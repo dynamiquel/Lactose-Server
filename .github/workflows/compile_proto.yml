@@ -14,7 +14,7 @@ jobs:
       - name: Download and unzip third-party tools
         run: |
           curl -LO https://github.com/thejinchao/turbolink-libraries/releases/download/v1.3/protoc.zip
-          tar -xvf protoc.zip -C Source\ThirdParty
+          tar -xvf protoc.zip -C .Turbolink\Source\ThirdParty
           mkdir -p Tools\Output
 
       - name: Run generate_code.cmd
