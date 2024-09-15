@@ -1,0 +1,6 @@
+@LactoseTasks_HostAddress = http://localhost:5147
+
+GET {{LactoseTasks_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Lactose.Grpc";
+
+package Common;
+
+service Account {
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Logout (LogoutRequest) returns (LogoutResponse);
+}
+
+message LoginRequest {
+  string userId = 1;
+}
+
+message LoginResponse {
+  string sessionToken = 1;
+}
+
+message LogoutRequest {
+}
+
+message LogoutResponse {
+}
