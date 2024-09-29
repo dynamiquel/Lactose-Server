@@ -1,4 +1,4 @@
-using Lactose.Identity.Services;
+using Lactose.Identity.Data.Repos;
 
 new IdentityApi().Start(args);
 
@@ -14,13 +14,14 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
             builder.Services.AddSingleton<IGuildConfigRepo<ProfanityGuildConfigModel>, ProfanityGuildConfigRepo>();
             builder.Services.AddHostedService<ProfanityService>();
         }*/
+        
+        builder.Services.AddSingleton<IRolesRepo, RolesRepo>();
+        builder.Services.AddSingleton<IUsersRepo, UsersRepo>();
     }
 
     protected override void OnBuilt(WebApplication app)
     {
         base.OnBuilt(app);
 
-        app.MapGrpcService<RolesService>();
-        app.MapGrpcService<UsersService>();
     }
 }

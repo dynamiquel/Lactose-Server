@@ -1,0 +1,62 @@
+using System.Text.Json;
+using Lactose.Identity.Data.Repos;
+using Lactose.Identity.Dtos.Roles;
+using Lactose.Identity.Mapping;
+using LactoseWebApp;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Lactose.Identity.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class RolesController(
+    ILogger<RolesController> logger, 
+    IRolesRepo rolesRepo) 
+    : ControllerBase
+{
+    [HttpGet("query", Name = "Query Roles")]
+    public async Task<IActionResult> QueryRoles()
+    {
+        var foundRoles = await rolesRepo.QueryRoles();
+        return Ok(new QueryRolesResponse
+        {
+            RoleIds = foundRoles.ToList()
+        });
+    }
+
+    [HttpGet(Name = "Get Roles")]
+    public async Task<IActionResult> GetRoles(RolesRequest request)
+    {
+        var foundRoles = await rolesRepo.GetRolesByIds(request.RoleIds.ToHashSet());
+        return Ok(RoleMapper.ToDto(foundRoles));
+    }
+
+    [HttpPut(Name = "Create Role")]
+    public async Task<IActionResult> CreateRole(CreateRoleRequest request)
+    {
+        var foundRole = await rolesRepo.GetRolesByIds([request.RoleId]);
+        if (!foundRole.IsEmpty())
+        {
+            logger.LogError($"Role with id {request.RoleId} already exists.");
+            return Conflict($"Role with id {request.RoleId} already exists.");
+        }
+        
+        var createdRole = await rolesRepo.CreateRole(RoleMapper.ToModel(request));
+        if (createdRole is null)
+        {
+            logger.LogError($"Could not create Role {request.RoleId}.");
+            return StatusCode(500, $"Could not create Role {request.RoleId}.");
+        }
+        
+        return Ok(RoleMapper.ToDto(createdRole));
+    }
+
+    public async Task<IActionResult> DeleteRoles(RolesRequest request)
+    {
+        var deletedRoles = await rolesRepo.DeleteRoles(request.RoleIds);
+        return Ok(new QueryRolesResponse
+        {
+            RoleIds = deletedRoles.ToList()
+        });
+    }
+}

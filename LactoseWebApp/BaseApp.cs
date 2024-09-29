@@ -1,6 +1,5 @@
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
-using LactoseWebApp.Services;
 using Serilog;
 
 namespace LactoseWebApp;
@@ -92,10 +91,6 @@ public abstract class BaseApp
         builder.Services.AddOptions(builder.Configuration);
 
         builder.Services.AddServiceInfo(builder.Configuration);
-
-        builder.Services.AddGrpc();
-        builder.Services.AddGrpcReflection();
-
         builder.Services.AddControllers();
     }
 
@@ -114,12 +109,9 @@ public abstract class BaseApp
         {
             app.UseExceptionHandler("/Error", createScopeForErrors: true);
             //app.UseHsts();
-            app.MapGrpcReflectionService();
         }
 
         app.MapControllers();
-        
-        app.MapGrpcService<HelloService>();
     }
 
     /// <summary>

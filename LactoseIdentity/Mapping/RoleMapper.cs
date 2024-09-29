@@ -1,12 +1,11 @@
-using Lactose.Identity.Grpc;
+using Lactose.Identity.Dtos.Roles;
 using Lactose.Identity.Models;
-using LactoseWebApp.Mapping;
 using Riok.Mapperly.Abstractions;
 
 namespace Lactose.Identity.Mapping;
 
 [Mapper]
-public partial class RoleMapper : ProtobufMapper
+public partial class RoleMapper
 {
     public static partial RoleResponse ToDto(Role role);
 
@@ -14,12 +13,9 @@ public partial class RoleMapper : ProtobufMapper
     {
         return new RolesResponse
         {
-            Roles = { roles.Select(ToDto) }
+            Roles = roles.Select(ToDto).ToList()
         };
     }
 
     public static partial Role ToModel(CreateRoleRequest createRoleRequest);
-    
-    public static Permissions ToDto(ISet<string> permissions) => new() { Permissions_ = { permissions } };
-    public static ISet<string> ToModel(Permissions permissions) => new HashSet<string>(permissions.Permissions_);
 }

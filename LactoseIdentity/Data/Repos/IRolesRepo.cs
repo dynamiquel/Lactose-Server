@@ -1,4 +1,3 @@
-using Lactose.Identity.Grpc;
 using Lactose.Identity.Models;
 
 namespace Lactose.Identity.Data.Repos;
