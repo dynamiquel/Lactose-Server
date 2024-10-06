@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Roles;
 using Lactose.Identity.Mapping;
@@ -36,21 +35,16 @@ public class RolesController(
     {
         var foundRole = await rolesRepo.GetRolesByIds([request.RoleId]);
         if (!foundRole.IsEmpty())
-        {
-            logger.LogError($"Role with id {request.RoleId} already exists.");
-            return Conflict($"Role with id {request.RoleId} already exists.");
-        }
+            return Conflict($"Role with ID '{request.RoleId}' already exists");
         
         var createdRole = await rolesRepo.CreateRole(RoleMapper.ToModel(request));
         if (createdRole is null)
-        {
-            logger.LogError($"Could not create Role {request.RoleId}.");
-            return StatusCode(500, $"Could not create Role {request.RoleId}.");
-        }
+            return StatusCode(500, $"Could not create Role with ID '{request.RoleId}'");
         
         return Ok(RoleMapper.ToDto(createdRole));
     }
 
+    [HttpDelete(Name = "Delete Roles")]
     public async Task<IActionResult> DeleteRoles(RolesRequest request)
     {
         var deletedRoles = await rolesRepo.DeleteRoles(request.RoleIds);

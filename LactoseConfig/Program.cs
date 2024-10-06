@@ -1,25 +1,12 @@
-var builder = WebApplication.CreateBuilder(args);
+using Lactose.Config.Data.Repositories;
 
-// Add services to the container.
+new ConfigApi().Start(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+internal sealed class ConfigApi : LactoseWebApp.BaseApp
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    protected override void Configure(WebApplicationBuilder builder)
+    {
+        base.Configure(builder);
+        builder.Services.AddSingleton<IConfigRepo, ConfigRepo>();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

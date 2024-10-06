@@ -1,3 +1,4 @@
+using LactoseWebApp.Filters;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
 using Serilog;
@@ -91,7 +92,10 @@ public abstract class BaseApp
         builder.Services.AddOptions(builder.Configuration);
 
         builder.Services.AddServiceInfo(builder.Configuration);
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<LogActionFilter>();
+        });
     }
 
     /// <summary>

@@ -13,7 +13,7 @@ public class UsersController(
     IUsersRepo usersRepo) 
     : ControllerBase
 {
-    [HttpHead(Name = "Query Users")]
+    [HttpGet("query", Name = "Query Users")]
     public async Task<IActionResult> QueryUsers()
     {
         ISet<string> foundUsers = await usersRepo.QueryUsers();
@@ -27,61 +27,47 @@ public class UsersController(
     [HttpGet(Name = "Get User")]
     public async Task<IActionResult> GetUser(UserRequest request)
     {
+        if (!MongoDB.Bson.ObjectId.TryParse(request.UserId, out _))
+            return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
+        
         var foundUser = await usersRepo.GetUserById(request.UserId);
         
         if (foundUser is null)
-        {
-            logger.LogError($"User with id {request.UserId} was not found.");
-            return NotFound($"User with id {request.UserId} was not found.");
-        }
+            return NotFound($"User with id '{request.UserId}' was not found");
 
         return Ok(UserMapper.ToDto(foundUser));
     }
 
-    [HttpPut(Name = "Create User")]
+    [HttpPost(Name = "Create User")]
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
-        var foundUser = await usersRepo.GetUserById(request.UserId);
-        if (foundUser is not null)
-        {
-            logger.LogError($"User with id {request.UserId} already exists.");
-            return Conflict($"User with id {request.UserId} already exists.");
-        }
-
         var newUser = new User
         {
-            UserId = request.UserId,
-            Username = request.Username,
+            DisplayName = request.DisplayName,
             Roles = request.Roles.ToHashSet(),
             TimeCreated = DateTime.UtcNow
         };
         
         var createdUser = await usersRepo.CreateUser(newUser);
         if (createdUser is null)
-        {
-            logger.LogError($"Could not create user {request.UserId}.");
-            return StatusCode(500, $"Could not create user {request.UserId}.");
-        }
+            return StatusCode(500, $"Could not create user with name '{request.DisplayName}'");
         
         return Ok(UserMapper.ToDto(createdUser));
     }
 
-    [HttpDelete("Delete User")]
+    [HttpDelete(Name = "Delete User")]
     public async Task<IActionResult> DeleteUser(UserRequest request)
     {
+        if (!MongoDB.Bson.ObjectId.TryParse(request.UserId, out _))
+            return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
+
         var foundUser = await usersRepo.GetUserById(request.UserId);
         if (foundUser is null)
-        {
-            logger.LogError($"User with id {request.UserId} was not found.");
-            return NotFound($"User with id {request.UserId} was not found.");
+            return NotFound($"User with ID '{request.UserId}' was not found");
 
-        }
         var response = await usersRepo.DeleteUserById(request.UserId);
         if (!response)
-        {
-            logger.LogError($"User with id {request.UserId} could not be deleted.");
-            return StatusCode(500, $"User with id {request.UserId} could not be deleted.");
-        }
+            return StatusCode(500, $"User with ID '{request.UserId}' could not be deleted");
 
         return Ok();
     }
