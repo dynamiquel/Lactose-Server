@@ -1,11 +1,6 @@
 using Lactose.Identity.Models;
+using LactoseWebApp.Repo;
 
 namespace Lactose.Identity.Data.Repos;
 
-public interface IRolesRepo
-{
-    Task<ISet<string>> QueryRoles();
-    Task<ICollection<Role>> GetRolesByIds(ICollection<string> roleIds);
-    Task<Role?> CreateRole(Role role);
-    Task<IEnumerable<string>> DeleteRoles(ICollection<string> roleIds);
-}
+public interface IRolesRepo : IBasicKeyValueRepo<Role>;

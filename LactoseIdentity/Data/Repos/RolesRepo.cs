@@ -16,7 +16,7 @@ public class RolesRepo : IRolesRepo
         _roleCollection = mongoDb.GetCollection<Role>(rolesDatabaseOptions.Value.Collection);
     }
     
-    public async Task<ISet<string>> QueryRoles()
+    public async Task<ISet<string>> Query()
     {
         var results =
             from role in _roleCollection.AsQueryable()
@@ -24,36 +24,46 @@ public class RolesRepo : IRolesRepo
 
         return results.ToHashSet();
     }
-
-    public async Task<ICollection<Role>> GetRolesByIds(ICollection<string> roleIds)
+    
+    public async Task<ICollection<Role>> Get(ICollection<string> roleIds)
     {
         var results =
             from role in _roleCollection.AsQueryable()
             where roleIds.Contains(role.RoleId)
             select role;
 
-        return results.ToList().AsReadOnly();
+        return results.ToList();
     }
 
-    public async Task<Role?> CreateRole(Role role)
+    public async Task<Role?> Set(Role role)
     {
         var task = _roleCollection.InsertOneAsync(role);
         await task;
         return task.IsCompletedSuccessfully ? role : null;
     }
 
-    public async Task<IEnumerable<string>> DeleteRoles(ICollection<string> roleIds)
+    public Task<ICollection<string>> Delete(IEnumerable<string> ids)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> Clear()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<ICollection<string>> Delete(ICollection<string> roleIds)
     {
         var result = await _roleCollection.DeleteManyAsync(r => roleIds.Contains(r.RoleId));
-        if (result.IsAcknowledged)
+        if (!result.IsAcknowledged)
             return new List<string>();
 
         if (result.DeletedCount == roleIds.Count)
             return roleIds;
         
         // Not all the desired Roles were deleted. Figure out which Roles were not deleted.
-        var existingRoles = await QueryRoles();
+        var existingRoles = await Query();
 
-        return roleIds.Where(r => !existingRoles.Contains(r));
+        return roleIds.Where(r => !existingRoles.Contains(r)).ToList();
     }
 }

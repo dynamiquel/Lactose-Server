@@ -17,13 +17,13 @@ public class ConfigEntry
     [BsonRequired]
     public required string Value { get; set; }
 
-    public ConfigEntryConditions? Conditions { get; set; } = default;
+    public ConfigEntryConditions? Conditions { get; set; }
 }
 
 public record struct ConfigEntryConditions
 {
     public ConfigEntryEnvironment Environment { get; set; }
-    public string? Location { get; set; } = default;
+    public string? Location { get; set; }
 
     public ConfigEntryConditions()
     { }

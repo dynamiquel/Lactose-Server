@@ -13,7 +13,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
 {
 
     //[Authorize(Permission.Read)]
-    [HttpGet("Entry", Name = "Get Entry")]
+    [HttpGet("entry", Name = "Get Entry")]
     //[Cache]
     public async Task<ActionResult<ConfigEntryResponse>> GetEntry(ConfigEntryRequest entryRequest)
     {
@@ -25,7 +25,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     }
 
     //[Authorize(Permission.Read)]
-    [HttpGet("Entry/ID", Name = "Get Entry By ID")]
+    [HttpGet("entry/id", Name = "Get Entry By ID")]
     //[Cache]
     public async Task<ActionResult<ConfigEntryResponse>> GetEntry(ConfigEntryByIdRequest entryRequest)
     {
@@ -37,7 +37,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     }
 
     //[Authorize(Permission.Read)]
-    [HttpGet("Config", Name = "Get Config")]
+    [HttpGet("config", Name = "Get Config")]
     public async Task<ActionResult<ConfigResponse>> GetConfig(ConfigRequest? readRequest)
     {
         // Repo depends on a valid Read Request, so construct a default one, if necessary.
@@ -50,7 +50,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     }
 
     //[Authorize(Permission.Write)]
-    [HttpPut("Entry", Name = "Set Entry")]
+    [HttpPut("entry", Name = "Set Entry")]
     public async Task<ActionResult<ConfigEntryResponse>> SetEntry(UpdateConfigEntryRequest writeRequest)
     {
         var model = ConfigEntryMapper.ToModel(writeRequest);
@@ -63,7 +63,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     }
 
     //[Authorize(Permission.Write)]
-    [HttpPut("SetEntries", Name = "Set Entries")]
+    [HttpPut("entries", Name = "Set Entries")]
     public async Task<ActionResult<IEnumerable<ConfigEntryResponse>>> SetEntries(IEnumerable<UpdateConfigEntryRequest> writeRequest)
     {
         var models = ConfigEntryMapper.ToModel(writeRequest);
@@ -76,7 +76,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     }
     
     //[Authorize(Permission.Write)]
-    [HttpDelete("Entry/ID", Name = "Delete Entry by ID")]
+    [HttpDelete("entry/id", Name = "Delete Entry by ID")]
     public async Task<IActionResult> RemoveEntry(ConfigEntryByIdRequest entryRequest)
     {
         var deleted = await repo.RemoveEntry(entryRequest.EntryId);
@@ -84,18 +84,16 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     }
 
     //[Authorize(Permission.Write)]
-    [HttpDelete(Name = "Delete Entries")]
-    public async Task<IActionResult> RemoveEntries(IEnumerable<string> removeRequest)
+    [HttpDelete("entries", Name = "Delete Entries")]
+    public async Task<IActionResult> RemoveEntries(DeleteConfigRequest deleteRequest)
     {
-        var deleted = await repo.RemoveEntries(removeRequest);
-        return deleted ? Ok() : BadRequest();
-    }
-
-    //[Authorize(Permission.Write)]
-    [HttpDelete(Name = "Delete All")]
-    public async Task<IActionResult> Clear()
-    {
-        var deleted = await repo.Clear();
+        if (deleteRequest.EntriesToRemove is null)
+        {
+            var deletedAll = await repo.Clear();
+            return deletedAll ? Ok() : BadRequest();
+        }
+        
+        var deleted = await repo.RemoveEntries(deleteRequest.EntriesToRemove);
         return deleted ? Ok() : BadRequest();
     }
 }

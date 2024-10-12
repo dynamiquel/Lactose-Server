@@ -11,6 +11,5 @@ public interface IConfigController
     Task<ActionResult<ConfigEntryResponse>> SetEntry(UpdateConfigEntryRequest writeRequest);
     Task<ActionResult<IEnumerable<ConfigEntryResponse>>> SetEntries(IEnumerable<UpdateConfigEntryRequest> writeRequest);
     Task<IActionResult> RemoveEntry(ConfigEntryByIdRequest entryRequest);
-    Task<IActionResult> RemoveEntries(IEnumerable<string> removeRequest);
-    Task<IActionResult> Clear();
+    Task<IActionResult> RemoveEntries(DeleteConfigRequest deleteRequest); 
 }

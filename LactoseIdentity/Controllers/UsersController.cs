@@ -14,9 +14,9 @@ public class UsersController(
     : ControllerBase
 {
     [HttpGet("query", Name = "Query Users")]
-    public async Task<IActionResult> QueryUsers()
+    public async Task<ActionResult<QueryUsersResponse>> QueryUsers()
     {
-        ISet<string> foundUsers = await usersRepo.QueryUsers();
+        ISet<string> foundUsers = await usersRepo.Query();
 
         return Ok(new QueryUsersResponse
         {
@@ -25,12 +25,12 @@ public class UsersController(
     }
 
     [HttpGet(Name = "Get User")]
-    public async Task<IActionResult> GetUser(UserRequest request)
+    public async Task<ActionResult<UserResponse>> GetUser(UserRequest request)
     {
         if (!MongoDB.Bson.ObjectId.TryParse(request.UserId, out _))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
         
-        var foundUser = await usersRepo.GetUserById(request.UserId);
+        var foundUser = await usersRepo.Get(request.UserId);
         
         if (foundUser is null)
             return NotFound($"User with id '{request.UserId}' was not found");
@@ -39,7 +39,7 @@ public class UsersController(
     }
 
     [HttpPost(Name = "Create User")]
-    public async Task<IActionResult> CreateUser(CreateUserRequest request)
+    public async Task<ActionResult<UserResponse>> CreateUser(CreateUserRequest request)
     {
         var newUser = new User
         {
@@ -48,7 +48,7 @@ public class UsersController(
             TimeCreated = DateTime.UtcNow
         };
         
-        var createdUser = await usersRepo.CreateUser(newUser);
+        var createdUser = await usersRepo.Set(newUser);
         if (createdUser is null)
             return StatusCode(500, $"Could not create user with name '{request.DisplayName}'");
         
@@ -56,16 +56,16 @@ public class UsersController(
     }
 
     [HttpDelete(Name = "Delete User")]
-    public async Task<IActionResult> DeleteUser(UserRequest request)
+    public async Task<ActionResult> DeleteUser(UserRequest request)
     {
         if (!MongoDB.Bson.ObjectId.TryParse(request.UserId, out _))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
 
-        var foundUser = await usersRepo.GetUserById(request.UserId);
+        var foundUser = await usersRepo.Get(request.UserId);
         if (foundUser is null)
             return NotFound($"User with ID '{request.UserId}' was not found");
 
-        var response = await usersRepo.DeleteUserById(request.UserId);
+        var response = await usersRepo.Delete(request.UserId);
         if (!response)
             return StatusCode(500, $"User with ID '{request.UserId}' could not be deleted");
 

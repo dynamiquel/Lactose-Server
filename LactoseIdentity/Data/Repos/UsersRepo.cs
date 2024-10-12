@@ -16,7 +16,7 @@ public class UsersRepo : IUsersRepo
         _usersCollection = mongoDb.GetCollection<User>(usersDatabaseOptions.Value.Collection);
     }
     
-    public async Task<ISet<string>> QueryUsers()
+    public async Task<ISet<string>> Query()
     {
         var results =
             from role in _usersCollection.AsQueryable()
@@ -25,7 +25,12 @@ public class UsersRepo : IUsersRepo
         return results.ToHashSet();
     }
 
-    public async Task<User?> GetUserById(string userId)
+    public Task<ICollection<User>> Get(ICollection<string> ids)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<User?> Get(string userId)
     {
         var result =
             from role in _usersCollection.AsQueryable()
@@ -35,16 +40,26 @@ public class UsersRepo : IUsersRepo
         return result.FirstOrDefault();
     }
 
-    public async Task<User?> CreateUser(User user)
+    public async Task<User?> Set(User user)
     {
         var task = _usersCollection.InsertOneAsync(user);
         await task;
         return task.IsCompletedSuccessfully ? user : null;
     }
 
-    public async Task<bool> DeleteUserById(string userId)
+    public async Task<bool> Delete(string userId)
     {
         var result = await _usersCollection.DeleteOneAsync(user => user.UserId == userId);
         return result.IsAcknowledged;
+    }
+    
+    public Task<ICollection<string>> Delete(ICollection<string> ids)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public Task<bool> Clear()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -16,7 +16,7 @@ public class RolesController(
     [HttpGet("query", Name = "Query Roles")]
     public async Task<IActionResult> QueryRoles()
     {
-        var foundRoles = await rolesRepo.QueryRoles();
+        var foundRoles = await rolesRepo.Query();
         return Ok(new QueryRolesResponse
         {
             RoleIds = foundRoles.ToList()
@@ -26,18 +26,18 @@ public class RolesController(
     [HttpGet(Name = "Get Roles")]
     public async Task<IActionResult> GetRoles(RolesRequest request)
     {
-        var foundRoles = await rolesRepo.GetRolesByIds(request.RoleIds.ToHashSet());
+        var foundRoles = await rolesRepo.Get(request.RoleIds.ToHashSet());
         return Ok(RoleMapper.ToDto(foundRoles));
     }
 
     [HttpPut(Name = "Create Role")]
     public async Task<IActionResult> CreateRole(CreateRoleRequest request)
     {
-        var foundRole = await rolesRepo.GetRolesByIds([request.RoleId]);
-        if (!foundRole.IsEmpty())
+        var foundRole = await rolesRepo.Get(request.RoleId);
+        if (foundRole is not null)
             return Conflict($"Role with ID '{request.RoleId}' already exists");
         
-        var createdRole = await rolesRepo.CreateRole(RoleMapper.ToModel(request));
+        var createdRole = await rolesRepo.Set(RoleMapper.ToModel(request));
         if (createdRole is null)
             return StatusCode(500, $"Could not create Role with ID '{request.RoleId}'");
         
@@ -47,7 +47,7 @@ public class RolesController(
     [HttpDelete(Name = "Delete Roles")]
     public async Task<IActionResult> DeleteRoles(RolesRequest request)
     {
-        var deletedRoles = await rolesRepo.DeleteRoles(request.RoleIds);
+        var deletedRoles = await rolesRepo.Delete(request.RoleIds);
         return Ok(new QueryRolesResponse
         {
             RoleIds = deletedRoles.ToList()
