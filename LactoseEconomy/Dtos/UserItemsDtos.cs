@@ -11,7 +11,7 @@ public class QueryUserItemsResponse
 
 public class GetUserItemsRequest
 {
-    public required string UserId { get; set; }
+    public required string UserId { get; init; }
 }
 
 public class GetUserItemsResponse

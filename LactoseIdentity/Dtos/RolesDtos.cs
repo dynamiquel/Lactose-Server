@@ -9,7 +9,7 @@ public class QueryRolesResponse
 
 public class RolesRequest
 {
-    public required IList<string> RoleIds { get; set; }
+    public required IList<string> RoleIds { get; init; }
 }
 
 public class RoleResponse
@@ -26,7 +26,7 @@ public class RolesResponse
 
 public class CreateRoleRequest
 {
-    public required string Id { get; set; }
-    public required string RoleName { get; set; }
-    public IList<string> Permissions { get; set; } = new List<string>();
+    public required string Id { get; init; }
+    public required string RoleName { get; init; }
+    public IList<string> Permissions { get; init; } = new List<string>();
 }

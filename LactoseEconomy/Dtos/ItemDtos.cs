@@ -9,7 +9,7 @@ public class QueryItemsResponse
 
 public class GetItemsRequest
 {
-    public required IList<string> ItemIds { get; set; }
+    public required IList<string> ItemIds { get; init; }
 }
 
 public class GetItemResponse
@@ -27,22 +27,22 @@ public class GetItemsResponse
 
 public class CreateItemRequest
 {
-    public required string Type { get; set; }
-    public required string Name { get; set; }
-    public string? Description { get; set; }
+    public required string Type { get; init; }
+    public required string Name { get; init; }
+    public string? Description { get; init; }
 }
 
 public class UpdateItemRequest
 {
-    public required string ItemId { get; set; }
-    public string? Type { get; set; }
-    public string? Name { get; set; }
-    public string? Description { get; set; }
+    public required string ItemId { get; init; }
+    public string? Type { get; init; }
+    public string? Name { get; init; }
+    public string? Description { get; init; }
 }
 
 public class DeleteItemsRequest
 {
-    public IList<string>? ItemIds { get; set; }
+    public IList<string>? ItemIds { get; init; }
 }
 
 public class DeleteItemsResponse

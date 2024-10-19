@@ -4,13 +4,13 @@ namespace Lactose.Config.Dtos.Config;
 
 public class ConfigEntryRequest
 {
-    public required string Key { get; set; }
-    public ConfigEntryConditions? Conditions { get; set; } = default;
+    public required string Key { get; init; }
+    public ConfigEntryConditions? Conditions { get; init; } = default;
 }
 
 public class ConfigEntryByIdRequest
 {
-    public required string EntryId { get; set; }
+    public required string EntryId { get; init; }
 }
 
 public class ConfigEntryResponse
@@ -21,22 +21,22 @@ public class ConfigEntryResponse
 
 public class ConfigRequest
 {
-    public ConfigEntryConditions? Conditions { get; set; } = default;
+    public ConfigEntryConditions? Conditions { get; init; } = default;
 }
 
 public class ConfigResponse
 {
-    public Dictionary<string, string> Entries { get;} = new();
+    public Dictionary<string, string> Entries { get; } = new();
 }
 
 public class UpdateConfigEntryRequest
 {
-    public required string Key { get; set; }
-    public required string Value { get; set; }
-    public ConfigEntryConditions? Conditions { get; set; } = default;
+    public required string Key { get; init; }
+    public required string Value { get; init; }
+    public ConfigEntryConditions? Conditions { get; init; } = default;
 }
 
 public class DeleteConfigRequest
 {
-    public IEnumerable<string>? EntriesToRemove { get; set; } = default;
+    public IEnumerable<string>? EntriesToRemove { get; init; } = default;
 }

@@ -11,7 +11,7 @@ public class QueryTransactionsResponse
 
 public class GetTransactionRequest
 {
-    public required string TransactionId { get; set; }
+    public required string TransactionId { get; init; }
 }
 
 public class GetTransactionResponse
@@ -25,14 +25,14 @@ public class GetTransactionResponse
 
 public class UserTradeRequest
 {
-    public string? UserId { get; set; }
-    public IList<UserItem> Items { get; set; } = new List<UserItem>();
+    public string? UserId { get; init; }
+    public IList<UserItem> Items { get; init; } = new List<UserItem>();
 }
 
 public class TradeRequest
 {
-    public required UserTradeRequest UserA { get; set; }
-    public required UserTradeRequest UserB { get; set; }
+    public required UserTradeRequest UserA { get; init; }
+    public required UserTradeRequest UserB { get; init; }
 }
 
 public enum TradeResponseReason

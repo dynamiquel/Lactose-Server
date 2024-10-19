@@ -9,7 +9,7 @@ public class QueryUsersResponse
 
 public class UserRequest
 {
-    public required string UserId { get; set; }
+    public required string UserId { get; init; }
 }
 
 public class UserResponse
@@ -23,6 +23,6 @@ public class UserResponse
 
 public class CreateUserRequest
 {
-    public required string DisplayName { get; set; }
-    public IList<string> Roles { get; set; } = new List<string>();
+    public required string DisplayName { get; init; }
+    public IList<string> Roles { get; init; } = new List<string>();
 }
