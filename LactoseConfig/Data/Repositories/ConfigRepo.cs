@@ -1,4 +1,4 @@
-﻿using Lactose.Config.Dtos;
+﻿using Lactose.Config.Dtos.Config;
 using Lactose.Config.Models;
 using Lactose.Config.Options;
 using LactoseWebApp;

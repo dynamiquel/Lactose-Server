@@ -1,4 +1,4 @@
-﻿using Lactose.Config.Dtos;
+﻿using Lactose.Config.Dtos.Config;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Config.Controllers;
