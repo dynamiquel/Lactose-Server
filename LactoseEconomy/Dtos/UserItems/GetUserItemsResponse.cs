@@ -1,6 +1,6 @@
 using Lactose.Economy.Models;
 
-namespace LactoseEconomy.Dtos.UserItems;
+namespace Lactose.Economy.Dtos.UserItems;
 
 public class GetUserItemsResponse
 {

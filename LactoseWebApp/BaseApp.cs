@@ -2,6 +2,7 @@ using LactoseWebApp.Filters;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
 using Serilog;
+using Serilog.Formatting.Display;
 
 namespace LactoseWebApp;
 
@@ -72,7 +73,8 @@ public abstract class BaseApp
         // Initialises Serilog so meaningful information can be outputted to the console and log files.
         builder.Host.UseSerilog((context, configuration) =>
         {
-            configuration.WriteTo.Console();
+            configuration.Enrich.FromLogContext();
+            configuration.WriteTo.Console(new MessageTemplateTextFormatter("[{Timestamp:MM-dd HH:mm:ss}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"));
             configuration.WriteTo.File(
                 Path.Combine(Environment.CurrentDirectory, "Saved", "Logs", $"Log_{DateTime.UtcNow}.txt"),
                 flushToDiskInterval: TimeSpan.FromSeconds(5));
@@ -139,21 +141,6 @@ public abstract class BaseApp
     protected virtual void OnShutdown()
     {
         Log.CloseAndFlush();
-    }
-
-    /// <summary>
-    /// Initialises Serilog so meaningful information can be outputted to the console and log files.
-    /// </summary>
-    void InitialiseStaticLogger()
-    {
-        // todo: Compress and rename previous logs.
-        // todo: use time for Log name.
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.File(
-                Path.Combine(Environment.CurrentDirectory, "Saved", "Logs", $"Log_{DateTime.UtcNow.ToFileTimeUtc()}.txt"),
-                flushToDiskInterval: TimeSpan.FromSeconds(5))
-            .CreateLogger();
     }
 
     class WebAppPreRunFailedException : Exception

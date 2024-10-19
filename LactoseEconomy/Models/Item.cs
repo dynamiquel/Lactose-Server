@@ -1,9 +1,10 @@
+using LactoseWebApp.Repo;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Lactose.Economy.Models;
 
-public class Item
+public class Item : IBasicKeyValueModel
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

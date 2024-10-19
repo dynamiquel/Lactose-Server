@@ -19,10 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Dtos\Transactions\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\LactoseWebApp\LactoseWebApp.csproj" />
     </ItemGroup>
 

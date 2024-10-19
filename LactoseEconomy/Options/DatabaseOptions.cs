@@ -9,5 +9,5 @@ public class ItemsDatabaseOptions : MongoDatabaseOptions;
 [Options]
 public class TransactionsDatabaseOptions : MongoDatabaseOptions;
 
-[Options]
+[Options(SectionName = "UserItems:Database")]
 public class UserItemsDatabaseOptions : MongoDatabaseOptions;

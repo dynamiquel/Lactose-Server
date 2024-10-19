@@ -1,4 +1,7 @@
-﻿namespace LactoseWebApp;
+﻿using System.Collections.Immutable;
+using System.Text;
+
+namespace LactoseWebApp;
 
 public static class ContainerExtensions
 {
@@ -22,5 +25,61 @@ public static class ContainerExtensions
         
         foreach (var item in items)
             set.Add(item);
+    }
+    
+    public static int Remove<T>(this ICollection<T> collection, Predicate<T> matchingCondition)
+    {
+        int removedCount = 0;
+        
+        if (collection is IList<T> list)
+        {
+            for (var i = list.Count - 1; i >= 0; i--)
+            {
+                T element = list[i];
+                bool shouldRemove = matchingCondition(element);
+                if (shouldRemove)
+                {
+                    list.RemoveAt(i);
+                    removedCount++;
+                }
+            }
+        }
+        else
+        {
+            for (var i = collection.Count - 1; i >= 0; i--)
+            {
+                T element = collection.ElementAt(i);
+                bool shouldRemove = matchingCondition(element);
+                if (shouldRemove)
+                {
+                    collection.Remove(element);
+                    removedCount++;
+                }
+            }
+        }
+
+        return removedCount;
+    }
+    
+    public static string ToCommaSeparatedString(this IEnumerable<object> enumerable)
+    {
+        var list = enumerable.ToImmutableList();
+
+        if (list.Count <= 0)
+            return string.Empty;
+
+        if (list[0].ToString() is null)
+            throw new ArgumentNullException(
+                nameof(enumerable), "The provided objects in the enumerable cannot return null with ToString");
+        
+        // Approximate reserved capacity based on the length of the first element.
+        var sb = new StringBuilder(list[0].ToString()!.Length * list.Count);
+
+        for (var i = 0; i < list.Count - 1; i++)
+            sb.Append($"{list[i].ToString()}, ");
+
+        sb.Append(list[^1]);
+
+        return sb.ToString();
     }
 }

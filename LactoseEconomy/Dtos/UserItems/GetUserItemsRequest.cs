@@ -1,4 +1,4 @@
-namespace LactoseEconomy.Dtos.UserItems;
+namespace Lactose.Economy.Dtos.UserItems;
 
 public class GetUserItemsRequest
 {

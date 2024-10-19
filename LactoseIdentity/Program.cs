@@ -15,8 +15,8 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
             builder.Services.AddHostedService<ProfanityService>();
         }*/
         
-        builder.Services.AddSingleton<IRolesRepo, RolesRepo>();
-        builder.Services.AddSingleton<IUsersRepo, UsersRepo>();
+        builder.Services.AddSingleton<IRolesRepo, MongoRolesRepo>();
+        builder.Services.AddSingleton<IUsersRepo, MongoUsersRepo>();
     }
 
     protected override void OnBuilt(WebApplication app)

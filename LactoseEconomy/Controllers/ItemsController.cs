@@ -3,6 +3,7 @@ using Lactose.Economy.Dtos.Items;
 using Lactose.Economy.Models;
 using Lactose.Identity.Mapping;
 using LactoseWebApp;
+using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Economy.Controllers;
@@ -51,12 +52,12 @@ public class ItemsController(
     [HttpPatch(Name = "Update Item")]
     public async Task<ActionResult<GetItemResponse>> UpdateItem(UpdateItemRequest request)
     {
-        if (!MongoDB.Bson.ObjectId.TryParse(request.Id, out _))
-            return BadRequest($"ItemId '{request.Id}' is not a valid ItemId");
+        if (!request.ItemId.IsValidObjectId())
+            return BadRequest($"ItemId '{request.ItemId}' is not a valid ItemId");
         
-        var existingItem = await itemsRepo.Get(request.Id);
+        var existingItem = await itemsRepo.Get(request.ItemId);
         if (existingItem is null)
-            return BadRequest($"Item with Id '{request.Id}' does not exist");
+            return BadRequest($"Item with Id '{request.ItemId}' does not exist");
 
         if (request.Name is not null)
             existingItem.Name = request.Name;
@@ -67,7 +68,7 @@ public class ItemsController(
 
         var updatedItem = await itemsRepo.Set(existingItem);
         if (updatedItem is null)
-            return StatusCode(500, $"Could not update Item with Id '{request.Id}'");
+            return StatusCode(500, $"Could not update Item with Id '{request.ItemId}'");
 
         return Ok(ItemMapper.ToDto(updatedItem));
     }

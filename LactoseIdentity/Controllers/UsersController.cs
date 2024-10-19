@@ -2,6 +2,7 @@ using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Users;
 using Lactose.Identity.Mapping;
 using Lactose.Identity.Models;
+using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Identity.Controllers;
@@ -58,7 +59,7 @@ public class UsersController(
     [HttpDelete(Name = "Delete User")]
     public async Task<ActionResult> DeleteUser(UserRequest request)
     {
-        if (!MongoDB.Bson.ObjectId.TryParse(request.UserId, out _))
+        if (!request.UserId.IsValidObjectId())
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
 
         var foundUser = await usersRepo.Get(request.UserId);

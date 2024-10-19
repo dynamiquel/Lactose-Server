@@ -24,7 +24,7 @@ public static class OptionsExtensions
             throw new InvalidOptionsTypeException(optionsType);
 
         if (string.IsNullOrWhiteSpace(optionsAttribute.SectionName))
-            optionsAttribute.SectionName = optionsType.Name;
+            optionsAttribute.SetSectionNameViaReflection(optionsType);
         
         return optionsAttribute.SectionName;
     }

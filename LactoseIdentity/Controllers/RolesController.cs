@@ -33,13 +33,13 @@ public class RolesController(
     [HttpPut(Name = "Create Role")]
     public async Task<IActionResult> CreateRole(CreateRoleRequest request)
     {
-        var foundRole = await rolesRepo.Get(request.RoleId);
+        var foundRole = await rolesRepo.Get(request.Id);
         if (foundRole is not null)
-            return Conflict($"Role with ID '{request.RoleId}' already exists");
+            return Conflict($"Role with ID '{request.Id}' already exists");
         
         var createdRole = await rolesRepo.Set(RoleMapper.ToModel(request));
         if (createdRole is null)
-            return StatusCode(500, $"Could not create Role with ID '{request.RoleId}'");
+            return StatusCode(500, $"Could not create Role with ID '{request.Id}'");
         
         return Ok(RoleMapper.ToDto(createdRole));
     }
