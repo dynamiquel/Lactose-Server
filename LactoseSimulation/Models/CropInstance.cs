@@ -1,4 +1,4 @@
-using System.Numerics;
+using LactoseWebApp.Types;
 
 namespace Lactose.Simulation.Models;
 
@@ -18,10 +18,11 @@ public class CropInstance
 {
     public required string Id { get; set; }
     public required string CropId { get; set; }
-    public required string State { get; set; }
-    public required Vector3 Location { get; set; }
-    public required Vector3 Rotation { get; set; }
+    public string State { get; set; } = CropInstanceStates.Empty;
+    public required Vector Location { get; set; }
+    public required Vector Rotation { get; set; }
+    public DateTime CreationTime { get; set; } = DateTime.UtcNow;
     public required double RemainingHarvestSeconds { get; set; }
-    public required double RemainingFertiliserSeconds { get; set; }
+    public double RemainingFertiliserSeconds { get; set; }
 }
 

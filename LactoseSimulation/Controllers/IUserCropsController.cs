@@ -11,4 +11,5 @@ public interface IUserCropsController
     Task<ActionResult<HarvestUserCropsResponse>> HarvestCrops(HarvestUserCropsRequest request);
     Task<ActionResult<DestroyUserCropsResponse>> DestroyCrops(DestroyUserCropsRequest request);
     Task<ActionResult<FertiliseUserCropsResponse>> FertiliseCrops(FertiliseUserCropsRequest request);
+    Task<ActionResult<SeedUserCropsResponse>> SeedCrop(SeedUserCropRequest request);
 }

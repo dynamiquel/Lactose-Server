@@ -15,7 +15,7 @@ public class UserItems : IBasicKeyValueModel
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     [BsonIgnoreIfDefault]
-    public required string Id { get; set; }
+    public required string? Id { get; set; }
     public IList<UserItem> Items { get; set; } = new List<UserItem>();
 
     public UserItem IncreaseItemQuantity(string itemId, int quantity)

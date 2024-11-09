@@ -1,7 +1,7 @@
 using LactoseWebApp.Mongo;
 using LactoseWebApp.Options;
 
-namespace LactoseSimulation.Options;
+namespace Lactose.Simulation.Options;
 
 [Options]
 public class CropsDatabaseOptions : MongoDatabaseOptions;

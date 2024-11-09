@@ -1,4 +1,5 @@
-using System.Numerics;
+using Lactose.Simulation.Models;
+using LactoseWebApp.Types;
 
 namespace Lactose.Simulation.Dtos.UserCrops;
 
@@ -7,7 +8,11 @@ public class GetUserCropsRequest
     public required string UserId { get; set; }
 }
 
-public class GetUserCropsResponse;
+public class GetUserCropsResponse
+{
+    public DateTime PreviousSimulationTime { get; set; }
+    public IList<CropInstance> CropInstances { get; set; } = new List<CropInstance>();
+}
 
 public class SimulateUserCropsRequest
 {
@@ -24,8 +29,8 @@ public class CreateUserCropRequest
 {
     public required string UserId { get; set; }
     public required string CropId { get; set; }
-    public required Vector3 CropLocation { get; set; }
-    public required Vector3 CropRotation { get; set; }
+    public required Vector CropLocation { get; set; }
+    public required Vector CropRotation { get; set; }
 }
 
 public class CreateUserCropResponse
@@ -64,4 +69,16 @@ public class FertiliseUserCropsRequest
 public class FertiliseUserCropsResponse
 {
     public required IList<string> FertilisedCropInstanceIds { get; set; }
+}
+
+public class SeedUserCropRequest
+{
+    public required string UserId { get; set; }
+    public required IList<string> CropInstanceIds { get; set; }
+    public required string CropId { get; set; }
+}
+
+public class SeedUserCropsResponse
+{
+    public required IList<string> SeededCropInstanceIds { get; set; }
 }

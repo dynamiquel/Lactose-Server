@@ -14,7 +14,6 @@ public class CropsController(
     ILogger<CropsController> logger,
     ICropsRepo cropsRepo) : ControllerBase, ICropsController
 {
-    
     [HttpGet("query", Name = "Query Crops")]
     public async Task<ActionResult<QueryCropsResponse>> QueryCrops(QueryCropsRequest request)
     {

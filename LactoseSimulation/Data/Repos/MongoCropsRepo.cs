@@ -1,5 +1,5 @@
 using Lactose.Simulation.Models;
-using LactoseSimulation.Options;
+using Lactose.Simulation.Options;
 using LactoseWebApp.Mongo;
 using Microsoft.Extensions.Options;
 
