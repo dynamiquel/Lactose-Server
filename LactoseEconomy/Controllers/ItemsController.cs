@@ -1,7 +1,7 @@
 using Lactose.Economy.Data.Repos;
 using Lactose.Economy.Dtos.Items;
 using Lactose.Economy.Models;
-using Lactose.Identity.Mapping;
+using Lactose.Economy.Mapping;
 using LactoseWebApp;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Mvc;

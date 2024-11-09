@@ -2,7 +2,7 @@ using Lactose.Economy.Dtos.Items;
 using Lactose.Economy.Models;
 using Riok.Mapperly.Abstractions;
 
-namespace Lactose.Identity.Mapping;
+namespace Lactose.Economy.Mapping;
 
 [Mapper]
 public partial class ItemMapper

@@ -1,25 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
+using Lactose.Simulation.Data.Repos;
 
-// Add services to the container.
+new SimulationApi().Start(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+internal sealed class SimulationApi : LactoseWebApp.BaseApp
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    protected override void Configure(WebApplicationBuilder builder)
+    {
+        base.Configure(builder);
+        builder.Services.AddSingleton<ICropsRepo, MongoCropsRepo>();
+        builder.Services.AddSingleton<IUserCropsRepo, MongoUserCropsRepo>();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
