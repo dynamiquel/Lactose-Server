@@ -18,3 +18,13 @@ public class GetUserItemsResponse
 {
     public IList<UserItem> Items { get; set; } = new List<UserItem>();
 }
+
+public class CreateVendorRequest
+{
+    public required string VendorId { get; init; }
+}
+
+public class CreateVendorResponse
+{
+    public required string UserId { get; set; }
+}

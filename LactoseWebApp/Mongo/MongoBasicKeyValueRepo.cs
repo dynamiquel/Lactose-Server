@@ -15,7 +15,9 @@ namespace LactoseWebApp.Mongo;
 /// <typeparam name="TParent">The interface that should be representing the concrete implementation. It is currently only being used for logging purposes</typeparam>
 /// <typeparam name="TModel">The model that represents the document in the collection. Requires to implement IBasicKeyValueModel</typeparam>
 /// <typeparam name="TDatabaseOptions">The Mongo database options class</typeparam>
-public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> : IBasicKeyValueRepo<TModel> where TModel : class, IBasicKeyValueModel where TDatabaseOptions : MongoDatabaseOptions
+public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> : IBasicKeyValueRepo<TModel>
+    where TModel : class, IBasicKeyValueModel
+    where TDatabaseOptions : MongoDatabaseOptions
 {
     protected IMongoCollection<TModel> Collection { get; }
     protected ILogger<TParent> Logger { get; }

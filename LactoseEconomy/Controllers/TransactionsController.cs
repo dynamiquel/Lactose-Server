@@ -4,7 +4,6 @@ using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Mvc;
-using Transaction = Lactose.Economy.Models.Transaction;
 
 namespace Lactose.Economy.Controllers;
 
@@ -15,7 +14,6 @@ public class TransactionsController(
     IUserItemsRepo userItemsRepo,
     ILogger<ITransactionsController> logger) : ControllerBase, ITransactionsController
 {
-    
     [HttpGet("query", Name = "Query Transactions")]
     public async Task<ActionResult<QueryTransactionsResponse>> QueryTransactions(QueryTransactionsRequest request)
     {
@@ -67,7 +65,7 @@ public class TransactionsController(
 
             foreach (var itemToRemove in request.UserA.Items)
             {
-                bool bHasEnoughItem = userAItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && item.Quantity >= itemToRemove.Quantity);
+                bool bHasEnoughItem = userAItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.InfiniteQuantity));
                 if (!bHasEnoughItem)
                 {
                     return Ok(new TradeResponse
@@ -94,7 +92,7 @@ public class TransactionsController(
 
             foreach (var itemToRemove in request.UserB.Items)
             {
-                bool bHasEnoughItem = userBItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && item.Quantity >= itemToRemove.Quantity);
+                bool bHasEnoughItem = userBItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.InfiniteQuantity));
                 if (!bHasEnoughItem)
                 {
                     return Ok(new TradeResponse

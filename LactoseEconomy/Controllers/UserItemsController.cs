@@ -11,6 +11,8 @@ namespace Lactose.Economy.Controllers;
 [Route("[controller]")]
 public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase, IUserItemsController
 {
+    static bool IsValidEconomyUser(string userId) => userId.IsValidObjectId() || userId.StartsWith("vendor");
+    
     [HttpGet("query", Name = "Query User Items")]
     public async Task<ActionResult<QueryUserItemsResponse>> QueryUserItems(QueryUserItemsRequest request)
     {
@@ -25,7 +27,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     [HttpGet(Name = "Get User Items")]
     public async Task<ActionResult<GetUserItemsResponse>> GetUserItems(GetUserItemsRequest request)
     {
-        if (!request.UserId.IsValidObjectId())
+        if (!IsValidEconomyUser(request.UserId))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
 
         UserItems? foundUserItems = await userItemsRepo.Get(request.UserId);
@@ -52,10 +54,34 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     [HttpDelete(Name = "Delete User Items")]
     public async Task<ActionResult<bool>> DeleteUserItems(GetUserItemsRequest request)
     {
-        if (!request.UserId.IsValidObjectId())
+        if (!IsValidEconomyUser(request.UserId))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
         
         bool result = await userItemsRepo.Delete(request.UserId);
         return Ok(result);
+    }
+
+    [HttpGet("createVendor", Name = "Create Vendor")]
+    public async Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request)
+    {
+        var fullVendorId = $"vendor-{request.VendorId}";
+        UserItems? existingVendorItems = await userItemsRepo.Get(fullVendorId);
+        
+        if (existingVendorItems is not null)
+            return Conflict($"Vendor with ID '{fullVendorId}' already exists");
+
+        var newVendorItems = new UserItems
+        {
+            Id = fullVendorId
+        };
+        
+        UserItems? createdVendorItems = await userItemsRepo.Set(newVendorItems);
+        if (createdVendorItems is null)
+            return StatusCode(500, $"Could not create User Items for User with ID '{fullVendorId}'");
+        
+        return Ok(new CreateVendorResponse
+        {
+            UserId = fullVendorId
+        });
     }
 }

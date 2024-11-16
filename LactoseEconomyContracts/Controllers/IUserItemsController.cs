@@ -8,4 +8,5 @@ public interface IUserItemsController
     Task<ActionResult<QueryUserItemsResponse>> QueryUserItems(QueryUserItemsRequest request);
     Task<ActionResult<GetUserItemsResponse>> GetUserItems(GetUserItemsRequest request);
     Task<ActionResult<bool>> DeleteUserItems(GetUserItemsRequest request);
+    Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request);
 }
