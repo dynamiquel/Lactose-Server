@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace LactoseWebApp;
@@ -12,8 +13,8 @@ public static class ContainerExtensions
 
         return dictionary[key];
     }
-
-    public static bool IsEmpty<T>(this ICollection<T>? collection)
+    
+    public static bool IsEmpty<T>([NotNullWhen(false)] this ICollection<T>? collection)
     {
         return collection is null || collection.Count == 0;
     }

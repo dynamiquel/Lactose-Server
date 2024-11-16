@@ -1,3 +1,6 @@
+using Lactose.Economy;
+using Lactose.Economy.Dtos.Transactions;
+using Lactose.Economy.Models;
 using Lactose.Simulation.Data.Repos;
 using Lactose.Simulation.Dtos.UserCrops;
 using Lactose.Simulation.Mapping;
@@ -16,7 +19,8 @@ public class UserCropsController(
     ILogger<CropsController> logger,
     IUserCropsRepo userCropsRepo,
     ICropsRepo cropsRepo,
-    IOptions<UserCropsOptions> options) : ControllerBase, IUserCropsController
+    IOptions<UserCropsOptions> options,
+    TransactionsClient transactionsClient) : ControllerBase, IUserCropsController
 {
     [HttpGet(Name = "Get User Crops")]
     public async Task<ActionResult<GetUserCropsResponse>> GetCrops(GetUserCropsRequest request)
@@ -96,7 +100,19 @@ public class UserCropsController(
         if (crop is null)
             return BadRequest($"No Crop could be found with ID: {request.CropId}");
         
-        // TODO: Check and consume items for user inventory.
+        var tradeRequest = new TradeRequest
+        {
+            UserA = new UserTradeRequest
+            {
+                UserId = request.UserId,
+                Items = crop.CostItems
+            },
+            UserB = new UserTradeRequest()
+        };
+
+        var transactionResult = await transactionsClient.Trade(tradeRequest);
+        if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            return BadRequest($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
         
         var userCrops = await userCropsRepo.Get(request.UserId) ?? new UserCropInstances
         {
@@ -168,7 +184,24 @@ public class UserCropsController(
             foundCropInstance.State = crop.Type == CropTypes.Plot ? CropInstanceStates.Empty : CropInstanceStates.Growing;
             foundCropInstance.RemainingHarvestSeconds = crop.HarvestSeconds;
             
-            // TODO: Give user the harvest items.
+            var tradeRequest = new TradeRequest
+            {
+                UserA = new UserTradeRequest
+                {
+                    Items = crop.HarvestItems
+                },
+                UserB = new UserTradeRequest
+                {
+                    UserId = request.UserId
+                }
+            };
+
+            var transactionResult = await transactionsClient.Trade(tradeRequest);
+            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            {
+                logger.LogError($"Could not transfer Harvest Items from Crop '{crop.Id}' to User '{request.UserId}'");
+                continue;
+            }
             
             harvestedCropInstanceIds.Add(requestedCropInstanceId);
             logger.LogInformation($"User has harvested User Crop with ID '{requestedCropInstanceId}'. Next harvest in {foundCropInstance.RemainingHarvestSeconds} seconds");
@@ -214,9 +247,25 @@ public class UserCropsController(
             logger.LogInformation($"User has destroyed User Crop with ID '{requestedCropInstanceId}'");
             
             Crop? crop = crops.FirstOrDefault(crop => crop.Id == foundCropInstance.CropId);
-            if (crop is not null)
+            if (/* bCropHasDestroyItems = */ crop is not null && !crop.DestroyItems.IsEmpty())
             {
-                // TODO: Give user the destroy items
+                var tradeRequest = new TradeRequest
+                {
+                    UserA = new UserTradeRequest
+                    {
+                        Items = crop!.DestroyItems!
+                    },
+                    UserB = new UserTradeRequest
+                    {
+                        UserId = request.UserId
+                    }
+                };
+
+                var transactionResult = await transactionsClient.Trade(tradeRequest);
+                if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+                {
+                    logger.LogError($"Could not transfer Destroy Items from Crop '{crop.Id}' to User '{request.UserId}'");
+                }
             }
         }
         
@@ -268,6 +317,12 @@ public class UserCropsController(
                 continue;
             }
 
+            if (string.IsNullOrEmpty(crop.FertiliserItemId))
+            {
+                logger.LogWarning($"User wanted to fertilise User Crop but Crop '{foundCropInstance.CropId}' does not have a Fertiliser");
+                continue;
+            }
+
             // Max Fertilise time should not exceed the remaining Harvest time / harvest speed multiplier.
             // i.e.
             // harvest speed multiplier = 2.
@@ -282,7 +337,22 @@ public class UserCropsController(
                 continue;
             }
             
-            // TODO: Try consume the user's fertiliser items.
+            var tradeRequest = new TradeRequest
+            {
+                UserA = new UserTradeRequest
+                {
+                    UserId = request.UserId,
+                    Items = new List<UserItem>{ new() { ItemId = crop.FertiliserItemId } }
+                },
+                UserB = new UserTradeRequest()
+            };
+
+            var transactionResult = await transactionsClient.Trade(tradeRequest);
+            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            {
+                logger.LogError($"Could not remove Fertilise Items from User '{request.UserId}' for Crop '{crop.Id}'");
+                continue;
+            }
 
             var fertiliseSeconds = crop.HarvestSeconds * options.Value.FertilisationToHarvestPerc;
             
@@ -343,14 +413,29 @@ public class UserCropsController(
                 Crop? existingCrop = await cropsRepo.Get(foundCropInstance.CropId);
                 if (existingCrop?.Type != CropTypes.Plot)
                 {
-                    logger.LogError($"Attempted to seed an empty crop but it is not a Plot. Crop Instance '{requestedCropInstanceId}, Existing Crop: {foundCropInstance.CropId}");
+                    logger.LogError($"Attempted to seed an empty Crop but it is not a Plot. Crop Instance '{requestedCropInstanceId}, Existing Crop: {foundCropInstance.CropId}");
                     continue;
                 }
             }
             
-            // TODO: Consume items for user inventory.
+            var tradeRequest = new TradeRequest
+            {
+                UserA = new UserTradeRequest
+                {
+                    UserId = request.UserId,
+                    Items = crop.CostItems
+                },
+                UserB = new UserTradeRequest()
+            };
 
-            // Plant the seed and change the crop info.
+            var transactionResult = await transactionsClient.Trade(tradeRequest);
+            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            {
+                logger.LogError($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
+                continue;
+            }
+
+            // Plant the seed and change the Crop info.
             foundCropInstance.CropId = request.CropId;
             foundCropInstance.State = CropInstanceStates.Growing;
             foundCropInstance.RemainingHarvestSeconds = crop.HarvestSeconds;

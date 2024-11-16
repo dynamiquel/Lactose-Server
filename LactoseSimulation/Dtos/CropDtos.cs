@@ -1,4 +1,4 @@
-using Lactose.Simulation.Models;
+using Lactose.Economy.Models;
 
 namespace Lactose.Simulation.Dtos.Crops;
 
@@ -19,10 +19,10 @@ public class GetCropResponse
     public required string Id { get; set; }
     public required string Type { get; set; }
     public required string Name { get; set; }
-    public required IList<CropItem> CostItems { get; set; }
+    public required IList<UserItem> CostItems { get; set; }
     public required double HarvestSeconds { get; set; }
-    public required IList<CropItem> HarvestItems { get; set; }
-    public IList<CropItem>? DestroyItems { get; set; }
+    public required IList<UserItem> HarvestItems { get; set; }
+    public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
 }
 
@@ -35,10 +35,10 @@ public class CreateCropRequest
 {
     public required string Type { get; set; }
     public required string Name { get; set; }
-    public required IList<CropItem> CostItems { get; set; }
+    public required IList<UserItem> CostItems { get; set; }
     public required double HarvestSeconds { get; set; }
-    public required IList<CropItem> HarvestItems { get; set; }
-    public IList<CropItem>? DestroyItems { get; set; }
+    public required IList<UserItem> HarvestItems { get; set; }
+    public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
 }
 
@@ -46,10 +46,10 @@ public class UpdateCropRequest
 {
     public required string CropId { get; init; }
     public string? Name { get; set; }
-    public IList<CropItem>? CostItems { get; set; }
+    public IList<UserItem>? CostItems { get; set; }
     public double? HarvestSeconds { get; set; }
-    public IList<CropItem>? HarvestItems { get; set; }
-    public IList<CropItem>? DestroyItems { get; set; }
+    public IList<UserItem>? HarvestItems { get; set; }
+    public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
 }
 

@@ -4,12 +4,6 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Lactose.Economy.Models;
 
-public class UserItem
-{
-    public required string ItemId { get; set; }
-    public required int Quantity { get; set; }
-}
-
 public class UserItems : IBasicKeyValueModel
 {
     [BsonId]
