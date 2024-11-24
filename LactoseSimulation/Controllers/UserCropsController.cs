@@ -22,7 +22,7 @@ public class UserCropsController(
     IOptions<UserCropsOptions> options,
     TransactionsClient transactionsClient) : ControllerBase, IUserCropsController
 {
-    [HttpGet(Name = "Get User Crops")]
+    [HttpPost(Name = "Get User Crops")]
     public async Task<ActionResult<GetUserCropsResponse>> GetCrops(GetUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
@@ -32,7 +32,7 @@ public class UserCropsController(
         return Ok(UserCropsMapper.ToDto(userCrops));
     }
 
-    [HttpGet("simulate", Name = "Simulate User Crops")]
+    [HttpPost("simulate", Name = "Simulate User Crops")]
     public async Task<ActionResult<SimulateUserCropsResponse>> SimulateCrops(SimulateUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
@@ -90,7 +90,7 @@ public class UserCropsController(
         });
     }
 
-    [HttpGet("create", Name = "Create User Crop")]
+    [HttpPost("create", Name = "Create User Crop")]
     public async Task<ActionResult<CreateUserCropResponse>> CreateCrop(CreateUserCropRequest request)
     {
         if (!request.UserId.IsValidObjectId())
@@ -142,7 +142,7 @@ public class UserCropsController(
         });
     }
 
-    [HttpGet("harvest", Name = "Harvest User Crops")]
+    [HttpPost("harvest", Name = "Harvest User Crops")]
     public async Task<ActionResult<HarvestUserCropsResponse>> HarvestCrops(HarvestUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
@@ -216,7 +216,7 @@ public class UserCropsController(
         });
     }
 
-    [HttpGet("destroy", Name = "Destroy User Crops")]
+    [HttpPost("destroy", Name = "Destroy User Crops")]
     public async Task<ActionResult<DestroyUserCropsResponse>> DestroyCrops(DestroyUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
@@ -278,7 +278,7 @@ public class UserCropsController(
         });
     }
 
-    [HttpGet("fertilise", Name = "Fertilise User Crops")]
+    [HttpPost("fertilise", Name = "Fertilise User Crops")]
     public async Task<ActionResult<FertiliseUserCropsResponse>> FertiliseCrops(FertiliseUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
@@ -373,7 +373,7 @@ public class UserCropsController(
         });
     }
 
-    [HttpGet("seed", Name = "Seed User Crops")]
+    [HttpPost("seed", Name = "Seed User Crops")]
     public async Task<ActionResult<SeedUserCropsResponse>> SeedCrop(SeedUserCropRequest request)
     {
         if (!request.UserId.IsValidObjectId())

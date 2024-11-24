@@ -14,7 +14,7 @@ public class UsersController(
     IUsersRepo usersRepo) 
     : ControllerBase
 {
-    [HttpGet("query", Name = "Query Users")]
+    [HttpPost("query", Name = "Query Users")]
     public async Task<ActionResult<QueryUsersResponse>> QueryUsers()
     {
         ISet<string> foundUsers = await usersRepo.Query();
@@ -25,7 +25,7 @@ public class UsersController(
         });
     }
 
-    [HttpGet(Name = "Get User")]
+    [HttpPost(Name = "Get User")]
     public async Task<ActionResult<UserResponse>> GetUser(UserRequest request)
     {
         if (!MongoDB.Bson.ObjectId.TryParse(request.UserId, out _))
@@ -39,7 +39,7 @@ public class UsersController(
         return Ok(UserMapper.ToDto(foundUser));
     }
 
-    [HttpPost(Name = "Create User")]
+    [HttpPost("create", Name = "Create User")]
     public async Task<ActionResult<UserResponse>> CreateUser(CreateUserRequest request)
     {
         var newUser = new User
@@ -56,7 +56,7 @@ public class UsersController(
         return Ok(UserMapper.ToDto(createdUser));
     }
 
-    [HttpDelete(Name = "Delete User")]
+    [HttpPost("delete", Name = "Delete User")]
     public async Task<ActionResult> DeleteUser(UserRequest request)
     {
         if (!request.UserId.IsValidObjectId())

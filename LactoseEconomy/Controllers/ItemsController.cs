@@ -14,7 +14,7 @@ public class ItemsController(
     ILogger<ItemsController> logger,
     IItemsRepo itemsRepo) : ControllerBase, IItemsController
 {
-    [HttpGet("query", Name = "Query Items")]
+    [HttpPost("query", Name = "Query Items")]
     public async Task<ActionResult<QueryItemsResponse>> QueryItems(QueryItemsRequest request)
     {
         ISet<string> foundItems = await itemsRepo.Query();
@@ -25,14 +25,14 @@ public class ItemsController(
         });
     }
     
-    [HttpGet(Name = "Get Items")]
+    [HttpPost(Name = "Get Items")]
     public async Task<ActionResult<GetItemsResponse>> GetItems(GetItemsRequest request)
     {
         var foundItems = await itemsRepo.Get(request.ItemIds.ToHashSet());
         return Ok(ItemMapper.ToDto(foundItems));
     }
 
-    [HttpPost(Name = "Create Item")]
+    [HttpPost("create", Name = "Create Item")]
     public async Task<ActionResult<GetItemResponse>> CreateItem(CreateItemRequest request)
     {
         var newItem = new Item
@@ -49,7 +49,7 @@ public class ItemsController(
         return Ok(ItemMapper.ToDto(createdItem));
     }
 
-    [HttpPatch(Name = "Update Item")]
+    [HttpPost("update", Name = "Update Item")]
     public async Task<ActionResult<GetItemResponse>> UpdateItem(UpdateItemRequest request)
     {
         if (!request.ItemId.IsValidObjectId())
@@ -73,7 +73,7 @@ public class ItemsController(
         return Ok(ItemMapper.ToDto(updatedItem));
     }
 
-    [HttpDelete(Name = "Delete Item")]
+    [HttpPost("delete", Name = "Delete Item")]
     public async Task<ActionResult<DeleteItemsResponse>> DeleteItems(DeleteItemsRequest request)
     {
         if (request.ItemIds is null)

@@ -14,7 +14,7 @@ public class TransactionsController(
     IUserItemsRepo userItemsRepo,
     ILogger<ITransactionsController> logger) : ControllerBase, ITransactionsController
 {
-    [HttpGet("query", Name = "Query Transactions")]
+    [HttpPost("query", Name = "Query Transactions")]
     public async Task<ActionResult<QueryTransactionsResponse>> QueryTransactions(QueryTransactionsRequest request)
     {
         ISet<string> foundItems = await transactionsRepo.Query();
@@ -25,7 +25,7 @@ public class TransactionsController(
         });
     }
 
-    [HttpGet(Name = "Get Transactions")]
+    [HttpPost(Name = "Get Transactions")]
     public async Task<ActionResult<GetTransactionResponse>> GetTransaction([FromBody] GetTransactionRequest request)
     {
         if (!request.TransactionId.IsValidObjectId())
@@ -38,7 +38,7 @@ public class TransactionsController(
         return Ok(TransactionMapper.ToDto(foundTransaction));
     }
 
-    [HttpGet("trade", Name = "Trade")]
+    [HttpPost("trade", Name = "Trade")]
     public async Task<ActionResult<TradeResponse>> Trade([FromBody] TradeRequest request)
     {
         bool bUserAExists = !string.IsNullOrWhiteSpace(request.UserA.UserId);

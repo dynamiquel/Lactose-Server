@@ -15,7 +15,7 @@ public class TransactionsClient(
     {
         var httpRequest = new HttpRequestMessage
         {
-            Method = HttpMethod.Get,
+            Method = HttpMethod.Post,
             RequestUri = new Uri($"{options.Value.Url}/transactions/query"),
             Content = JsonContent.Create(request)
         };
@@ -28,7 +28,7 @@ public class TransactionsClient(
     {
         var httpRequest = new HttpRequestMessage
         {
-            Method = HttpMethod.Get,
+            Method = HttpMethod.Post,
             RequestUri = new Uri($"{options.Value.Url}/transactions"),
             Content = JsonContent.Create(request)
         };
@@ -41,7 +41,7 @@ public class TransactionsClient(
     {
         var httpRequest = new HttpRequestMessage
         {
-            Method = HttpMethod.Get,
+            Method = HttpMethod.Post,
             RequestUri = new Uri($"{options.Value.Url}/transactions/trade"),
             Content = JsonContent.Create(request)
         };

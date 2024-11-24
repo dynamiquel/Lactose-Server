@@ -13,7 +13,7 @@ public class RolesController(
     IRolesRepo rolesRepo) 
     : ControllerBase
 {
-    [HttpGet("query", Name = "Query Roles")]
+    [HttpPost("query", Name = "Query Roles")]
     public async Task<IActionResult> QueryRoles()
     {
         var foundRoles = await rolesRepo.Query();
@@ -23,14 +23,14 @@ public class RolesController(
         });
     }
 
-    [HttpGet(Name = "Get Roles")]
+    [HttpPost(Name = "Get Roles")]
     public async Task<IActionResult> GetRoles(RolesRequest request)
     {
         var foundRoles = await rolesRepo.Get(request.RoleIds.ToHashSet());
         return Ok(RoleMapper.ToDto(foundRoles));
     }
 
-    [HttpPut(Name = "Create Role")]
+    [HttpPost("create", Name = "Create Role")]
     public async Task<IActionResult> CreateRole(CreateRoleRequest request)
     {
         var foundRole = await rolesRepo.Get(request.Id);
@@ -44,7 +44,7 @@ public class RolesController(
         return Ok(RoleMapper.ToDto(createdRole));
     }
 
-    [HttpDelete(Name = "Delete Roles")]
+    [HttpPost("delete", Name = "Delete Roles")]
     public async Task<IActionResult> DeleteRoles(RolesRequest request)
     {
         var deletedRoles = await rolesRepo.Delete(request.RoleIds);

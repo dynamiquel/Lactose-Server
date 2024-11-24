@@ -11,7 +11,6 @@ namespace Lactose.Config.Controllers;
 [Route("[controller]")]
 public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigController
 {
-
     //[Authorize(Permission.Read)]
     [HttpGet("entry", Name = "Get Entry")]
     //[Cache]

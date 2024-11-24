@@ -13,7 +13,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
 {
     static bool IsValidEconomyUser(string userId) => userId.IsValidObjectId() || userId.StartsWith("vendor");
     
-    [HttpGet("query", Name = "Query User Items")]
+    [HttpPost("query", Name = "Query User Items")]
     public async Task<ActionResult<QueryUserItemsResponse>> QueryUserItems(QueryUserItemsRequest request)
     {
         ISet<string> foundItems = await userItemsRepo.Query();
@@ -24,7 +24,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
         });
     }
     
-    [HttpGet(Name = "Get User Items")]
+    [HttpPost(Name = "Get User Items")]
     public async Task<ActionResult<GetUserItemsResponse>> GetUserItems(GetUserItemsRequest request)
     {
         if (!IsValidEconomyUser(request.UserId))
@@ -51,7 +51,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
         return Ok(UserMapper.ToDto(foundUserItems));
     }
 
-    [HttpDelete(Name = "Delete User Items")]
+    [HttpPost("delete", Name = "Delete User Items")]
     public async Task<ActionResult<bool>> DeleteUserItems(GetUserItemsRequest request)
     {
         if (!IsValidEconomyUser(request.UserId))
@@ -61,7 +61,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
         return Ok(result);
     }
 
-    [HttpGet("createVendor", Name = "Create Vendor")]
+    [HttpPost("createVendor", Name = "Create Vendor")]
     public async Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request)
     {
         var fullVendorId = $"vendor-{request.VendorId}";

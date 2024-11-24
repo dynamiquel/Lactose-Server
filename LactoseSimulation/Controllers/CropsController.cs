@@ -14,7 +14,7 @@ public class CropsController(
     ILogger<CropsController> logger,
     ICropsRepo cropsRepo) : ControllerBase, ICropsController
 {
-    [HttpGet("query", Name = "Query Crops")]
+    [HttpPost("query", Name = "Query Crops")]
     public async Task<ActionResult<QueryCropsResponse>> QueryCrops(QueryCropsRequest request)
     {
         ISet<string> foundCrops = await cropsRepo.Query();
@@ -25,14 +25,14 @@ public class CropsController(
         });
     }
     
-    [HttpGet(Name = "Get Crops")]
+    [HttpPost(Name = "Get Crops")]
     public async Task<ActionResult<GetCropsResponse>> GetCrops(GetCropsRequest request)
     {
         var foundCrops = await cropsRepo.Get(request.CropIds.ToHashSet());
         return Ok(CropMapper.ToDto(foundCrops));
     }
 
-    [HttpPost(Name = "Create Crop")]
+    [HttpPost("create", Name = "Create Crop")]
     public async Task<ActionResult<GetCropResponse>> CreateCrop(CreateCropRequest request)
     {
         if (!CropTypes.IsValid(request.Type))
@@ -65,7 +65,7 @@ public class CropsController(
         return Ok(CropMapper.ToDto(createdCrop));
     }
 
-    [HttpPatch(Name = "Update Crop")]
+    [HttpPost("update", Name = "Update Crop")]
     public async Task<ActionResult<GetCropResponse>> UpdateCrop(UpdateCropRequest request)
     {
         if (!request.CropId.IsValidObjectId())
@@ -103,7 +103,7 @@ public class CropsController(
         return Ok(CropMapper.ToDto(updatedCrop));
     }
 
-    [HttpDelete(Name = "Delete Crop")]
+    [HttpPost("delete", Name = "Delete Crop")]
     public async Task<ActionResult<DeleteCropsResponse>> DeleteCrops(DeleteCropsRequest request)
     {
         if (request.CropIds is null)
