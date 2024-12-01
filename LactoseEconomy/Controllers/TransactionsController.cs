@@ -65,7 +65,7 @@ public class TransactionsController(
 
             foreach (var itemToRemove in request.UserA.Items)
             {
-                bool bHasEnoughItem = userAItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.InfiniteQuantity));
+                bool bHasEnoughItem = userAItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.HasInfiniteQuantity()));
                 if (!bHasEnoughItem)
                 {
                     return Ok(new TradeResponse
@@ -92,7 +92,7 @@ public class TransactionsController(
 
             foreach (var itemToRemove in request.UserB.Items)
             {
-                bool bHasEnoughItem = userBItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.InfiniteQuantity));
+                bool bHasEnoughItem = userBItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.HasInfiniteQuantity()));
                 if (!bHasEnoughItem)
                 {
                     return Ok(new TradeResponse

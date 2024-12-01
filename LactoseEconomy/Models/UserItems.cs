@@ -17,7 +17,7 @@ public class UserItems : IBasicKeyValueModel
         var existingItem = Items.SingleOrDefault(x => x.ItemId == itemId);
         if (existingItem is not null)
         {
-            if (!existingItem.InfiniteQuantity)
+            if (!existingItem.HasInfiniteQuantity())
                 existingItem.Quantity += quantity;
             
             return existingItem;
@@ -32,7 +32,7 @@ public class UserItems : IBasicKeyValueModel
         var existingItem = Items.SingleOrDefault(x => x.ItemId == itemId);
         if (existingItem is not null)
         {
-            if (existingItem.InfiniteQuantity)
+            if (existingItem.HasInfiniteQuantity())
                 return existingItem;
             
             existingItem.Quantity -= quantity;
