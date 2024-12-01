@@ -48,6 +48,10 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
         return Ok(ConfigEntryMapper.ToConfigDto(config));
     }
 
+    [HttpPost("config", Name = "Get Config (via Post)")]
+    public Task<ActionResult<ConfigResponse>> GetConfigViaPost(ConfigRequest? readRequest) =>
+        GetConfig(readRequest);
+
     //[Authorize(Permission.Write)]
     [HttpPut("entry", Name = "Set Entry")]
     public async Task<ActionResult<ConfigEntryResponse>> SetEntry(UpdateConfigEntryRequest writeRequest)
