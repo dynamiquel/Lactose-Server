@@ -95,25 +95,34 @@ public class UserCropsController(
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
-
-        Crop? crop = await cropsRepo.Get(request.CropId);
-        if (crop is null)
-            return BadRequest($"No Crop could be found with ID: {request.CropId}");
         
-        var tradeRequest = new TradeRequest
+        Crop? crop;
+        if (string.IsNullOrEmpty(request.CropId))
         {
-            UserA = new UserTradeRequest
-            {
-                UserId = request.UserId,
-                Items = crop.CostItems
-            },
-            UserB = new UserTradeRequest()
-        };
+            // Empty crop ID means it is an empty plot.
+            crop = null;
+        }
+        else
+        {
+            crop = await cropsRepo.Get(request.CropId);
+            if (crop is null)
+                return BadRequest($"No Crop could be found with ID: {request.CropId}");
 
-        var transactionResult = await transactionsClient.Trade(tradeRequest);
-        if (transactionResult.Value?.Reason != TradeResponseReason.Success)
-            return BadRequest($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
-        
+            var tradeRequest = new TradeRequest
+            {
+                UserA = new UserTradeRequest
+                {
+                    UserId = request.UserId,
+                    Items = crop.CostItems
+                },
+                UserB = new UserTradeRequest()
+            };
+
+            var transactionResult = await transactionsClient.Trade(tradeRequest);
+            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+                return BadRequest($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
+        }
+
         var userCrops = await userCropsRepo.Get(request.UserId) ?? new UserCropInstances
         {
             Id = request.UserId,
@@ -126,8 +135,8 @@ public class UserCropsController(
             CropId = request.CropId,
             Location = request.CropLocation,
             Rotation = request.CropRotation,
-            State = CropInstanceStates.Growing,
-            RemainingHarvestSeconds = crop.HarvestSeconds
+            State = crop is not null ? CropInstanceStates.Growing : CropInstanceStates.Empty,
+            RemainingHarvestSeconds = crop?.HarvestSeconds ?? 0
         };
         
         userCrops.CropInstances.Add(cropInstance);
