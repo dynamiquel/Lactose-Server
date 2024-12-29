@@ -38,7 +38,7 @@ public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> 
         UsingObjectIds = bsonRepresentationAttribute?.Representation == BsonType.ObjectId;
     }
 
-    public async Task<ISet<string>> Query()
+    public Task<ISet<string>> Query()
     {
         Logger.LogInformation("Querying items");
 
@@ -50,10 +50,10 @@ public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> 
         
         Logger.LogInformation($"Queried {foundItems.Count} items");
 
-        return foundItems;
+        return Task.FromResult<ISet<string>>(foundItems);
     }
 
-    public async Task<ICollection<TModel>> Get(ICollection<string> ids)
+    public Task<ICollection<TModel>> Get(ICollection<string> ids)
     {
         if (UsingObjectIds)
         {
@@ -64,7 +64,7 @@ public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> 
             if (ids.IsEmpty())
             {
                 Logger.LogError("No valid IDs were provided");
-                return new List<TModel>();
+                return Task.FromResult<ICollection<TModel>>(new List<TModel>());
             }
         }
 
@@ -79,7 +79,7 @@ public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> 
         
         Logger.LogInformation($"Retrieved {foundItems.Count} items");
 
-        return foundItems;
+        return Task.FromResult<ICollection<TModel>>(foundItems);
     }
 
     public async Task<TModel?> Set(TModel model)

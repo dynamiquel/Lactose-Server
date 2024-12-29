@@ -4,9 +4,9 @@ namespace Lactose.Simulation.Models;
 
 public static class CropInstanceStates
 {
-    public readonly static string Empty = "Empty";
-    public readonly static string Growing = "Growing";
-    public readonly static string Harvestable = "Harvestable";
+    public static readonly string Empty = "Empty";
+    public static readonly string Growing = "Growing";
+    public static readonly string Harvestable = "Harvestable";
 
     public static bool IsValid(string cropState)
     {

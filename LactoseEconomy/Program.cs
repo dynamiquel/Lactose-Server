@@ -10,5 +10,6 @@ internal sealed class EconomyApi : LactoseWebApp.BaseApp
         builder.Services.AddSingleton<IItemsRepo, MongoItemsRepo>();
         builder.Services.AddSingleton<IUserItemsRepo, MongoUserItemsRepo>();
         builder.Services.AddSingleton<ITransactionsRepo, MongoTransactionsRepo>();
+        builder.Services.AddSingleton<IShopItemsRepo, MongoShopItemsRepo>();
     }
 }

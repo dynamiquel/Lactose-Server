@@ -21,7 +21,7 @@ public class ItemsController(
 
         return Ok(new QueryItemsResponse
         {
-            ItemIds =  foundItems.ToList()
+            ItemIds = foundItems.ToList()
         });
     }
     

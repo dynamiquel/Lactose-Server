@@ -16,5 +16,4 @@ public partial class ItemMapper
             Items = items.Select(ToDto).ToList()
         };
     }
-
 }
