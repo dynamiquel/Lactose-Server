@@ -1,5 +1,6 @@
 using System.Text;
 using Lactose.Economy.Data.Repos;
+using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Mapping;
 using Lactose.Economy.Models;
 using LactoseEconomyContracts.Dtos.ShopItems;
@@ -13,7 +14,8 @@ namespace Lactose.Economy.Controllers;
 public class ShopItemsController(
     ILogger<ShopItemsController> logger,
     IShopItemsRepo shopItemsRepo,
-    IUserItemsRepo userItemsRepo) : ControllerBase, IShopItemsController
+    IUserItemsRepo userItemsRepo,
+    TransactionsController transactionsController) : ControllerBase, IShopItemsController
 {
     [HttpPost(Name = "Get Item")]
     public async Task<ActionResult<GetShopItemsRequest>> GetShopItems(GetShopItemsRequest request)
@@ -153,5 +155,61 @@ public class ShopItemsController(
             return StatusCode(500, $"Could not delete user shop for user with ID '{request.UserId}'");
         
         return Ok();
+    }
+
+    [HttpPost("trade")]
+    public async Task<ActionResult<ShopItemTradeResponse>> PerformTrade(ShopItemTradeRequest request)
+    {
+        // Get the Shop Item.
+        var shopItem = await shopItemsRepo.Get(request.ShopItemId);
+        if (shopItem is null)
+            return NotFound();
+        
+        var desiredUserItem = new UserItem
+        {
+            ItemId = shopItem.ItemId,
+            Quantity = 1
+        };
+        
+        // Create the Trade Request.
+        var shopUserTradeItems = new List<UserItem>();
+        var instigatingUserTradeItems = new List<UserItem>();
+        if (shopItem.TransactionType == ShopItemTransactionTypes.Buy)
+        {
+            shopUserTradeItems.AddRange(shopItem.TransactionItems);
+            instigatingUserTradeItems.Add(desiredUserItem);
+        }
+        else if (shopItem.TransactionType == ShopItemTransactionTypes.Sell)
+        {
+            shopUserTradeItems.Add(desiredUserItem);
+            instigatingUserTradeItems.AddRange(shopItem.TransactionItems);
+        }
+        else
+        {
+            return BadRequest("Unknown transaction type");
+        }
+        
+        var tradeRequest = new TradeRequest
+        {
+            UserA = new UserTradeRequest
+            {
+                UserId = request.UserId,
+                Items = instigatingUserTradeItems
+            },
+            UserB = new UserTradeRequest
+            {
+                UserId = shopItem.UserId,
+                Items = shopUserTradeItems
+            }
+        };
+
+        var tradeResult = await transactionsController.Trade(tradeRequest);
+        if (tradeResult.Result is ObjectResult objectResult)
+            return Ok(new ShopItemTradeResponse
+            {
+                Reason = (objectResult.Value as TradeResponse)!.Reason
+            });
+        
+        return tradeResult.Result ?? StatusCode(500);
     }
 }

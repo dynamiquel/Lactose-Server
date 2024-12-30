@@ -1,3 +1,4 @@
+using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
 
 namespace LactoseEconomyContracts.Dtos.ShopItems;
@@ -64,4 +65,15 @@ public class DeleteUserShopRequest
 public class DeleteUserShopResponse
 {
     
+}
+
+public class ShopItemTradeRequest
+{
+    public required string UserId { get; set; }
+    public required string ShopItemId { get; set; }
+}
+
+public class ShopItemTradeResponse
+{
+    public TradeResponseReason Reason { get; set; }
 }

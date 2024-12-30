@@ -97,7 +97,7 @@ public abstract class BaseApp
         builder.Services.AddControllers(options =>
         {
             options.Filters.Add<LogActionFilter>();
-        });
+        }).AddControllersAsServices();
     }
 
     /// <summary>

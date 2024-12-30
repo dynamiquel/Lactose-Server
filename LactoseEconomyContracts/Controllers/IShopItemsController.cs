@@ -9,4 +9,5 @@ public interface IShopItemsController
     Task<ActionResult<GetUserShopItemsResponse>> GetUserShopItems(GetUserShopItemsRequest request);
     Task<ActionResult<UpdateUserShopItemsResponse>> UpdateUserShopItems(UpdateUserShopItemsRequest request);
     Task<ActionResult<DeleteUserShopResponse>> DeleteUserShop(DeleteUserShopRequest request);
+    Task<ActionResult<ShopItemTradeResponse>> PerformTrade(ShopItemTradeRequest request);
 }
