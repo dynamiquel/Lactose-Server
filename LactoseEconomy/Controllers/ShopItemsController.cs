@@ -168,21 +168,27 @@ public class ShopItemsController(
         var desiredUserItem = new UserItem
         {
             ItemId = shopItem.ItemId,
-            Quantity = 1
+            Quantity = request.Quantity
         };
-        
+
+        var desiredShopItems = shopItem.TransactionItems.Select(transactionItem => new UserItem
+        {
+            ItemId = transactionItem.ItemId, 
+            Quantity = transactionItem.Quantity * request.Quantity
+        }).ToList();
+
         // Create the Trade Request.
         var shopUserTradeItems = new List<UserItem>();
         var instigatingUserTradeItems = new List<UserItem>();
         if (shopItem.TransactionType == ShopItemTransactionTypes.Buy)
         {
-            shopUserTradeItems.AddRange(shopItem.TransactionItems);
+            shopUserTradeItems.AddRange(desiredShopItems);
             instigatingUserTradeItems.Add(desiredUserItem);
         }
         else if (shopItem.TransactionType == ShopItemTransactionTypes.Sell)
         {
             shopUserTradeItems.Add(desiredUserItem);
-            instigatingUserTradeItems.AddRange(shopItem.TransactionItems);
+            instigatingUserTradeItems.AddRange(desiredShopItems);
         }
         else
         {

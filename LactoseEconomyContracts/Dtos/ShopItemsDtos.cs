@@ -71,6 +71,7 @@ public class ShopItemTradeRequest
 {
     public required string UserId { get; set; }
     public required string ShopItemId { get; set; }
+    public int Quantity { get; set; } = 1;
 }
 
 public class ShopItemTradeResponse
