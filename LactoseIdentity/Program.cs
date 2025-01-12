@@ -1,4 +1,6 @@
 using Lactose.Identity.Data.Repos;
+using Lactose.Identity.Models;
+using Microsoft.AspNetCore.Identity;
 
 new IdentityApi().Start(args);
 
@@ -17,6 +19,7 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
         
         builder.Services.AddSingleton<IRolesRepo, MongoRolesRepo>();
         builder.Services.AddSingleton<IUsersRepo, MongoUsersRepo>();
+        builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
     }
 
     protected override void OnBuilt(WebApplication app)

@@ -13,7 +13,7 @@ namespace LactoseWebApp.Options;
 /// Simply add the <see cref="OptionsAttribute"/> to a class containing the desired properties and it will determine
 /// which part of the Configuration file it relates to.
 ///
-/// <seealso cref="MushroomWebApp.Service.ServiceOptions"/>
+/// <seealso cref="LactoseWebApp.Service.ServiceOptions"/>
 /// </summary>
 public static class OptionsExtensions
 {

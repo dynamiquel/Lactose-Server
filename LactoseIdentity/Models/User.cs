@@ -13,4 +13,6 @@ public class User : IBasicKeyValueModel
     public ISet<string> Roles { get; set; } = new HashSet<string>();
     public DateTime TimeCreated { get; set; }
     public DateTime TimeLastLoggedIn { get; set; }
+    public string? Email { get; set; }
+    public string? PasswordHash { get; set; }
 }

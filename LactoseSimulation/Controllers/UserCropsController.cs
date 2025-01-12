@@ -8,6 +8,7 @@ using Lactose.Simulation.Models;
 using Lactose.Simulation.Options;
 using LactoseWebApp;
 using LactoseWebApp.Mongo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -22,6 +23,7 @@ public class UserCropsController(
     IOptions<UserCropsOptions> options,
     TransactionsClient transactionsClient) : ControllerBase, IUserCropsController
 {
+    [Authorize]
     [HttpPost(Name = "Get User Crops")]
     public async Task<ActionResult<GetUserCropsResponse>> GetCrops(GetUserCropsRequest request)
     {

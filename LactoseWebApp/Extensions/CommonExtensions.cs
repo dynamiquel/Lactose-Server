@@ -49,6 +49,7 @@ public static class CommonExtensions
         var typesWithAttribute = new List<Type>();
         
         GetTypesWithAttributeFromAssembly<T>(Assembly.GetEntryAssembly(), typesWithAttribute);
+        GetTypesWithAttributeFromAssembly<T>(Assembly.GetCallingAssembly(), typesWithAttribute);
 
         return typesWithAttribute;
     }

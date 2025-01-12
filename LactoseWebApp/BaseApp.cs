@@ -1,3 +1,5 @@
+using Lactose.Identity.Options;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Filters;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
@@ -93,6 +95,13 @@ public abstract class BaseApp
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddOptions(builder.Configuration);
 
+        var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
+        if (authOptions is { Enabled: true })
+        {
+            builder.Services.AddJwtAuthentication(authOptions);
+            builder.Services.AddAuthorization();
+        }
+
         builder.Services.AddServiceInfo(builder.Configuration);
         builder.Services.AddControllers(options =>
         {
@@ -115,6 +124,13 @@ public abstract class BaseApp
         {
             app.UseExceptionHandler("/Error", createScopeForErrors: true);
             //app.UseHsts();
+        }
+        
+        var authOptions = app.Configuration.TryGetOptions<AuthOptions>();
+        if (authOptions is { Enabled: true })
+        {
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
 
         app.MapControllers();
