@@ -45,11 +45,8 @@ public class AuthController : ControllerBase
      
         logger.LogInformation($"Using Auth Options: {_authOptions.Value.ToIndentedJson()}");
         
-        if (string.IsNullOrWhiteSpace(authOptions.Value.JwtTokenKey))
-            throw new SecurityTokenEncryptionKeyNotFoundException("No JwtTokenKey found");
-        
         _tokenSigningCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authOptions.Value.JwtTokenKey)), 
+            new SymmetricSecurityKey(JwtServiceExtensions.GetJwtTokenKey(authOptions.Value.JwtTokenKey)), 
             SecurityAlgorithms.HmacSha256);
     }
 
@@ -386,7 +383,7 @@ public class AuthController : ControllerBase
         var token = _tokenHandler.ReadJsonWebToken(refreshTokenJwt);
         TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authOptions.Value.JwtTokenKey)),
+            IssuerSigningKey = _tokenSigningCredentials.Key,
             ValidIssuer = _authOptions.Value.JwtIssuer,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,

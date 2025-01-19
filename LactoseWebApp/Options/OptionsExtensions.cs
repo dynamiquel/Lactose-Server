@@ -72,9 +72,9 @@ public static class OptionsExtensions
    static void SetOptionFieldFromConfigDirect<T>(IConfigurationSection configurationSection, PropertyInfo property, T options)
    {
        object? value = configurationSection.GetValue(property.PropertyType, property.Name);
-       if (!property.PropertyType.IsNullable() && value is null)
-           throw new RequiredOptionsFieldNotFoundException<T>(property);
-
+       if (value is null) 
+           return;
+       
        property.SetValue(options, value);
    }
    

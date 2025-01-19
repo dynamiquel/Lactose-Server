@@ -8,7 +8,8 @@ public class AuthOptions
     public bool Enabled { get; set; } = false;
     public bool UseCookieForAccessToken { get; set; } = true;
     public bool UseCookieForRefreshToken { get; set; } = true;
-    public string JwtTokenKey { get; set; } = string.Empty;
+    // Can be the token as a value or as a path.
+    public string JwtTokenKey { get; set; } = "/run/secrets/lactose-jwt-key";
     public string JwtIssuer { get; set; } = "https://lactose.mookrata.ovh";
     public string JwtAudience { get; set; } = "https://lactose.mookrata.ovh";
     public int JwtExpireMinutes { get; set; } = 30;

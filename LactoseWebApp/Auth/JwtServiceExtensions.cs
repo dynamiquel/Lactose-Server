@@ -14,9 +14,9 @@ public static class JwtServiceExtensions
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authOptions.JwtTokenKey)),
-                    ValidIssuer = "https://lactose.mookrata.ovh",
-                    ValidAudience = "https://lactose.mookrata.ovh",
+                    IssuerSigningKey = new SymmetricSecurityKey(GetJwtTokenKey(authOptions.JwtTokenKey)),
+                    ValidIssuer = authOptions.JwtIssuer,
+                    ValidAudience = authOptions.JwtAudience,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     ValidateIssuer = true,
@@ -61,5 +61,16 @@ public static class JwtServiceExtensions
             token = context.Request.Cookies[AuthDefaults.JwtAccessTokenCookieName];
 
         return token;
+    }
+
+    public static byte[] GetJwtTokenKey(string tokenKey)
+    {
+        if (string.IsNullOrWhiteSpace(tokenKey))
+            throw new SecurityTokenEncryptionKeyNotFoundException("No JwtTokenKey found");
+        
+        if (tokenKey.Contains('/'))
+            return File.ReadAllBytes(tokenKey);
+        
+        return Encoding.UTF8.GetBytes(tokenKey);
     }
 }
