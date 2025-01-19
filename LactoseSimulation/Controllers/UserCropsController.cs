@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Lactose.Economy;
 using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
@@ -29,6 +31,9 @@ public class UserCropsController(
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanReadThisUserCrops(request))
+            return Unauthorized("You cannot view crops for this user");
 
         UserCropInstances? userCrops = await userCropsRepo.Get(request.UserId);
         return Ok(UserCropsMapper.ToDto(userCrops));
@@ -92,11 +97,15 @@ public class UserCropsController(
         });
     }
 
+    [Authorize]
     [HttpPost("create", Name = "Create User Crop")]
     public async Task<ActionResult<CreateUserCropResponse>> CreateCrop(CreateUserCropRequest request)
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanWriteThisUserCrops(request))
+            return Unauthorized("You cannot create crops for this user");
         
         Crop? crop;
         if (string.IsNullOrEmpty(request.CropId))
@@ -153,11 +162,15 @@ public class UserCropsController(
         });
     }
 
+    [Authorize]
     [HttpPost("harvest", Name = "Harvest User Crops")]
     public async Task<ActionResult<HarvestUserCropsResponse>> HarvestCrops(HarvestUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanWriteThisUserCrops(request))
+            return Unauthorized("You cannot harvest crops for this user");
 
         UserCropInstances? userCrops = await userCropsRepo.Get(request.UserId);
         if (userCrops is null)
@@ -227,11 +240,15 @@ public class UserCropsController(
         });
     }
 
+    [Authorize]
     [HttpPost("destroy", Name = "Destroy User Crops")]
     public async Task<ActionResult<DestroyUserCropsResponse>> DestroyCrops(DestroyUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanWriteThisUserCrops(request))
+            return Unauthorized("You cannot destroy crops for this user");
         
         UserCropInstances? userCrops = await userCropsRepo.Get(request.UserId);
         if (userCrops is null)
@@ -289,11 +306,15 @@ public class UserCropsController(
         });
     }
 
+    [Authorize]
     [HttpPost("fertilise", Name = "Fertilise User Crops")]
     public async Task<ActionResult<FertiliseUserCropsResponse>> FertiliseCrops(FertiliseUserCropsRequest request)
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanWriteThisUserCrops(request))
+            return Unauthorized("You cannot fertilise crops for this user");
 
         UserCropInstances? userCrops = await userCropsRepo.Get(request.UserId);
         if (userCrops is null)
@@ -384,11 +405,15 @@ public class UserCropsController(
         });
     }
 
+    [Authorize]
     [HttpPost("seed", Name = "Seed User Crops")]
     public async Task<ActionResult<SeedUserCropsResponse>> SeedCrop(SeedUserCropRequest request)
     {
         if (!request.UserId.IsValidObjectId())
             return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanWriteThisUserCrops(request))
+            return Unauthorized("You cannot seed crops for this user");
 
         UserCropInstances? userCrops = await userCropsRepo.Get(request.UserId);
         if (userCrops is null)
@@ -462,5 +487,17 @@ public class UserCropsController(
         {
             SeededCropInstanceIds = seededCropInstanceIds
         });
+    }
+    
+    bool CanWriteThisUserCrops(UserRequest request)
+    {
+        return request.UserId == User.FindFirstValue(JwtRegisteredClaimNames.Sub) && User.HasClaim(Permissions.WriteSelf, "true") 
+               || User.HasClaim(Permissions.WriteOthers, "true");
+    }
+
+    bool CanReadThisUserCrops(UserRequest request)
+    {
+        return request.UserId == User.FindFirstValue(JwtRegisteredClaimNames.Sub) && User.HasClaim(Permissions.ReadSelf, "true") 
+               || User.HasClaim(Permissions.ReadOthers, "true");
     }
 }

@@ -1,8 +1,10 @@
 using Lactose.Identity.Options;
 using LactoseWebApp.Auth;
+using LactoseWebApp.Auth.Permissions;
 using LactoseWebApp.Filters;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
+using Microsoft.AspNetCore.Authentication;
 using Serilog;
 using Serilog.Formatting.Display;
 
@@ -94,10 +96,13 @@ public abstract class BaseApp
         // Ideally, the Options system should be used instead.
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddOptions(builder.Configuration);
+        builder.Services.AddHttpClient();
 
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
         if (authOptions is { Enabled: true })
         {
+            builder.Services.AddSingleton<PermissionsService>();
+            builder.Services.AddScoped<IClaimsTransformation, PermissionClaimsTransformation>();
             builder.Services.AddJwtAuthentication(authOptions);
             builder.Services.AddAuthorization();
         }

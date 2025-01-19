@@ -26,7 +26,7 @@ public static class JwtServiceExtensions
                 // Remove the stupid translation ASP.NET does for claim names.
                 // I.e. by default, "email" would translate to "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email"
                 options.MapInboundClaims = false;
-                
+
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
@@ -37,7 +37,7 @@ public static class JwtServiceExtensions
                         // If no token found, check for a cookie with the token.
                         if (string.IsNullOrEmpty(token))
                             token = context.Request.Cookies[AuthDefaults.JwtAccessTokenCookieName];
-                        
+
                         context.Token = token;
                         return Task.CompletedTask;
                     }

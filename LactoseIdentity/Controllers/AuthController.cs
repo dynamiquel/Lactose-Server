@@ -1,12 +1,12 @@
 using System.Globalization;
 using System.Security.Claims;
-using System.Text;
 using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Auth;
 using Lactose.Identity.Models;
 using Lactose.Identity.Options;
 using LactoseWebApp;
 using LactoseWebApp.Auth;
+using LactoseWebApp.Auth.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +28,8 @@ public class AuthController : ControllerBase
     readonly IOptions<AuthOptions> _authOptions;
     readonly IPasswordHasher<User> _passwordHasher;
     readonly JsonWebTokenHandler _tokenHandler = new();
+    readonly IOptions<NewUserOptions> _newUserOptions;
+    readonly IOptions<PermissionsOptions> _permissionsOptions;
 
     public AuthController(
         ILogger<AuthController> logger,
@@ -35,13 +37,17 @@ public class AuthController : ControllerBase
         IRefreshTokensRepo refreshTokensRepo,
         IOptions<AuthOptions> authOptions,
         IPasswordHasher<User> passwordHasher,
-        UsersController usersController)
+        UsersController usersController,
+        IOptions<NewUserOptions> newUserOptions,
+        IOptions<PermissionsOptions> permissionsOptions)
     {
         _usersRepo = usersRepo;
         _refreshTokensRepo = refreshTokensRepo;
         _passwordHasher = passwordHasher;
         _usersController = usersController;
         _authOptions = authOptions;
+        _newUserOptions = newUserOptions;
+        _permissionsOptions = permissionsOptions;
      
         logger.LogInformation($"Using Auth Options: {_authOptions.Value.ToIndentedJson()}");
         
@@ -123,7 +129,8 @@ public class AuthController : ControllerBase
         {
             DisplayName = request.DisplayName,
             Email = request.Email,
-            TimeCreated = DateTime.UtcNow
+            TimeCreated = DateTime.UtcNow,
+            Roles = _newUserOptions.Value.DefaultRoles.ToHashSet()
         };
         newUser.PasswordHash = _passwordHasher.HashPassword(newUser, request.Password);
 
@@ -215,7 +222,8 @@ public class AuthController : ControllerBase
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddDays(-1)
+                    Expires = DateTimeOffset.UtcNow.AddDays(-1),
+                    Path = GetRefreshActionRelativeUrl()
                 });
         }
 
@@ -238,6 +246,9 @@ public class AuthController : ControllerBase
             DisplayName = User.FindFirstValue(JwtRegisteredClaimNames.Name),
             Email = User.FindFirstValue(JwtRegisteredClaimNames.Email),
             TokenExpires = User.FindFirstValue(JwtRegisteredClaimNames.Exp),
+            Roles = User.Claims
+                .Where(c => c.Type.StartsWith(_permissionsOptions.Value.RoleClaimPrefix))
+                .Select(c => c.Type).ToList(),
             Token = jwt
         });
     }

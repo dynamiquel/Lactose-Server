@@ -3,10 +3,12 @@ using LactoseWebApp.Types;
 
 namespace Lactose.Simulation.Dtos.UserCrops;
 
-public class GetUserCropsRequest
+public class UserRequest
 {
     public required string UserId { get; set; }
 }
+
+public class GetUserCropsRequest : UserRequest;
 
 public class GetUserCropsResponse
 {
@@ -14,10 +16,7 @@ public class GetUserCropsResponse
     public IList<CropInstance> CropInstances { get; set; } = new List<CropInstance>();
 }
 
-public class SimulateUserCropsRequest
-{
-    public required string UserId { get; set; }
-}
+public class SimulateUserCropsRequest : UserRequest;
 
 public class SimulateUserCropsResponse
 {
@@ -25,9 +24,8 @@ public class SimulateUserCropsResponse
     public DateTime NewSimulationTime { get; set; }
 }
 
-public class CreateUserCropRequest
+public class CreateUserCropRequest : UserRequest
 {
-    public required string UserId { get; set; }
     public required string CropId { get; set; }
     public required Vector CropLocation { get; set; }
     public required Vector CropRotation { get; set; }
@@ -38,9 +36,8 @@ public class CreateUserCropResponse
     public required string UserCropInstanceId { get; set; }
 }
 
-public class HarvestUserCropsRequest
+public class HarvestUserCropsRequest : UserRequest
 {
-    public required string UserId { get; set; }
     public required IList<string> CropInstanceIds { get; set; }
 }
 
@@ -49,9 +46,8 @@ public class HarvestUserCropsResponse
     public required IList<string> HarvestedCropInstanceIds { get; set; }
 }
 
-public class DestroyUserCropsRequest
+public class DestroyUserCropsRequest : UserRequest
 {
-    public required string UserId { get; set; }
     public required IList<string> CropInstanceIds { get; set; }
 }
 
@@ -60,9 +56,8 @@ public class DestroyUserCropsResponse
     public required IList<string> DestroyedCropInstanceIds { get; set; }
 }
 
-public class FertiliseUserCropsRequest
+public class FertiliseUserCropsRequest : UserRequest
 {
-    public required string UserId { get; set; }
     public required IList<string> CropInstanceIds { get; set; }
 }
 
@@ -71,9 +66,8 @@ public class FertiliseUserCropsResponse
     public required IList<string> FertilisedCropInstanceIds { get; set; }
 }
 
-public class SeedUserCropRequest
+public class SeedUserCropRequest : UserRequest
 {
-    public required string UserId { get; set; }
     public required IList<string> CropInstanceIds { get; set; }
     public required string CropId { get; set; }
 }

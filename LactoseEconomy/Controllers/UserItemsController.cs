@@ -1,8 +1,11 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Lactose.Economy.Data.Repos;
 using Lactose.Economy.Dtos.UserItems;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using LactoseWebApp.Mongo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Economy.Controllers;
@@ -14,6 +17,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     static bool IsValidEconomyUser(string userId) => userId.IsValidObjectId() || userId.StartsWith("vendor");
     
     [HttpPost("query", Name = "Query User Items")]
+    [Authorize]
     public async Task<ActionResult<QueryUserItemsResponse>> QueryUserItems(QueryUserItemsRequest request)
     {
         ISet<string> foundItems = await userItemsRepo.Query();
@@ -25,6 +29,7 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     }
     
     [HttpPost(Name = "Get User Items")]
+    [Authorize]
     public async Task<ActionResult<GetUserItemsResponse>> GetUserItems(GetUserItemsRequest request)
     {
         if (!IsValidEconomyUser(request.UserId))
@@ -52,16 +57,21 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     }
 
     [HttpPost("delete", Name = "Delete User Items")]
+    [Authorize]
     public async Task<ActionResult<bool>> DeleteUserItems(GetUserItemsRequest request)
     {
         if (!IsValidEconomyUser(request.UserId))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
+        
+        if (request.UserId != User.FindFirstValue(JwtRegisteredClaimNames.Sub))
+            return Unauthorized("You cannot delete items of another user");
         
         bool result = await userItemsRepo.Delete(request.UserId);
         return Ok(result);
     }
 
     [HttpPost("createVendor", Name = "Create Vendor")]
+    [Authorize]
     public async Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request)
     {
         var fullVendorId = $"vendor-{request.VendorId}";

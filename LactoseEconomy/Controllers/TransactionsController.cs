@@ -3,6 +3,7 @@ using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using LactoseWebApp.Mongo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Economy.Controllers;
@@ -15,6 +16,7 @@ public class TransactionsController(
     ILogger<ITransactionsController> logger) : ControllerBase, ITransactionsController
 {
     [HttpPost("query", Name = "Query Transactions")]
+    [Authorize]
     public async Task<ActionResult<QueryTransactionsResponse>> QueryTransactions(QueryTransactionsRequest request)
     {
         ISet<string> foundItems = await transactionsRepo.Query();
@@ -26,6 +28,7 @@ public class TransactionsController(
     }
 
     [HttpPost(Name = "Get Transactions")]
+    [Authorize]
     public async Task<ActionResult<GetTransactionResponse>> GetTransaction([FromBody] GetTransactionRequest request)
     {
         if (!request.TransactionId.IsValidObjectId())
@@ -39,6 +42,7 @@ public class TransactionsController(
     }
 
     [HttpPost("trade", Name = "Trade")]
+    [Authorize]
     public async Task<ActionResult<TradeResponse>> Trade([FromBody] TradeRequest request)
     {
         bool bUserAExists = !string.IsNullOrWhiteSpace(request.UserA.UserId);
