@@ -8,3 +8,6 @@ public class RolesDatabaseOptions : MongoDatabaseOptions;
 
 [Options]
 public class UsersDatabaseOptions : MongoDatabaseOptions;
+
+[Options(SectionName = "RefreshTokens:Database")]
+public class RefreshTokensDatabaseOptions : MongoDatabaseOptions;

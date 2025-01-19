@@ -1,5 +1,14 @@
 namespace Lactose.Identity.Dtos.Auth;
 
+public class BasicClaims
+{
+    public string? Id { get; set; }
+    public string? DisplayName { get; set; }
+    public string? Email { get; set; }
+    public string? TokenExpires { get; set; }
+    public string? Token { get; set; }
+}
+
 public class LoginRequest
 {
     public required string Email { get; set; }
@@ -25,10 +34,11 @@ public class DetailsRequest;
 
 public class DetailsResponse : BasicClaims;
 
-public class BasicClaims
+
+public class RefreshRequest
 {
-    public string? Id { get; set; }
-    public string? DisplayName { get; set; }
-    public string? Email { get; set; }
-    public string? Token { get; set; }
+    // Optional. Will try to find cookie with refresh token if not set.
+    public string? RefreshToken { get; set; }
 }
+
+public class RefreshResponse : BasicClaims;

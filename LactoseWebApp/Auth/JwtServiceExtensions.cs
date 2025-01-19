@@ -1,6 +1,5 @@
 using System.Text;
 using Lactose.Identity.Options;
-using LactoseWebApp.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,6 +23,10 @@ public static class JwtServiceExtensions
                     ValidateAudience = true
                 };
                 
+                // Remove the stupid translation ASP.NET does for claim names.
+                // I.e. by default, "email" would translate to "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email"
+                options.MapInboundClaims = false;
+                
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
@@ -33,7 +36,7 @@ public static class JwtServiceExtensions
                         
                         // If no token found, check for a cookie with the token.
                         if (string.IsNullOrEmpty(token))
-                            token = context.Request.Cookies[AuthDefaults.JwtCookieName];
+                            token = context.Request.Cookies[AuthDefaults.JwtAccessTokenCookieName];
                         
                         context.Token = token;
                         return Task.CompletedTask;
@@ -44,14 +47,18 @@ public static class JwtServiceExtensions
         return services;
     }
 
-    public static string? GetJwt(this HttpContext context)
+    public static string? GetJwtAccessToken(this HttpContext context)
     {
+        // This is fucking stupid but whatever. ASP.NET abstraction bs.
+        if (context.User.Identity is CaseSensitiveClaimsIdentity identity)
+            return identity.SecurityToken.ToString();
+         
         // Check for the token in the Authorization header first. Assumes 'Bearer {token}' format.
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").LastOrDefault();
                         
         // If no token found, check for a cookie with the token.
         if (string.IsNullOrEmpty(token))
-            token = context.Request.Cookies[AuthDefaults.JwtCookieName];
+            token = context.Request.Cookies[AuthDefaults.JwtAccessTokenCookieName];
 
         return token;
     }
