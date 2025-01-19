@@ -74,7 +74,7 @@ public class AuthController : ControllerBase
         string refreshToken = await CreateJwtRefreshTokenForUser(foundUser);
         string accessToken = CreateJwtAccessTokenForUser(foundUser);
         
-        if (_authOptions.Value.UseCookie)
+        if (_authOptions.Value.UseCookieForAccessToken)
         {
             // As well as the standard JWT Bearer Token in the Authorization Header,
             // the service should also support JWTs being stored in Cookies too as it's
@@ -89,7 +89,10 @@ public class AuthController : ControllerBase
                     SameSite = SameSiteMode.Lax,
                     Expires = DateTimeOffset.UtcNow.AddMinutes(_authOptions.Value.JwtExpireMinutes)
                 });
-            
+        }
+
+        if (_authOptions.Value.UseCookieForRefreshToken)
+        {
             Response.Cookies.Append(
                 AuthDefaults.JwtRefreshTokenCookieName,
                 refreshToken,
@@ -98,7 +101,8 @@ public class AuthController : ControllerBase
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours)
+                    Expires = DateTimeOffset.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours),
+                    Path = GetRefreshActionRelativeUrl()
                 });
         }
 
@@ -133,7 +137,7 @@ public class AuthController : ControllerBase
         string refreshToken = await CreateJwtRefreshTokenForUser(createdUser);
         string accessToken = CreateJwtAccessTokenForUser(createdUser);
 
-        if (_authOptions.Value.UseCookie)
+        if (_authOptions.Value.UseCookieForAccessToken)
         {
             Response.Cookies.Append(
                 AuthDefaults.JwtAccessTokenCookieName,
@@ -145,7 +149,10 @@ public class AuthController : ControllerBase
                     SameSite = SameSiteMode.Lax,
                     Expires = DateTimeOffset.UtcNow.AddMinutes(_authOptions.Value.JwtExpireMinutes)
                 });
-            
+        }
+
+        if (_authOptions.Value.UseCookieForRefreshToken)
+        {
             Response.Cookies.Append(
                 AuthDefaults.JwtRefreshTokenCookieName,
                 refreshToken,
@@ -154,7 +161,8 @@ public class AuthController : ControllerBase
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours)
+                    Expires = DateTimeOffset.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours),
+                    Path = GetRefreshActionRelativeUrl()
                 });
         }
         
@@ -185,7 +193,7 @@ public class AuthController : ControllerBase
         }
         
         // Delete the access and refresh tokens from the client so they can not be reused again.
-        if (_authOptions.Value.UseCookie)
+        if (_authOptions.Value.UseCookieForAccessToken)
         {
             // Force reset the Jwt cookie on the client.
             Response.Cookies.Append(
@@ -198,7 +206,10 @@ public class AuthController : ControllerBase
                     SameSite = SameSiteMode.Lax,
                     Expires = DateTimeOffset.UtcNow.AddDays(-1)
                 });
-            
+        }
+
+        if (_authOptions.Value.UseCookieForRefreshToken)
+        {
             Response.Cookies.Append(
                 AuthDefaults.JwtRefreshTokenCookieName,
                 string.Empty,
@@ -210,6 +221,7 @@ public class AuthController : ControllerBase
                     Expires = DateTimeOffset.UtcNow.AddDays(-1)
                 });
         }
+
 
         return Ok(new LogoutResponse());
     }
@@ -266,7 +278,7 @@ public class AuthController : ControllerBase
         string newRefreshToken = await CreateJwtRefreshTokenForUser(foundUser);
         string newAccessToken = CreateJwtAccessTokenForUser(foundUser);
         
-        if (_authOptions.Value.UseCookie)
+        if (_authOptions.Value.UseCookieForAccessToken)
         {
             // As well as the standard JWT Bearer Token in the Authorization Header,
             // the service should also support JWTs being stored in Cookies too as it's
@@ -281,7 +293,10 @@ public class AuthController : ControllerBase
                     SameSite = SameSiteMode.Lax,
                     Expires = DateTimeOffset.UtcNow.AddMinutes(_authOptions.Value.JwtExpireMinutes)
                 });
-            
+        }
+
+        if (_authOptions.Value.UseCookieForRefreshToken)
+        {
             Response.Cookies.Append(
                 AuthDefaults.JwtRefreshTokenCookieName,
                 newRefreshToken,
@@ -290,7 +305,8 @@ public class AuthController : ControllerBase
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours)
+                    Expires = DateTimeOffset.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours),
+                    Path = GetRefreshActionRelativeUrl()
                 });
         }
         
@@ -368,7 +384,7 @@ public class AuthController : ControllerBase
     async Task<RefreshToken?> ParseRefreshTokenFromJwt(string refreshTokenJwt)
     {
         var token = _tokenHandler.ReadJsonWebToken(refreshTokenJwt);
-        var tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
+        TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authOptions.Value.JwtTokenKey)),
             ValidIssuer = _authOptions.Value.JwtIssuer,
@@ -398,5 +414,13 @@ public class AuthController : ControllerBase
         };
 
         return refreshToken;
+    }
+
+    string GetRefreshActionRelativeUrl()
+    {
+        // Seriously need to find a better way to do this.
+        if (!string.IsNullOrEmpty(HttpContext.Request.PathBase))
+            return $"{HttpContext.Request.PathBase}/auth/refresh";
+        return "/auth/refresh";
     }
 }
