@@ -1,0 +1,17 @@
+version: '3'
+services:
+  acme-sidecar:
+    container_name: acme-sidecar
+    build:
+      context: .
+    image: acme-sidecar
+    environment:
+      - WATCH_DIR=/certs # Directory of the input ACME file
+      - OUTPUT_DIR=/certs # Directory where to output the pem files
+      - PROVIDER=cf # Name of the Certificate Resolver in Traefik
+      - ACME_FILE_NAME=acme.json
+      - USER_UID=1000
+      - USER_GID=1000
+      - FLAT=false # False: Certs will output into sub dirs based on domain name
+    volumes:
+      - ./data/certs:/certs
