@@ -1,7 +1,6 @@
 ﻿name: lactose
 
 volumes:
-  lactose-tmp:
   # Ideally this would use the shared certs dir but it's on a local exfat drive and Traefik wants
   # the file permission set to 600, which isn't possible on exfat.
   # So instead, create a volume just for the acme file. Acme Sidecar will extract the acme file into
