@@ -3,6 +3,8 @@ using Lactose.Config.Models;
 using Lactose.Config.Data.Repositories;
 using Lactose.Config.Mapping;
 using LactoseWebApp;
+using LactoseWebApp.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Config.Controllers;
@@ -11,9 +13,7 @@ namespace Lactose.Config.Controllers;
 [Route("[controller]")]
 public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigController
 {
-    //[Authorize(Permission.Read)]
     [HttpGet("entry", Name = "Get Entry")]
-    //[Cache]
     public async Task<ActionResult<ConfigEntryResponse>> GetEntry(ConfigEntryRequest entryRequest)
     {
         ConfigEntry? entry = await repo.GetEntry(entryRequest);
@@ -23,9 +23,7 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
         return Ok(ConfigEntryMapper.ToDto(entry));
     }
 
-    //[Authorize(Permission.Read)]
     [HttpGet("entry/id", Name = "Get Entry By ID")]
-    //[Cache]
     public async Task<ActionResult<ConfigEntryResponse>> GetEntry(ConfigEntryByIdRequest entryRequest)
     {
         ConfigEntry? entry = await repo.GetEntryById(entryRequest.EntryId);
@@ -35,7 +33,6 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
         return Ok(ConfigEntryMapper.ToDto(entry));
     }
 
-    //[Authorize(Permission.Read)]
     [HttpGet("config", Name = "Get Config")]
     public async Task<ActionResult<ConfigResponse>> GetConfig(ConfigRequest? readRequest)
     {
@@ -52,10 +49,13 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
     public Task<ActionResult<ConfigResponse>> GetConfigViaPost(ConfigRequest? readRequest) =>
         GetConfig(readRequest);
 
-    //[Authorize(Permission.Write)]
     [HttpPut("entry", Name = "Set Entry")]
+    [Authorize]
     public async Task<ActionResult<ConfigEntryResponse>> SetEntry(UpdateConfigEntryRequest writeRequest)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return BadRequest("You do not have permission to update Config");
+        
         var model = ConfigEntryMapper.ToModel(writeRequest);
         var postedEntry = await repo.SetEntry(model);
         if (postedEntry is null)
@@ -65,10 +65,13 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
         return CreatedAtAction(nameof(GetEntry), new { entryId = readDto.Key }, readDto);
     }
 
-    //[Authorize(Permission.Write)]
     [HttpPut("entries", Name = "Set Entries")]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<ConfigEntryResponse>>> SetEntries(IEnumerable<UpdateConfigEntryRequest> writeRequest)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return BadRequest("You do not have permission to update Config");
+
         var models = ConfigEntryMapper.ToModel(writeRequest);
         var postedEntries = await repo.SetEntries(models);
         if (postedEntries.Count == 0)
@@ -78,18 +81,24 @@ public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigControl
         return Ok(readDto);
     }
     
-    //[Authorize(Permission.Write)]
     [HttpDelete("entry/id", Name = "Delete Entry by ID")]
+    [Authorize]
     public async Task<IActionResult> RemoveEntry(ConfigEntryByIdRequest entryRequest)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return BadRequest("You do not have permission to update Config");
+
         var deleted = await repo.RemoveEntry(entryRequest.EntryId);
         return deleted ? Ok() : BadRequest();
     }
 
-    //[Authorize(Permission.Write)]
     [HttpDelete("entries", Name = "Delete Entries")]
+    [Authorize]
     public async Task<IActionResult> RemoveEntries(DeleteConfigRequest deleteRequest)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return BadRequest("You do not have permission to update Config");
+
         if (deleteRequest.EntriesToRemove is null)
         {
             var deletedAll = await repo.Clear();

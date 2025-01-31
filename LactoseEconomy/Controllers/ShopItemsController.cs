@@ -5,6 +5,8 @@ using Lactose.Economy.Mapping;
 using Lactose.Economy.Models;
 using LactoseEconomyContracts.Dtos.ShopItems;
 using LactoseWebApp;
+using LactoseWebApp.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Economy.Controllers;
@@ -18,15 +20,23 @@ public class ShopItemsController(
     TransactionsController transactionsController) : ControllerBase, IShopItemsController
 {
     [HttpPost(Name = "Get Item")]
+    [Authorize]
     public async Task<ActionResult<GetShopItemsRequest>> GetShopItems(GetShopItemsRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.Read))
+            return Unauthorized("You do not have permission to read items");
+        
         var foundShopItems = await shopItemsRepo.Get(request.ShopItemIds);
         return Ok(ShopItemMapper.ToShopItemsDto(foundShopItems));
     }
 
     [HttpPost("usershop", Name = "Get User Shop")]
+    [Authorize]
     public async Task<ActionResult<GetUserShopItemsResponse>> GetUserShopItems(GetUserShopItemsRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.Read))
+            return Unauthorized("You do not have permission to read items");
+
         ICollection<ShopItem> foundShopItems = await shopItemsRepo.GetUserShopItems(request.UserId);
 
         var userShopDto = ShopItemMapper.ToDto(foundShopItems);
@@ -50,10 +60,14 @@ public class ShopItemsController(
     }
 
     [HttpPost("usershop/update", Name = "Update User Shop")]
+    [Authorize]
     public async Task<ActionResult<UpdateUserShopItemsResponse>> UpdateUserShopItems(UpdateUserShopItemsRequest request)
     {
         if (request.NewItems.IsEmpty() && request.ItemIdsToRemove.IsEmpty())
             return BadRequest("You must provide at least one item to update or remove");
+        
+        if (!User.HasBoolClaim(Permissions.Write))
+            return Unauthorized("You do not have permission to write items");
 
         if (!request.NewItems.IsEmpty())
         {
@@ -148,8 +162,12 @@ public class ShopItemsController(
     }
 
     [HttpPost("usershop/delete", Name = "Delete User Shop")]
+    [Authorize]
     public async Task<ActionResult<DeleteUserShopResponse>> DeleteUserShop(DeleteUserShopRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return Unauthorized("You do not have permission to write items");
+        
         bool success = await shopItemsRepo.DeleteUserShopItems(request.UserId);
         if (!success)
             return StatusCode(500, $"Could not delete user shop for user with ID '{request.UserId}'");

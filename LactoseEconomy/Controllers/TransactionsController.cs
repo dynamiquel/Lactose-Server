@@ -2,6 +2,7 @@ using Lactose.Economy.Data.Repos;
 using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,9 @@ public class TransactionsController(
     [Authorize]
     public async Task<ActionResult<QueryTransactionsResponse>> QueryTransactions(QueryTransactionsRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.ReadTransactions))
+            return Unauthorized("You do not have permission to read transactions");
+        
         ISet<string> foundItems = await transactionsRepo.Query();
 
         return Ok(new QueryTransactionsResponse
@@ -33,6 +37,9 @@ public class TransactionsController(
     {
         if (!request.TransactionId.IsValidObjectId())
             return BadRequest($"TransactionId '{request.TransactionId}' is not a valid TransactionId");
+        
+        if (!User.HasBoolClaim(Permissions.ReadTransactions))
+            return Unauthorized("You do not have permission to read transactions");
         
         Transaction? foundTransaction = await transactionsRepo.Get(request.TransactionId);
         if (foundTransaction is null)

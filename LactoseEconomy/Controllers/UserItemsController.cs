@@ -1,9 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Lactose.Economy.Data.Repos;
 using Lactose.Economy.Dtos.UserItems;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +33,12 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     {
         if (!IsValidEconomyUser(request.UserId))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
+        
+        bool bCanRead = User.MatchesId(request.UserId) && User.HasBoolClaim(Permissions.ReadUserSelf) ||
+                        User.HasBoolClaim(Permissions.ReadUserOthers);
+        
+        if (!bCanRead)
+            return Unauthorized($"You do not have permission to read user's '{request.UserId}' items");
 
         UserItems? foundUserItems = await userItemsRepo.Get(request.UserId);
         if (foundUserItems is null)
@@ -63,8 +68,11 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
         if (!IsValidEconomyUser(request.UserId))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
         
-        if (request.UserId != User.FindFirstValue(JwtRegisteredClaimNames.Sub))
-            return Unauthorized("You cannot delete items of another user");
+        bool bCanWrite = User.MatchesId(request.UserId) && User.HasBoolClaim(Permissions.WriteUserSelf) ||
+                         User.HasBoolClaim(Permissions.WriteUserOthers);
+        
+        if (!bCanWrite)
+            return Unauthorized($"You do not have permission to write user's '{request.UserId}' items");
         
         bool result = await userItemsRepo.Delete(request.UserId);
         return Ok(result);
@@ -74,6 +82,9 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
     [Authorize]
     public async Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.WriteVendors))
+            return Unauthorized("You do not have permission to create Vendors");
+        
         var fullVendorId = $"vendor-{request.VendorId}";
         UserItems? existingVendorItems = await userItemsRepo.Get(fullVendorId);
         

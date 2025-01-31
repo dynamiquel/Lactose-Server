@@ -30,6 +30,7 @@ public class AuthController : ControllerBase
     readonly JsonWebTokenHandler _tokenHandler = new();
     readonly IOptions<NewUserOptions> _newUserOptions;
     readonly IOptions<PermissionsOptions> _permissionsOptions;
+    readonly PermissionsService _permissionsService;
 
     public AuthController(
         ILogger<AuthController> logger,
@@ -39,7 +40,8 @@ public class AuthController : ControllerBase
         IPasswordHasher<User> passwordHasher,
         UsersController usersController,
         IOptions<NewUserOptions> newUserOptions,
-        IOptions<PermissionsOptions> permissionsOptions)
+        IOptions<PermissionsOptions> permissionsOptions,
+        PermissionsService permissionsService)
     {
         _usersRepo = usersRepo;
         _refreshTokensRepo = refreshTokensRepo;
@@ -48,6 +50,7 @@ public class AuthController : ControllerBase
         _authOptions = authOptions;
         _newUserOptions = newUserOptions;
         _permissionsOptions = permissionsOptions;
+        _permissionsService = permissionsService;
      
         logger.LogInformation($"Using Auth Options: {_authOptions.Value.ToIndentedJson()}");
         
@@ -239,16 +242,25 @@ public class AuthController : ControllerBase
 
         if (string.IsNullOrEmpty(jwt))
             return Unauthorized();
-        
+
+        List<string>? permissions = null;
+        var claimsIdentity = User.Identity as CaseSensitiveClaimsIdentity;
+        string? userId = User.GetUserId();
+        if (claimsIdentity is not null && !string.IsNullOrEmpty(userId))
+        {
+            permissions = await _permissionsService.GetPermissionClaimsForUser(claimsIdentity, userId);
+        }
+
         return Ok(new DetailsResponse
         {
-            Id = User.FindFirstValue(JwtRegisteredClaimNames.Sub),
+            Id = User.GetUserId(),
             DisplayName = User.FindFirstValue(JwtRegisteredClaimNames.Name),
             Email = User.FindFirstValue(JwtRegisteredClaimNames.Email),
             TokenExpires = User.FindFirstValue(JwtRegisteredClaimNames.Exp),
             Roles = User.Claims
                 .Where(c => c.Type.StartsWith(_permissionsOptions.Value.RoleClaimPrefix))
                 .Select(c => c.Type).ToList(),
+            Permissions = permissions,
             Token = jwt
         });
     }

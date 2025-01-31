@@ -3,7 +3,9 @@ using Lactose.Economy.Dtos.Items;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using LactoseWebApp;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Economy.Controllers;
@@ -26,15 +28,23 @@ public class ItemsController(
     }
     
     [HttpPost(Name = "Get Items")]
+    [Authorize]
     public async Task<ActionResult<GetItemsResponse>> GetItems(GetItemsRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.Read))
+            return Unauthorized("You do not have permission to read items");
+        
         var foundItems = await itemsRepo.Get(request.ItemIds.ToHashSet());
         return Ok(ItemMapper.ToDto(foundItems));
     }
 
     [HttpPost("create", Name = "Create Item")]
+    [Authorize]
     public async Task<ActionResult<GetItemResponse>> CreateItem(CreateItemRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return Unauthorized("You do not have permission to write items");
+        
         var newItem = new Item
         {
             Name = request.Name,
@@ -50,10 +60,14 @@ public class ItemsController(
     }
 
     [HttpPost("update", Name = "Update Item")]
+    [Authorize]
     public async Task<ActionResult<GetItemResponse>> UpdateItem(UpdateItemRequest request)
     {
         if (!request.ItemId.IsValidObjectId())
             return BadRequest($"ItemId '{request.ItemId}' is not a valid ItemId");
+     
+        if (!User.HasBoolClaim(Permissions.Write))
+            return Unauthorized("You do not have permission to write items");
         
         var existingItem = await itemsRepo.Get(request.ItemId);
         if (existingItem is null)
@@ -74,8 +88,12 @@ public class ItemsController(
     }
 
     [HttpPost("delete", Name = "Delete Item")]
+    [Authorize]
     public async Task<ActionResult<DeleteItemsResponse>> DeleteItems(DeleteItemsRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.Write))
+            return Unauthorized("You do not have permission to write items");
+        
         if (request.ItemIds is null)
         {
             bool deletedAll = await itemsRepo.Clear();
