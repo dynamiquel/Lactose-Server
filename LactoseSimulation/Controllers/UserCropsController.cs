@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Lactose.Economy;
 using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
@@ -9,6 +7,7 @@ using Lactose.Simulation.Mapping;
 using Lactose.Simulation.Models;
 using Lactose.Simulation.Options;
 using LactoseWebApp;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -491,13 +490,13 @@ public class UserCropsController(
     
     bool CanWriteThisUserCrops(UserRequest request)
     {
-        return request.UserId == User.FindFirstValue(JwtRegisteredClaimNames.Sub) && User.HasClaim(Permissions.WriteSelf, "true") 
-               || User.HasClaim(Permissions.WriteOthers, "true");
+        return User.MatchesId(request.UserId) && User.HasBoolClaim(Permissions.WriteSelf) ||
+               User.HasBoolClaim(Permissions.WriteOthers);
     }
 
     bool CanReadThisUserCrops(UserRequest request)
     {
-        return request.UserId == User.FindFirstValue(JwtRegisteredClaimNames.Sub) && User.HasClaim(Permissions.ReadSelf, "true") 
-               || User.HasClaim(Permissions.ReadOthers, "true");
+        return User.MatchesId(request.UserId) && User.HasBoolClaim(Permissions.ReadSelf) ||
+               User.HasBoolClaim(Permissions.ReadOthers);
     }
 }

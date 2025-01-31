@@ -13,7 +13,7 @@ services:
     image: cloudflare/cloudflared
     command: tunnel run
     environment:
-      - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+      TUNNEL_TOKEN: ${CF_TUNNEL_TOKEN}
     restart: unless-stopped
     
   traefik:
@@ -23,19 +23,24 @@ services:
       - --providers.docker
       - --providers.docker.exposedByDefault=false
       - --entryPoints.web.address=:443
+      - --entryPoints.metrics.address=:8081
       - --certificatesResolvers.cf.acme.email=info@mookrata.ovh
       - --certificatesResolvers.cf.acme.storage=/etc/traefik/certs/acme.json
       - --certificatesResolvers.cf.acme.dnsChallenge.provider=cloudflare
       - --certificatesResolvers.cf.acme.dnsChallenge.propagation.delayBeforeChecks=10s
+      - --metrics.prometheus
+      - --metrics.prometheus.entryPoint=metrics
+      - --metrics.prometheus.addEntryPointsLabels=true
+      - --metrics.prometheus.addServicesLabels=true
       - --global.sendAnonymousUsage=false
       - --api.insecure=true
       - --log.level=debug
       - --serversTransport.insecureSkipVerify=true # Disabling this fails because of invalid IP SAN
     environment:
-      - CF_DNS_API_TOKEN_FILE=/run/secrets/lactose-cf-dns-token
+      CF_DNS_API_TOKEN_FILE: /run/secrets/lactose-cf-dns-token
     ports:
       - "2000:443"
-      - "2002:8080" 
+      - "2002:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-acme:/etc/traefik/certs:rw
@@ -52,23 +57,65 @@ services:
       context: ./Traefik-Acme-Converter
     image: lactose-acme-sidecar
     environment:
-      - WATCH_DIR=/certs
-      - OUTPUT_DIR=/certs
-      - PROVIDER=cf
-      - USER_UID=1001
-      - USER_GID=1001
-      - FLAT=true
+      WATCH_DIRL: /certs
+      OUTPUT_DIR: /certs
+      PROVIDER: cf
+      USER_UID: 1001
+      USER_GID: 1001
+      FLAT: true
     volumes:
       - ./data/certs:/certs:rw
       - traefik-acme:/input:ro
     restart: unless-stopped
     
+  prometheus:
+    container_name: lactose-prometheus
+    image: prom/prometheus
+    labels:
+      traefik.enable: true
+      traefik.http.routers.prometheus.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/prom`)
+      traefik.http.routers.prometheus.tls.certResolver: cf
+      traefik.http.services.prometheus.loadBalancer.server.scheme: https
+      traefik.http.services.prometheus.loadBalancer.server.port: 9090
+    ports:
+      - "2004:9090"
+    volumes:
+      - ./data/prometheus/config:/etc/prometheus/config:ro
+      - ./data/prometheus/data:/prometheus:rw
+    secrets:
+      - lactose-cert-fullchain
+      - lactose-cert-privkey
+    user: "1001"
+    command:
+      - --config.file=/etc/prometheus/config/prometheus.yml
+      - --web.config.file=/etc/prometheus/config/web.yml
+    restart: unless-stopped
+    
+  grafana:
+    container_name: lactose-grafana
+    image: grafana/grafana
+    environment:
+      GF_SERVER_PROTOCOL: https
+      GF_SERVER_CERT_FILE: /run/secrets/lactose-cert-fullchain
+      GF_SERVER_CERT_KEY: /run/secrets/lactose-cert-privkey
+    ports:
+      - "2005:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    secrets:
+      - lactose-cert-fullchain
+      - lactose-cert-privkey
+    user: "1001"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    
   whoami:
     image: traefik/whoami
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`lactose.mookrata.ovh`) && PathPrefix(`/wai`)
-      - traefik.http.routers.whoami.tls=true
+      traefik.enable: true
+      traefik.http.routers.whoami.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/wai`)
+      traefik.http.routers.whoami.tls: true
     ports:
       - "2003:80" # Keep exposed so it's easier to test whether a reverse proxy issue is happening or not.
     restart: always
@@ -80,14 +127,14 @@ services:
       context: .
       dockerfile: LactoseIdentity/Dockerfile
     environment:
-      - ASPNETCORE_Kestrel__PathBase=/identity
+      ASPNETCORE_Kestrel__PathBase: /identity
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.identity.rule=(Host(`lactose.mookrata.ovh`)) && PathPrefix(`/identity`)
-      #- traefik.http.routers.identity.tls=true - not necessary due to below line
-      - traefik.http.routers.identity.tls.certResolver=cf # Tells Traefik to assign the TLS certificates under the CF group
-      #- traefik.http.services.identity.loadBalancer.server.port=443 - not necessary due to below line
-      - traefik.http.services.identity.loadBalancer.server.scheme=https # Tells Traefik to use HTTPS
+      traefik.enable: true
+      traefik.http.routers.identity.rule: (Host(`lactose.mookrata.ovh`)) && PathPrefix(`/identity`)
+      #traefik.http.routers.identity.tls: true - not necessary due to below line
+      traefik.http.routers.identity.tls.certResolver: cf # Tells Traefik to assign the TLS certificates under the CF group
+      #traefik.http.services.identity.loadBalancer.server.port: 443 - not necessary due to below line
+      traefik.http.services.identity.loadBalancer.server.scheme: https # Tells Traefik to use HTTPS
     ports:
       - "2010:443" # Keep exposed so it's easier to test whether a reverse proxy issue is happening or not.
     secrets:
@@ -115,12 +162,12 @@ services:
       context: .
       dockerfile: LactoseConfig/Dockerfile
     environment:
-      - ASPNETCORE_Kestrel__PathBase=/config
+      ASPNETCORE_Kestrel__PathBase: /config
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.config.rule=Host(`lactose.mookrata.ovh`) && PathPrefix(`/config`)
-      - traefik.http.routers.config.tls.certResolver=cf
-      - traefik.http.services.config.loadBalancer.server.scheme=https
+      traefik.enable: true
+      traefik.http.routers.config.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/config`)
+      traefik.http.routers.config.tls.certResolver: cf
+      traefik.http.services.config.loadBalancer.server.scheme: https
     secrets:
       - lactose-jwt-key
       - lactose-cert-fullchain
@@ -155,12 +202,12 @@ services:
       context: .
       dockerfile: LactoseEconomy/Dockerfile
     environment:
-      - ASPNETCORE_Kestrel__PathBase=/economy
+      ASPNETCORE_Kestrel__PathBase: /economy
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.economy.rule=Host(`lactose.mookrata.ovh`) && PathPrefix(`/economy`)
-      - traefik.http.routers.economy.tls.certResolver=cf
-      - traefik.http.services.economy.loadBalancer.server.scheme=https
+      traefik.enable: true
+      traefik.http.routers.economy.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/economy`)
+      traefik.http.routers.economy.tls.certResolver: cf
+      traefik.http.services.economy.loadBalancer.server.scheme: https
     secrets:
       - lactose-jwt-key
       - lactose-cert-fullchain
@@ -186,12 +233,12 @@ services:
       context: .
       dockerfile: LactoseSimulation/Dockerfile
     environment:
-      - ASPNETCORE_Kestrel__PathBase=/simulation
+      ASPNETCORE_Kestrel__PathBase: /simulation
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.simulation.rule=Host(`lactose.mookrata.ovh`) && PathPrefix(`/simulation`)
-      - traefik.http.routers.simulation.tls.certResolver=cf
-      - traefik.http.services.simulation.loadBalancer.server.scheme=https
+      traefik.enable: true
+      traefik.http.routers.simulation.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/simulation`)
+      traefik.http.routers.simulation.tls.certResolver: cf
+      traefik.http.services.simulation.loadBalancer.server.scheme: https
     secrets:
       - lactose-jwt-key
       - lactose-cert-fullchain

@@ -2,6 +2,8 @@ using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Roles;
 using Lactose.Identity.Mapping;
 using LactoseWebApp;
+using LactoseWebApp.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lactose.Identity.Controllers;
@@ -31,8 +33,12 @@ public class RolesController(
     }
 
     [HttpPost("create", Name = "Create Role")]
+    [Authorize]
     public async Task<IActionResult> CreateRole(CreateRoleRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.WriteRoles))
+            return Unauthorized("You do not have permission to create roles");
+        
         var foundRole = await rolesRepo.Get(request.Id);
         if (foundRole is not null)
             return Conflict($"Role with ID '{request.Id}' already exists");
@@ -45,8 +51,12 @@ public class RolesController(
     }
 
     [HttpPost("delete", Name = "Delete Roles")]
+    [Authorize]
     public async Task<IActionResult> DeleteRoles(RolesRequest request)
     {
+        if (!User.HasBoolClaim(Permissions.WriteRoles))
+            return Unauthorized("You do not have permission to delete roles");
+        
         var deletedRoles = await rolesRepo.Delete(request.RoleIds);
         return Ok(new QueryRolesResponse
         {

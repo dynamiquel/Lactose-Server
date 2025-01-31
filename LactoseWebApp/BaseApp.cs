@@ -101,6 +101,7 @@ public abstract class BaseApp
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
         if (authOptions is { Enabled: true })
         {
+            builder.Services.AddSingleton<IPermissionsRepo, HttpPermissionsRepo>();
             builder.Services.AddSingleton<PermissionsService>();
             builder.Services.AddScoped<IClaimsTransformation, PermissionClaimsTransformation>();
             builder.Services.AddJwtAuthentication(authOptions);
