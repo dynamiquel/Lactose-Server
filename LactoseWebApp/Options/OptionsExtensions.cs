@@ -161,4 +161,19 @@ public static class OptionsExtensions
            : base($"Could not find value for required Options field {typeof(T)}.{memberInfo.Name}")
        { }
    }
+   
+   /**
+    * If the string is a file, return the contents of the file, otherwise, return the string.
+    * Useful for options containing secrets.
+    */
+   public static string? GetRawOrFileString(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return null;
+        
+        if (raw.Contains('/'))
+            return File.ReadAllText(raw);
+        
+        return raw;
+    }
 }

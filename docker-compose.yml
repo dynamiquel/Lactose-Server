@@ -141,6 +141,8 @@ services:
       - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
     depends_on:
       - traefik
       - identity-db
@@ -149,11 +151,17 @@ services:
   identity-db:
     container_name: lactose-identity-db
     image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
     user: "1001"
     ports:
       - "2015:27017"
     volumes:
       - ./data/IdentityDb:/data/db
+    secrets:
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
       
   config:
     container_name: lactose-config
@@ -172,6 +180,8 @@ services:
       - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
     depends_on:
       - traefik
       - config-db
@@ -180,11 +190,17 @@ services:
   config-db:
     container_name: lactose-config-db
     image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
     user: "1001"
     ports:
       - "2025:27017"
     volumes:
       - ./data/ConfigDb:/data/db
+    secrets:
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
 
   tasks:
     container_name: lactose-tasks
@@ -212,6 +228,8 @@ services:
       - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
     depends_on:
       - economy-db
       - identity
@@ -220,11 +238,17 @@ services:
   economy-db:
     container_name: lactose-economy-db
     image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
     user: "1001"
     ports:
       - "2045:27017"
     volumes:
       - ./data/EconomyDb:/data/db
+    secrets:
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
 
   simulation:
     container_name: lactose-simulation
@@ -243,6 +267,8 @@ services:
       - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
     depends_on:
       - simulation-db
       - identity
@@ -255,7 +281,10 @@ services:
     ports:
       - "2055:27017"
     volumes:
-      - ./data/SimulationDb:/data/db  
+      - ./data/SimulationDb:/data/db
+    secrets:
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
 
 secrets:
   lactose-jwt-key:
@@ -266,3 +295,7 @@ secrets:
     file: ./data/certs/privkey.pem
   lactose-cf-dns-token:
     file: ./data/secrets/cf-dns-token.txt
+  lactose-mongodb-username:
+    file: ./data/secrets/mongodb-username.txt
+  lactose-mongodb-pass:
+    file: ./data/secrets/mongodb-pass.txt

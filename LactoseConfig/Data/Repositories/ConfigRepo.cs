@@ -14,7 +14,7 @@ public class ConfigRepo : IConfigRepo
     
     public ConfigRepo(IOptions<ConfigDatabaseOptions> configCloudDatabaseConfig)
     {
-        var mongoClient = new MongoClient(configCloudDatabaseConfig.Value.Connection);
+        var mongoClient = new MongoClient(configCloudDatabaseConfig.Value.ConnectionWithBasicAuth);
         var mongoDb = mongoClient.GetDatabase(configCloudDatabaseConfig.Value.Database);
         _configCollection = mongoDb.GetCollection<ConfigEntry>(configCloudDatabaseConfig.Value.Collection);
     }

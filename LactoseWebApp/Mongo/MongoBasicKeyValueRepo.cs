@@ -25,7 +25,7 @@ public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> 
 
     public MongoBasicKeyValueRepo(ILogger<TParent> logger, IOptions<TDatabaseOptions> databaseOptions)
     {
-        var mongoClient = new MongoClient(databaseOptions.Value.Connection);
+        var mongoClient = new MongoClient(databaseOptions.Value.ConnectionWithBasicAuth);
         var mongoDb = mongoClient.GetDatabase(databaseOptions.Value.Database);
         Collection = mongoDb.GetCollection<TModel>(databaseOptions.Value.Collection);
         Logger = logger;
