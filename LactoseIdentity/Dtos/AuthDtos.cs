@@ -8,7 +8,8 @@ public class BasicClaims
     public List<string>? Roles { get; set; }
     public List<string>? Permissions { get; set; }
     public string? TokenExpires { get; set; }
-    public string? Token { get; set; }
+    public string? AccessToken { get; set; }
+    public string? RefreshToken { get; set; }
 }
 
 public class LoginRequest
@@ -35,7 +36,6 @@ public class SignupResponse : BasicClaims;
 public class DetailsRequest;
 
 public class DetailsResponse : BasicClaims;
-
 
 public class RefreshRequest
 {

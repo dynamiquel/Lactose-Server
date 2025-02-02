@@ -117,7 +117,8 @@ public class AuthController : ControllerBase
             Id = foundUser.Id,
             Email = foundUser.Email,
             DisplayName = foundUser.DisplayName,
-            Token = accessToken
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         });
     }
     
@@ -178,7 +179,8 @@ public class AuthController : ControllerBase
             Id = createdUser.Id,
             Email = createdUser.Email,
             DisplayName = createdUser.DisplayName,
-            Token = accessToken
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         });
     }
     
@@ -261,14 +263,14 @@ public class AuthController : ControllerBase
                 .Where(c => c.Type.StartsWith(_permissionsOptions.Value.RoleClaimPrefix))
                 .Select(c => c.Type).ToList(),
             Permissions = permissions,
-            Token = jwt
+            AccessToken = jwt
         });
     }
 
     [HttpPost("refresh", Name = "Refresh")]
     public async Task<ActionResult<RefreshResponse>> Refresh(RefreshRequest request)
     {
-        if (request.RefreshToken is null)
+        if (string.IsNullOrEmpty(request.RefreshToken))
         {
             string? refreshTokenStr = Request.Cookies[AuthDefaults.JwtRefreshTokenCookieName];
             if (refreshTokenStr is null)
@@ -338,7 +340,8 @@ public class AuthController : ControllerBase
             Id = foundUser.Id,
             Email = foundUser.Email,
             DisplayName = foundUser.DisplayName,
-            Token = newAccessToken
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken
         });
     }
 
