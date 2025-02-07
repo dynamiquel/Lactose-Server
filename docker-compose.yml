@@ -128,6 +128,7 @@ services:
       dockerfile: LactoseIdentity/Dockerfile
     environment:
       ASPNETCORE_Kestrel__PathBase: /identity
+      ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-identity-api-key
     labels:
       traefik.enable: true
       traefik.http.routers.identity.rule: (Host(`lactose.mookrata.ovh`)) && PathPrefix(`/identity`)
@@ -143,6 +144,7 @@ services:
       - lactose-cert-privkey
       - lactose-mongodb-username
       - lactose-mongodb-pass
+      - lactose-identity-api-key
     depends_on:
       - traefik
       - identity-db
@@ -171,6 +173,7 @@ services:
       dockerfile: LactoseConfig/Dockerfile
     environment:
       ASPNETCORE_Kestrel__PathBase: /config
+      ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-config-api-key
     labels:
       traefik.enable: true
       traefik.http.routers.config.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/config`)
@@ -181,6 +184,7 @@ services:
       - lactose-cert-privkey
       - lactose-mongodb-username
       - lactose-mongodb-pass
+      - lactose-config-api-key
     depends_on:
       - traefik
       - config-db
@@ -218,6 +222,7 @@ services:
       dockerfile: LactoseEconomy/Dockerfile
     environment:
       ASPNETCORE_Kestrel__PathBase: /economy
+      ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-economy-api-key
     labels:
       traefik.enable: true
       traefik.http.routers.economy.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/economy`)
@@ -228,6 +233,7 @@ services:
       - lactose-cert-privkey
       - lactose-mongodb-username
       - lactose-mongodb-pass
+      - lactose-economy-api-key
     depends_on:
       - economy-db
       - identity
@@ -256,6 +262,7 @@ services:
       dockerfile: LactoseSimulation/Dockerfile
     environment:
       ASPNETCORE_Kestrel__PathBase: /simulation
+      ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-simulation-api-key
     labels:
       traefik.enable: true
       traefik.http.routers.simulation.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/simulation`)
@@ -266,6 +273,7 @@ services:
       - lactose-cert-privkey
       - lactose-mongodb-username
       - lactose-mongodb-pass
+      - lactose-simulation-api-key
     depends_on:
       - simulation-db
       - identity
@@ -296,3 +304,11 @@ secrets:
     file: ./data/secrets/mongodb-username.txt
   lactose-mongodb-pass:
     file: ./data/secrets/mongodb-pass.txt
+  lactose-identity-api-key:
+    file: ./data/secrets/identity-api-key.txt
+  lactose-simulation-api-key:
+    file: ./data/secrets/simulation-api-key.txt
+  lactose-config-api-key:
+    file: ./data/secrets/config-api-key.txt
+  lactose-economy-api-key:
+    file: ./data/secrets/economy-api-key.txt

@@ -25,6 +25,10 @@ public class HttpPermissionsRepo(
         var responseJson = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
         if (responseJson.RootElement.TryGetProperty("roles", out var rolesJson))
         {
+            // Role doesn't have any permissions.
+            if (rolesJson.GetArrayLength() == 0)
+                return permissions;
+            
             // Add the role as a claim under 'role-'.
             permissions.Add($"{permissionsOptions.Value.RoleClaimPrefix}{roleName}");
                 

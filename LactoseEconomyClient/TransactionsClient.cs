@@ -19,7 +19,7 @@ public class TransactionsClient(
             RequestUri = new Uri($"{options.Value.Url}/transactions/query"),
             Content = JsonContent.Create(request)
         };
-
+        
         var response = await httpClient.SendFromJson<QueryTransactionsResponse>(httpRequest);
         return response is not null ? response : new EmptyResult();
     }
@@ -32,7 +32,7 @@ public class TransactionsClient(
             RequestUri = new Uri($"{options.Value.Url}/transactions"),
             Content = JsonContent.Create(request)
         };
-
+        
         var response = await httpClient.SendFromJson<GetTransactionResponse>(httpRequest);
         return response is not null ? response : new EmptyResult();
     }
@@ -43,7 +43,7 @@ public class TransactionsClient(
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri($"{options.Value.Url}/transactions/trade"),
-            Content = JsonContent.Create(request)
+            Content = JsonContent.Create(request),
         };
 
         var response = await httpClient.SendFromJson<TradeResponse>(httpRequest);

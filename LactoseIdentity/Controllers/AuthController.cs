@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Security.Claims;
+using Lactose.Identity.Auth;
 using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Auth;
 using Lactose.Identity.Models;
@@ -21,42 +22,33 @@ namespace Lactose.Identity.Controllers;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    readonly SigningCredentials _tokenSigningCredentials;
     readonly IUsersRepo _usersRepo;
-    readonly IRefreshTokensRepo _refreshTokensRepo;
-    readonly UsersController _usersController;
     readonly IOptions<AuthOptions> _authOptions;
     readonly IPasswordHasher<User> _passwordHasher;
-    readonly JsonWebTokenHandler _tokenHandler = new();
     readonly IOptions<NewUserOptions> _newUserOptions;
     readonly IOptions<PermissionsOptions> _permissionsOptions;
     readonly PermissionsService _permissionsService;
+    readonly JwtTokenHandler _tokenHandler;
 
     public AuthController(
         ILogger<AuthController> logger,
         IUsersRepo usersRepo,
-        IRefreshTokensRepo refreshTokensRepo,
         IOptions<AuthOptions> authOptions,
         IPasswordHasher<User> passwordHasher,
-        UsersController usersController,
         IOptions<NewUserOptions> newUserOptions,
         IOptions<PermissionsOptions> permissionsOptions,
-        PermissionsService permissionsService)
+        PermissionsService permissionsService,
+        JwtTokenHandler tokenHandler)
     {
         _usersRepo = usersRepo;
-        _refreshTokensRepo = refreshTokensRepo;
         _passwordHasher = passwordHasher;
-        _usersController = usersController;
         _authOptions = authOptions;
         _newUserOptions = newUserOptions;
         _permissionsOptions = permissionsOptions;
         _permissionsService = permissionsService;
+        _tokenHandler = tokenHandler;
      
         logger.LogInformation($"Using Auth Options: {_authOptions.Value.ToIndentedJson()}");
-        
-        _tokenSigningCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(JwtServiceExtensions.GetJwtTokenKey(authOptions.Value.JwtTokenKey)), 
-            SecurityAlgorithms.HmacSha256);
     }
 
     [HttpPost("login", Name = "Login")]
@@ -77,8 +69,8 @@ public class AuthController : ControllerBase
         if (result == PasswordVerificationResult.Failed)
             return BadRequest();
 
-        string refreshToken = await CreateJwtRefreshTokenForUser(foundUser);
-        string accessToken = CreateJwtAccessTokenForUser(foundUser);
+        string refreshToken = await _tokenHandler.CreateJwtRefreshTokenForUser(foundUser);
+        string accessToken = _tokenHandler.CreateJwtAccessTokenForUser(foundUser);
         
         if (_authOptions.Value.UseCookieForAccessToken)
         {
@@ -142,8 +134,8 @@ public class AuthController : ControllerBase
         if (createdUser is null)
             return StatusCode(500, "Could not create user");
 
-        string refreshToken = await CreateJwtRefreshTokenForUser(createdUser);
-        string accessToken = CreateJwtAccessTokenForUser(createdUser);
+        string refreshToken = await _tokenHandler.CreateJwtRefreshTokenForUser(createdUser);
+        string accessToken = _tokenHandler.CreateJwtAccessTokenForUser(createdUser);
 
         if (_authOptions.Value.UseCookieForAccessToken)
         {
@@ -196,9 +188,9 @@ public class AuthController : ControllerBase
         string? refreshTokenStr = Request.Cookies[AuthDefaults.JwtRefreshTokenCookieName];
         if (refreshTokenStr is not null)
         {
-            RefreshToken? refreshToken = await ParseRefreshTokenFromJwt(refreshTokenStr);
+            RefreshToken? refreshToken = await _tokenHandler.ParseRefreshTokenFromJwt(refreshTokenStr);
             if (refreshToken is not null)
-                await _refreshTokensRepo.Delete(refreshToken.Id);
+                await _tokenHandler.DeleteRefreshToken(refreshToken.Id);
         }
         
         // Delete the access and refresh tokens from the client so they can not be reused again.
@@ -279,11 +271,11 @@ public class AuthController : ControllerBase
             request.RefreshToken = refreshTokenStr;
         }
 
-        RefreshToken? refreshToken = await ParseRefreshTokenFromJwt(request.RefreshToken);
+        RefreshToken? refreshToken = await _tokenHandler.ParseRefreshTokenFromJwt(request.RefreshToken);
         if (refreshToken is null)
             return Unauthorized("Invalid Refresh Token was provided");
 
-        RefreshToken? trustedRefreshToken = await _refreshTokensRepo.Get(refreshToken.Id);
+        RefreshToken? trustedRefreshToken = await _tokenHandler.GetRefreshTokenById(refreshToken.Id);
         if (trustedRefreshToken is null)
             return Unauthorized("Refresh Token does not exist on the server");
         
@@ -297,8 +289,8 @@ public class AuthController : ControllerBase
         if (foundUser is null)
             return BadRequest($"Could not find user with ID: {refreshToken.UserId}");
         
-        string newRefreshToken = await CreateJwtRefreshTokenForUser(foundUser);
-        string newAccessToken = CreateJwtAccessTokenForUser(foundUser);
+        string newRefreshToken = await _tokenHandler.CreateJwtRefreshTokenForUser(foundUser);
+        string newAccessToken = _tokenHandler.CreateJwtAccessTokenForUser(foundUser);
         
         if (_authOptions.Value.UseCookieForAccessToken)
         {
@@ -333,7 +325,7 @@ public class AuthController : ControllerBase
         }
         
         // Delete the old refresh token.
-        await _refreshTokensRepo.Delete(refreshToken.Id);
+        await _tokenHandler.DeleteRefreshToken(refreshToken.Id);
 
         return Ok(new RefreshResponse
         {
@@ -348,22 +340,12 @@ public class AuthController : ControllerBase
     [HttpPost("authenticate-token", Name = "Authenticate Token")]
     public async Task<ActionResult<AuthenticateTokenResponse>> AuthenticateToken(AuthenticateTokenRequest request)
     {
-        var token = _tokenHandler.ReadJsonWebToken(request.AccessToken);
-        TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
-        {
-            IssuerSigningKey = _tokenSigningCredentials.Key,
-            ValidIssuer = _authOptions.Value.JwtIssuer,
-            ValidateIssuerSigningKey = true,
-            ValidateLifetime = true,
-            ValidateIssuer = true,
-            ValidateAudience = !string.IsNullOrEmpty(request.Audience),
-            ValidAudience = request.Audience
-        });
+        TokenValidationResult? tokenValid = await _tokenHandler.ValidateAccessToken(request.AccessToken, request.Audience);
         
-        if (tokenValid is null)
+        if (tokenValid is null || !tokenValid.IsValid)
             return Unauthorized($"Invalid Access Token for Audience {request.Audience}");
 
-        Claim? userIdClaim = token.GetClaim(JwtRegisteredClaimNames.Sub);
+        Claim? userIdClaim = tokenValid.ClaimsIdentity.FindFirst(JwtRegisteredClaimNames.Sub);
         if (userIdClaim is null)
             return Unauthorized("Invalid User Id claim");
 
@@ -377,118 +359,7 @@ public class AuthController : ControllerBase
             UserRoles = userRoles
         });
     }
-
-    string CreateJwtAccessTokenForUser(User user)
-    {
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new (JwtRegisteredClaimNames.Sub, user.Id ?? string.Empty),
-                new (JwtRegisteredClaimNames.Name, user.DisplayName),
-                new (JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-            }),
-            IssuedAt = DateTime.UtcNow,
-            Expires = DateTime.UtcNow.AddMinutes(_authOptions.Value.JwtExpireMinutes),
-            Issuer = _authOptions.Value.JwtIssuer,
-            Audience = _authOptions.Value.JwtAudience,
-            SigningCredentials = _tokenSigningCredentials,
-        };
-
-        var token = _tokenHandler.CreateToken(tokenDescriptor);
-        return token;
-    }
-
-    async Task<string> CreateJwtRefreshTokenForUser(User user)
-    {
-        var randomTokenId = Guid.NewGuid();
-        var issuedAt = DateTime.UtcNow;
-        var expiresAt = DateTime.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours);
-
-        // Adds the refresh token to the database.
-        var refreshToken = await _refreshTokensRepo.Set(new RefreshToken
-        {
-            Id = randomTokenId.ToString(),
-            UserId = user.Id ?? throw new InvalidOperationException(),
-            IssuedAt = issuedAt,
-            ExpiresAt = expiresAt,
-            ClientIp = HttpContext.Connection.RemoteIpAddress?.ToString(),
-            Issuer = _authOptions.Value.JwtIssuer
-        });
-
-        if (refreshToken is null)
-            throw new InvalidOperationException();
-        
-        // Creates a JWT representing the refresh token that clients will use.
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new (JwtRegisteredClaimNames.Jti, randomTokenId.ToString()),
-                new (JwtRegisteredClaimNames.Sub, user.Id ?? string.Empty)
-            }),
-            IssuedAt = DateTime.UtcNow,
-            Expires = DateTime.UtcNow.AddHours(_authOptions.Value.JwtRefreshExpireHours),
-            Issuer = _authOptions.Value.JwtIssuer,
-            SigningCredentials = _tokenSigningCredentials
-        };
-
-        var token = _tokenHandler.CreateToken(tokenDescriptor);
-        return token;
-    }
-
-    async Task<bool> IsAccessTokenValid(string accessToken, string? audience)
-    {
-        var token = _tokenHandler.ReadJsonWebToken(accessToken);
-        TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
-        {
-            IssuerSigningKey = _tokenSigningCredentials.Key,
-            ValidIssuer = _authOptions.Value.JwtIssuer,
-            ValidateIssuerSigningKey = true,
-            ValidateLifetime = true,
-            ValidateIssuer = true,
-            ValidateAudience = !string.IsNullOrEmpty(audience),
-            ValidAudience = audience
-        });
-
-        return tokenValid.IsValid;
-    }
-
-    async Task<RefreshToken?> ParseRefreshTokenFromJwt(string refreshTokenJwt)
-    {
-        var token = _tokenHandler.ReadJsonWebToken(refreshTokenJwt);
-        TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
-        {
-            IssuerSigningKey = _tokenSigningCredentials.Key,
-            ValidIssuer = _authOptions.Value.JwtIssuer,
-            ValidateIssuerSigningKey = true,
-            ValidateLifetime = true,
-            ValidateIssuer = true,
-            ValidateAudience = false
-        });
-
-        if (!tokenValid.IsValid)
-            return null;
-
-        token.TryGetValue(JwtRegisteredClaimNames.Jti, out string? tokenId);
-        if (string.IsNullOrEmpty(tokenId))
-            return null;
-        token.TryGetValue(JwtRegisteredClaimNames.Sub, out string? userId);
-        if (string.IsNullOrEmpty(userId))
-            return null;
-        
-        var refreshToken = new RefreshToken
-        {
-            Id = tokenId,
-            UserId = userId,
-            IssuedAt = token.IssuedAt,
-            ExpiresAt = token.ValidTo,
-            Issuer = token.Issuer,
-        };
-
-        return refreshToken;
-    }
-
+    
     string GetRefreshActionRelativeUrl()
     {
         // Seriously need to find a better way to do this.

@@ -127,7 +127,7 @@ public class UserCropsController(
                 },
                 UserB = new UserTradeRequest()
             };
-
+            
             var transactionResult = await transactionsClient.Trade(tradeRequest);
             if (transactionResult.Value?.Reason != TradeResponseReason.Success)
                 return BadRequest($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
@@ -287,7 +287,7 @@ public class UserCropsController(
                         UserId = request.UserId
                     }
                 };
-
+            
                 var transactionResult = await transactionsClient.Trade(tradeRequest);
                 if (transactionResult.Value?.Reason != TradeResponseReason.Success)
                 {
@@ -377,7 +377,7 @@ public class UserCropsController(
                 },
                 UserB = new UserTradeRequest()
             };
-
+            
             var transactionResult = await transactionsClient.Trade(tradeRequest);
             if (transactionResult.Value?.Reason != TradeResponseReason.Success)
             {

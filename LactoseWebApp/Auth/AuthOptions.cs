@@ -16,4 +16,5 @@ public class AuthOptions
     public string JwtAudience { get; set; } = "https://lactose.mookrata.ovh";
     public int JwtExpireMinutes { get; set; } = 30;
     public int JwtRefreshExpireHours { get; set; } = 24 * 7;
+    public string ApiKey { get; set; } = "/run/secrets/lactose-api-key";
 }

@@ -1,7 +1,9 @@
+using System.Net.Http.Headers;
 using System.Text;
 using Lactose.Identity.Options;
 using LactoseWebApp.Auth.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LactoseWebApp.Auth;
@@ -98,6 +100,19 @@ public static class JwtServiceExtensions
             });
         
         return services;
+    }
+
+    public static HttpClient UseThisApiForAuth(this HttpClient httpClient, IServiceProvider serviceProvider)
+    {
+        // Forward the API's Access Token to the HTTP Client.
+        JsonWebToken? accessToken = serviceProvider.GetRequiredService<IApiAuthHandler>().AccessToken;
+        if (accessToken is not null)
+        {
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken.UnsafeToString());
+        }
+
+        return httpClient;
     }
 
     public static string? GetJwtAccessToken(this HttpContext context)

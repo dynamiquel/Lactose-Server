@@ -97,7 +97,6 @@ public abstract class BaseApp
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
         if (authOptions is { Enabled: true })
         {
-            builder.Services.AddSingleton<IPermissionsRepo, HttpPermissionsRepo>();
             builder.Services.AddSingleton<PermissionsService>();
             builder.Services.AddScoped<IClaimsTransformation, PermissionClaimsTransformation>();
             if (authOptions.UseLocalAuth)
@@ -106,6 +105,9 @@ public abstract class BaseApp
             }
             else
             {
+                builder.Services.AddSingleton<IPermissionsRepo, HttpPermissionsRepo>();
+                builder.Services.AddSingleton<IApiAuthHandler, HttpApiAuthHandler>();
+
                 var permissionOptions = builder.Configuration.GetOptions<PermissionsOptions>();
                 builder.Services.AddLactoseIdentityAuthentication(authOptions, permissionOptions);
             }
@@ -130,7 +132,6 @@ public abstract class BaseApp
         app.UseReverseProxySupport();
         app.UseHttpsRedirection();
         app.UseRouting();
-        
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error", createScopeForErrors: true);
@@ -142,6 +143,7 @@ public abstract class BaseApp
         {
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ApiAuthMiddleware>();
         }
 
         app.MapControllers();
