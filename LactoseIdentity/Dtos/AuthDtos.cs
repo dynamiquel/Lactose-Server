@@ -43,4 +43,15 @@ public class RefreshRequest
     public string? RefreshToken { get; set; }
 }
 
+public class AuthenticateTokenRequest
+{
+    public required string AccessToken { get; set; }
+    public string? Audience { get; set; }
+}
+
+public class AuthenticateTokenResponse
+{
+    public required ISet<string> UserRoles { get; set; }
+}
+
 public class RefreshResponse : BasicClaims;

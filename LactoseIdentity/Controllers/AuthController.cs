@@ -345,6 +345,39 @@ public class AuthController : ControllerBase
         });
     }
 
+    [HttpPost("authenticate-token", Name = "Authenticate Token")]
+    public async Task<ActionResult<AuthenticateTokenResponse>> AuthenticateToken(AuthenticateTokenRequest request)
+    {
+        var token = _tokenHandler.ReadJsonWebToken(request.AccessToken);
+        TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
+        {
+            IssuerSigningKey = _tokenSigningCredentials.Key,
+            ValidIssuer = _authOptions.Value.JwtIssuer,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidateIssuer = true,
+            ValidateAudience = !string.IsNullOrEmpty(request.Audience),
+            ValidAudience = request.Audience
+        });
+        
+        if (tokenValid is null)
+            return Unauthorized($"Invalid Access Token for Audience {request.Audience}");
+
+        Claim? userIdClaim = token.GetClaim(JwtRegisteredClaimNames.Sub);
+        if (userIdClaim is null)
+            return Unauthorized("Invalid User Id claim");
+
+        User? foundUser = await _usersRepo.Get(userIdClaim.Value);
+        if (foundUser is null)
+            return Unauthorized($"Could not find user with ID: {userIdClaim.Value}");
+
+        ISet<string> userRoles = foundUser.Roles;
+        return Ok(new AuthenticateTokenResponse
+        {
+            UserRoles = userRoles
+        });
+    }
+
     string CreateJwtAccessTokenForUser(User user)
     {
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -402,6 +435,23 @@ public class AuthController : ControllerBase
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
         return token;
+    }
+
+    async Task<bool> IsAccessTokenValid(string accessToken, string? audience)
+    {
+        var token = _tokenHandler.ReadJsonWebToken(accessToken);
+        TokenValidationResult? tokenValid = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
+        {
+            IssuerSigningKey = _tokenSigningCredentials.Key,
+            ValidIssuer = _authOptions.Value.JwtIssuer,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidateIssuer = true,
+            ValidateAudience = !string.IsNullOrEmpty(audience),
+            ValidAudience = audience
+        });
+
+        return tokenValid.IsValid;
     }
 
     async Task<RefreshToken?> ParseRefreshTokenFromJwt(string refreshTokenJwt)

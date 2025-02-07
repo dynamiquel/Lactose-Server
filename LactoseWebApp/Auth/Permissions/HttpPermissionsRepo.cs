@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Lactose.Identity.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -7,7 +8,8 @@ namespace LactoseWebApp.Auth.Permissions;
 
 public class HttpPermissionsRepo(
     IHttpClientFactory httpClientFactory,
-    IOptions<PermissionsOptions> options) : IPermissionsRepo
+    IOptions<PermissionsOptions> permissionsOptions,
+    IOptions<AuthOptions> authOptions) : IPermissionsRepo
 {
     public async Task<List<string>> GetPermissionsForRole(CaseSensitiveClaimsIdentity identity, string roleName)
     {
@@ -15,7 +17,7 @@ public class HttpPermissionsRepo(
         List<string> permissions = [];
             
         var response = await httpClient.PostAsJsonAsync(
-            $"{options.Value.IdentityUrl}/roles",
+            $"{authOptions.Value.IdentityUrl}/roles",
             new { RoleIds = new[] { roleName } });
 
         response.EnsureSuccessStatusCode();
@@ -24,7 +26,7 @@ public class HttpPermissionsRepo(
         if (responseJson.RootElement.TryGetProperty("roles", out var rolesJson))
         {
             // Add the role as a claim under 'role-'.
-            permissions.Add($"{options.Value.RoleClaimPrefix}{roleName}");
+            permissions.Add($"{permissionsOptions.Value.RoleClaimPrefix}{roleName}");
                 
             if (rolesJson[0].TryGetProperty("permissions", out var permissionsJson))
             {
@@ -42,29 +44,19 @@ public class HttpPermissionsRepo(
         return permissions;
     }
 
-    public async Task<List<string>> GetUserRoles(CaseSensitiveClaimsIdentity identity, string userId)
+    public Task<List<string>> GetUserRoles(CaseSensitiveClaimsIdentity identity, string userId)
     {
-        var httpClient = CreateHttpClient(identity);
-        List<string> roles = [];
-
-        var response = await httpClient.PostAsJsonAsync(
-            $"{options.Value.IdentityUrl}/users",
-            new { UserId = userId });
-
-        response.EnsureSuccessStatusCode();
-
-        var responseJson = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
-        if (responseJson.RootElement.TryGetProperty("roles", out var rolesJson))
-        {
-            foreach (var roleJson in rolesJson.EnumerateArray())
-            {
-                string? roleId = roleJson.GetString();
-                if (!string.IsNullOrWhiteSpace(roleId))
-                    roles.Add(roleId);
-            }
-        }
+        // The user claims identity will already have the role claims from a prior step
+        // (IdentityJwtHandler).
         
-        return roles;
+        // Role claims are prefixed with RoleClaimPrefix.
+        // Find any of these claims and strip out the prefix to find the actual role name.
+        List<string> roles = identity.Claims
+            .Where(c => c.Type.StartsWith(permissionsOptions.Value.RoleClaimPrefix))
+            .Select(c => c.Type.Replace(permissionsOptions.Value.RoleClaimPrefix, string.Empty))
+            .ToList();
+        
+        return Task.FromResult(roles);
     }
     
     HttpClient CreateHttpClient(CaseSensitiveClaimsIdentity identity)

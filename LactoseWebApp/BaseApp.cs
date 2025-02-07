@@ -70,10 +70,6 @@ public abstract class BaseApp
     /// <param name="builder"></param>
     protected virtual void Configure(WebApplicationBuilder builder)
     {
-        // If using ISS, enable ISS compatability.
-        if (Environment.GetEnvironmentVariable("USE_ISS")?.ToUpperInvariant() is "1" or "TRUE")
-            builder.WebHost.UseIISIntegration();
-
         // Initialises Serilog so meaningful information can be outputted to the console and log files.
         builder.Host.UseSerilog((context, configuration) =>
         {
@@ -104,7 +100,16 @@ public abstract class BaseApp
             builder.Services.AddSingleton<IPermissionsRepo, HttpPermissionsRepo>();
             builder.Services.AddSingleton<PermissionsService>();
             builder.Services.AddScoped<IClaimsTransformation, PermissionClaimsTransformation>();
-            builder.Services.AddJwtAuthentication(authOptions);
+            if (authOptions.UseLocalAuth)
+            {
+                builder.Services.AddJwtAuthentication(authOptions);
+            }
+            else
+            {
+                var permissionOptions = builder.Configuration.GetOptions<PermissionsOptions>();
+                builder.Services.AddLactoseIdentityAuthentication(authOptions, permissionOptions);
+            }
+
             builder.Services.AddAuthorization();
         }
 

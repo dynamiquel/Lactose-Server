@@ -177,7 +177,6 @@ services:
       traefik.http.routers.config.tls.certResolver: cf
       traefik.http.services.config.loadBalancer.server.scheme: https
     secrets:
-      - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
       - lactose-mongodb-username
@@ -225,7 +224,6 @@ services:
       traefik.http.routers.economy.tls.certResolver: cf
       traefik.http.services.economy.loadBalancer.server.scheme: https
     secrets:
-      - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
       - lactose-mongodb-username
@@ -264,7 +262,6 @@ services:
       traefik.http.routers.simulation.tls.certResolver: cf
       traefik.http.services.simulation.loadBalancer.server.scheme: https
     secrets:
-      - lactose-jwt-key
       - lactose-cert-fullchain
       - lactose-cert-privkey
       - lactose-mongodb-username

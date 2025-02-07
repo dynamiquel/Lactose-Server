@@ -6,6 +6,8 @@ namespace Lactose.Identity.Options;
 public class AuthOptions
 {
     public bool Enabled { get; set; } = false;
+    public bool UseLocalAuth { get; set; } = false;
+    public string IdentityUrl { get; set; } = "https://lactose.mookrata.ovh/identity";
     public bool UseCookieForAccessToken { get; set; } = true;
     public bool UseCookieForRefreshToken { get; set; } = true;
     // Can be the token as a value or as a path.
