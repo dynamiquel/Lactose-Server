@@ -49,7 +49,8 @@ public class ItemsController(
         {
             Name = request.Name,
             Type = request.Type,
-            Description = request.Description
+            Description = request.Description,
+            GameImage = request.GameImage
         };
         
         var createdItem = await itemsRepo.Set(newItem);
@@ -79,6 +80,8 @@ public class ItemsController(
             existingItem.Type = request.Type;
         if (request.Description is not null)
             existingItem.Description = request.Description;
+        if (request.GameImage is not null)
+            existingItem.GameImage = request.GameImage;
 
         var updatedItem = await itemsRepo.Set(existingItem);
         if (updatedItem is null)

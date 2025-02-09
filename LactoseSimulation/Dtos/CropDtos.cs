@@ -24,6 +24,7 @@ public class GetCropResponse
     public required IList<UserItem> HarvestItems { get; set; }
     public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
+    public string? GameCrop { get; set; }
 }
 
 public class GetCropsResponse
@@ -40,6 +41,7 @@ public class CreateCropRequest
     public required IList<UserItem> HarvestItems { get; set; }
     public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
+    public string? GameCrop { get; set; }
 }
 
 public class UpdateCropRequest
@@ -51,6 +53,7 @@ public class UpdateCropRequest
     public IList<UserItem>? HarvestItems { get; set; }
     public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
+    public string? GameCrop { get; set; }
 }
 
 public class DeleteCropsRequest

@@ -55,7 +55,8 @@ public class CropsController(
             HarvestSeconds = request.HarvestSeconds,
             HarvestItems = request.HarvestItems,
             DestroyItems = request.DestroyItems,
-            FertiliserItemId = request.FertiliserItemId
+            FertiliserItemId = request.FertiliserItemId,
+            GameCrop = request.GameCrop
         };
         
         var createdCrop = await cropsRepo.Set(newCrop);
@@ -92,6 +93,8 @@ public class CropsController(
             existingCrop.HarvestSeconds = request.HarvestSeconds.Value;
         if (request.HarvestItems is not null)
             existingCrop.HarvestItems = request.HarvestItems;
+        if (request.GameCrop is not null)
+            existingCrop.GameCrop = request.GameCrop;
         
         existingCrop.DestroyItems = request.DestroyItems;
         existingCrop.FertiliserItemId = request.FertiliserItemId;

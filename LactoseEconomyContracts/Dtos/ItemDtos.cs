@@ -18,6 +18,7 @@ public class GetItemResponse
     public required string Type { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }
+    public string? GameImage { get; set; }
 }
 
 public class GetItemsResponse
@@ -30,6 +31,7 @@ public class CreateItemRequest
     public required string Type { get; init; }
     public required string Name { get; init; }
     public string? Description { get; init; }
+    public string? GameImage { get; set; }
 }
 
 public class UpdateItemRequest
@@ -38,6 +40,7 @@ public class UpdateItemRequest
     public string? Type { get; init; }
     public string? Name { get; init; }
     public string? Description { get; init; }
+    public string? GameImage { get; set; }
 }
 
 public class DeleteItemsRequest

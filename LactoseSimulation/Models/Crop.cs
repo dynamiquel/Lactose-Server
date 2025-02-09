@@ -30,4 +30,5 @@ public class Crop : IBasicKeyValueModel
     public required IList<UserItem> HarvestItems { get; set; }
     public IList<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
+    public string? GameCrop { get; set; }
 }
