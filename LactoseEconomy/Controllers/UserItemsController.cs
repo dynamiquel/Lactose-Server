@@ -2,16 +2,20 @@ using Lactose.Economy.Data.Repos;
 using Lactose.Economy.Dtos.UserItems;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
+using Lactose.Economy.Options;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Lactose.Economy.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase, IUserItemsController
+public class UserItemsController(
+    IUserItemsRepo userItemsRepo, 
+    IOptions<UserStartingItemsOptions> userStartingItems) : ControllerBase, IUserItemsController
 {
     static bool IsValidEconomyUser(string userId) => userId.IsValidObjectId() || userId.StartsWith("vendor");
     
@@ -45,10 +49,13 @@ public class UserItemsController(IUserItemsRepo userItemsRepo) : ControllerBase,
         {
             // TODO: Check that user exists with the provided ID before creating a User Items.
             
-            // User Items don't exist for the specified user, create it.
+            // User Items don't exist for the specified user, create it with starting items.
             var newModel = new UserItems
             {
-                Id = request.UserId
+                Id = request.UserId,
+                // Not the most ideal place to do this. I would assume some other system would listen for some kind
+                // of user created event and would initialise necessary user data?
+                Items = userStartingItems.Value.StartingUserItems
             };
 
             UserItems? createdModel = await userItemsRepo.Set(newModel);

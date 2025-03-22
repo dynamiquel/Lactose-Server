@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Lactose.Identity.Dtos.Auth;
 
 public class BasicClaims
@@ -26,8 +28,13 @@ public class LogoutResponse;
 
 public class SignupRequest
 {
+    [EmailAddress]
     public required string Email { get; set; }
+    
+    [MinLength(8)]
     public required string Password { get; set; }
+    
+    [MinLength(8)]
     public required string DisplayName { get; set; }
 }
 

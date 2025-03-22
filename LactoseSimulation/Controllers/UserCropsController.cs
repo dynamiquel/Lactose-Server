@@ -35,6 +35,20 @@ public class UserCropsController(
             return Unauthorized("You cannot view crops for this user");
 
         UserCropInstances? userCrops = await userCropsRepo.Get(request.UserId);
+
+        if (userCrops is null)
+        {
+            var newUserCrops = new UserCropInstances()
+            {
+                Id = request.UserId,
+                CropInstances = new List<CropInstance>()
+            };
+
+            userCrops = await userCropsRepo.Set(newUserCrops);
+            if (userCrops is null)
+                return StatusCode(500, $"Could not create User Crops for User with ID '{request.UserId}'");
+        }
+        
         return Ok(UserCropsMapper.ToDto(userCrops));
     }
 
