@@ -12,6 +12,7 @@ using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MQTTnet;
 
 namespace Lactose.Simulation.Controllers;
 
@@ -22,7 +23,8 @@ public class UserCropsController(
     IUserCropsRepo userCropsRepo,
     ICropsRepo cropsRepo,
     IOptions<UserCropsOptions> options,
-    TransactionsClient transactionsClient) : ControllerBase, IUserCropsController
+    TransactionsClient transactionsClient,
+    IMqttClient mqttClient) : ControllerBase, IUserCropsController
 {
     [Authorize]
     [HttpPost(Name = "Get User Crops")]
@@ -169,6 +171,12 @@ public class UserCropsController(
         if (userCrops is null)
             return StatusCode(StatusCodes.Status500InternalServerError, $"Could not create Crop '{request.CropId}' for User '{request.UserId}'");
 
+        // TODO: Better JSON-based payload
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/player/{request.UserId}/crops/created")
+            .WithPayload(cropInstance.Id)
+            .Build());
+
         return Ok(new CreateUserCropResponse
         {
             UserCropInstanceId = cropInstance.Id
@@ -245,8 +253,16 @@ public class UserCropsController(
         }
 
         if (!harvestedCropInstanceIds.IsEmpty())
+        {
             userCrops = await userCropsRepo.Set(userCrops);
-        
+            
+            // TODO: Better JSON-based payload
+            await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                .WithTopic($"/player/{request.UserId}/crops/harvested")
+                .WithPayload(harvestedCropInstanceIds.ToJson())
+                .Build());
+        }
+
         return Ok(new HarvestUserCropsResponse
         {
             HarvestedCropInstanceIds = harvestedCropInstanceIds
@@ -309,10 +325,18 @@ public class UserCropsController(
                 }
             }
         }
-        
+
         if (!destroyedCropInstanceIds.IsEmpty())
+        {
             userCrops = await userCropsRepo.Set(userCrops);
-        
+            
+            // TODO: Better JSON-based payload
+            await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                .WithTopic($"/player/{request.UserId}/crops/destroyed")
+                .WithPayload(destroyedCropInstanceIds.ToJson())
+                .Build());
+        }
+
         return Ok(new DestroyUserCropsResponse
         {
             DestroyedCropInstanceIds = destroyedCropInstanceIds
@@ -408,10 +432,18 @@ public class UserCropsController(
             fertilisedCropInstanceIds.Add(requestedCropInstanceId);
             logger.LogInformation($"User has fertilised User Crop with ID '{requestedCropInstanceId}'. From {currentFertiliserSeconds} seconds to {foundCropInstance.RemainingFertiliserSeconds} seconds");
         }
-        
+
         if (!fertilisedCropInstanceIds.IsEmpty())
+        {
             userCrops = await userCropsRepo.Set(userCrops);
-        
+            
+            // TODO: Better JSON-based payload
+            await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                .WithTopic($"/player/{request.UserId}/crops/fertilised")
+                .WithPayload(fertilisedCropInstanceIds.ToJson())
+                .Build());
+        }
+
         return Ok(new FertiliseUserCropsResponse
         {
             FertilisedCropInstanceIds = fertilisedCropInstanceIds
@@ -483,7 +515,7 @@ public class UserCropsController(
                 logger.LogError($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
                 continue;
             }
-
+            
             // Plant the seed and change the Crop info.
             foundCropInstance.CropId = request.CropId;
             foundCropInstance.State = CropInstanceStates.Growing;
@@ -495,6 +527,12 @@ public class UserCropsController(
         userCrops = await userCropsRepo.Set(userCrops);
         if (userCrops is null)
             return StatusCode(StatusCodes.Status500InternalServerError, $"Could not seed Crop '{request.CropId}' for User '{request.UserId}'");
+        
+        // TODO: Better JSON-based payload
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/player/{request.UserId}/crops/seeded")
+            .WithPayload(seededCropInstanceIds.ToJson())
+            .Build());
 
         return Ok(new SeedUserCropsResponse
         {

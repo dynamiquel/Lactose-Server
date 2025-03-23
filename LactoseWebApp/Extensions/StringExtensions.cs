@@ -41,4 +41,18 @@ public static class StringExtensions
 
         return false;
     }
+    
+    public static string CombineUrlWithPort(string addressWithOptionalPath, int port)
+    {
+        if (string.IsNullOrEmpty(addressWithOptionalPath))
+        {
+            return string.Empty;
+        }
+
+        var parts = addressWithOptionalPath.Split('/', 2); // Split into hostname/domain and the rest of the path (max 2 parts)
+        string hostname = parts[0];
+        string path = parts.Length > 1 ? "/" + parts[1] : ""; // Add the leading slash back if a path exists
+
+        return $"{hostname}:{port}{path}";
+    }
 }

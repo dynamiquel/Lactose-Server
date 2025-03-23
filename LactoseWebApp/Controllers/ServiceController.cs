@@ -14,6 +14,7 @@ public class ServiceController(IServiceInfo serviceInfo) : ControllerBase
         var sb = new StringBuilder(256);
         sb.AppendLine($"<!DOCTYPE html> <html> <head> <title>Aurora {serviceInfo.Name}</title> </head>")
             .AppendLine($"<h1>Lactose {serviceInfo.Name} is {serviceInfo.Status.ToString().ToLower()}!</h1>")
+            .AppendLine().AppendLine($"{serviceInfo.Id}")
             .AppendLine().AppendLine($"{serviceInfo.Description}.")
             .AppendLine().AppendLine($"<h2>Dependencies ({serviceInfo.Dependencies.Length})</h2>")
             .AppendLine("<ul>");

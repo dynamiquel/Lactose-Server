@@ -32,10 +32,13 @@ public interface IServiceInfo
     DateTime StartTime { get; init; }
     
     TimeSpan Uptime { get; }
+
+    string Id => Name.ToLower().Replace(' ', '-');
 }
 
 public class ServiceInfo : IServiceInfo
 {
+    
     public string Name { get; init; }
     
     public string Description { get; init; }

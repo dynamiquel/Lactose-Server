@@ -119,6 +119,31 @@ services:
     ports:
       - "2003:80" # Keep exposed so it's easier to test whether a reverse proxy issue is happening or not.
     restart: always
+    
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: lactose-mosquitto
+    user: "1000"
+    labels:
+      traefik.enable: true
+      
+      traefik.http.routers.mosquitto-ws.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/mqtt`)
+      traefik.http.routers.mosquitto-ws.tls: true
+      traefik.http.routers.mosquitto-ws.tls.certResolver: cf
+      traefik.http.services.mosquitto-ws.loadBalancer.server.scheme: https
+      traefik.http.middlewares.strip-mqtt-prefix.stripprefix.prefixes: /mqtt
+      traefik.http.routers.mosquitto-ws.middlewares: strip-mqtt-prefix      
+    ports:
+      - "2006:1883"
+      - "2007:443"
+    secrets:
+      - lactose-cert-fullchain
+      - lactose-cert-privkey
+    volumes:
+      - ./data/mosquitto/config:/mosquitto/config
+      - ./data/mosquitto/data:/mosquitto/data
+      - ./data/mosquitto/log:/mosquitto/log
+    restart: always
   
   identity:
     container_name: lactose-identity

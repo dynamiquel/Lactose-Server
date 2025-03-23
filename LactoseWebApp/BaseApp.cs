@@ -2,6 +2,7 @@ using Lactose.Identity.Options;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Auth.Permissions;
 using LactoseWebApp.Filters;
+using LactoseWebApp.Mqtt;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
 using Microsoft.AspNetCore.Authentication;
@@ -93,6 +94,8 @@ public abstract class BaseApp
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddOptions(builder.Configuration);
         builder.Services.AddHttpClient();
+
+        builder.Services.AddMqtt();
 
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
         if (authOptions is { Enabled: true })
