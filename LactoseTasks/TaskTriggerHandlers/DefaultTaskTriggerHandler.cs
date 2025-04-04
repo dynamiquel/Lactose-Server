@@ -5,6 +5,10 @@ namespace Lactose.Tasks.TaskTriggerHandlers;
 
 public class DefaultTaskTriggerConfig
 {
+    /// <summary>
+    /// How much progress to provide to the User Task for each time the
+    /// event is triggered.
+    /// </summary>
     public float ProgressPerOccurence { get; set; } = 1;
 }
 
