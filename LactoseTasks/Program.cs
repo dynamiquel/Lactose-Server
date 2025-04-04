@@ -16,7 +16,7 @@ internal sealed class TasksApi : BaseApp
         builder.Services.AddSingleton<MongoTasksRepo>();
         builder.Services.AddSingleton<MongoUserTasksRepo>();
         builder.Services.AddHostedService<UserTaskTracker>();
-        builder.Services.AddSingleton<TaskTriggerHandlerRegistry>();
+        builder.Services.AddSingleton<DefaultTaskTriggerHandler>();
        
         {
             builder.Services.Configure<EconomyClientOptions>(builder.Configuration.GetSection("Economy"));

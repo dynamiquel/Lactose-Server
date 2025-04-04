@@ -8,8 +8,7 @@ public class UserTaskTracker(
     ILogger<UserTaskTracker> logger,
     IMqttClient mqttClient,
     MongoTasksRepo tasksRepo,
-    MongoUserTasksRepo userTasksRepo,
-    TaskTriggerHandlerRegistry triggerHandlerRegistry) : IHostedService
+    MongoUserTasksRepo userTasksRepo) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
