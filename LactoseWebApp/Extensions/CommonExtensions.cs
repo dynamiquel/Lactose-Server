@@ -44,6 +44,14 @@ public static class CommonExtensions
         }
     }
     
+    static void GetTypesWithInterfaceFromAssembly<T>(Assembly? assembly, List<Type> types)
+    {
+        if (assembly is not null)
+        {
+            types.AddRange(assembly.GetTypes().Where(type => type.GetInterfaces().Any(t => t == typeof(T))));
+        }
+    }
+    
     public static IEnumerable<Type> GetTypesWithAttribute<T>()
     {
         var typesWithAttribute = new List<Type>();
@@ -52,6 +60,16 @@ public static class CommonExtensions
         GetTypesWithAttributeFromAssembly<T>(Assembly.GetCallingAssembly(), typesWithAttribute);
 
         return typesWithAttribute;
+    }
+    
+    public static IEnumerable<Type> GetTypesWithInterface<T>()
+    {
+        var typesWithInterface = new List<Type>();
+        
+        GetTypesWithInterfaceFromAssembly<T>(Assembly.GetEntryAssembly(), typesWithInterface);
+        GetTypesWithInterfaceFromAssembly<T>(Assembly.GetCallingAssembly(), typesWithInterface);
+
+        return typesWithInterface;
     }
     
     public static bool IsGeneric(this Type type, Type genericType) => type.IsGenericType && type.GetGenericTypeDefinition() == genericType;

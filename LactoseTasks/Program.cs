@@ -1,25 +1,32 @@
-var builder = WebApplication.CreateBuilder(args);
+using Lactose.Economy;
+using Lactose.Tasks.Data;
+using Lactose.Tasks.TaskTriggerHandlers;
+using LactoseTasks.Services;
+using LactoseWebApp;
+using LactoseWebApp.Auth;
 
-// Add services to the container.
+new TasksApi().Start(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+internal sealed class TasksApi : BaseApp
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    protected override void Configure(WebApplicationBuilder builder)
+    {
+        base.Configure(builder);
+        
+        builder.Services.AddSingleton<MongoTasksRepo>();
+        builder.Services.AddSingleton<MongoUserTasksRepo>();
+        builder.Services.AddHostedService<UserTaskTracker>();
+        builder.Services.AddSingleton<TaskTriggerHandlerRegistry>();
+       
+        {
+            builder.Services.Configure<EconomyClientOptions>(builder.Configuration.GetSection("Economy"));
+            var clientBuilder = builder.Services.AddHttpClient<TransactionsClient>((provider, client) =>
+            {
+                client.UseThisApiForAuth(provider);
+            });
+            
+            if (builder.Environment.IsDevelopment())
+                clientBuilder.DisableSslValidation();
+        }
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
