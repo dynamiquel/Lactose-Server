@@ -63,7 +63,7 @@ public class MqttService(
         if (client.IsConnected)
         {
             await client.PublishAsync(new MqttApplicationMessageBuilder()
-                .WithTopic($"service/{serviceInfo.Id}/offline")
+                .WithTopic($"/{serviceInfo.Id}/health/offline")
                 .WithRetainFlag(false)
                 .Build(), 
                 cancellationToken);
@@ -83,7 +83,7 @@ public class MqttService(
         logger.LogInformation("Connected to MQTT broker");
         
         await client.PublishAsync(new MqttApplicationMessageBuilder()
-            .WithTopic($"service/{serviceInfo.Id}/online")
+            .WithTopic($"/{serviceInfo.Id}/health/online")
             .WithRetainFlag(false)
             .Build(), 
             _cancellationToken);

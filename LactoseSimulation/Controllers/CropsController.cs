@@ -5,6 +5,7 @@ using Lactose.Simulation.Models;
 using LactoseWebApp;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet;
 
 namespace Lactose.Simulation.Controllers;
 
@@ -12,7 +13,8 @@ namespace Lactose.Simulation.Controllers;
 [Route("[controller]")]
 public class CropsController(
     ILogger<CropsController> logger,
-    ICropsRepo cropsRepo) : ControllerBase, ICropsController
+    ICropsRepo cropsRepo,
+    IMqttClient mqttClient) : ControllerBase, ICropsController
 {
     [HttpPost("query", Name = "Query Crops")]
     public async Task<ActionResult<QueryCropsResponse>> QueryCrops(QueryCropsRequest request)
@@ -63,6 +65,14 @@ public class CropsController(
         if (createdCrop is null)
             return StatusCode(500, $"Could not create Crop with name '{request.Name}'");
         
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/simulation/crops/created")
+            .WithPayload(new CropEvent
+            {
+                CropId = createdCrop.Id!
+            }.ToJson())
+            .Build());
+        
         return Ok(CropMapper.ToDto(createdCrop));
     }
 
@@ -102,6 +112,14 @@ public class CropsController(
         var updatedCrop = await cropsRepo.Set(existingCrop);
         if (updatedCrop is null)
             return StatusCode(500, $"Could not update Crop with Id '{request.CropId}'");
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/simulation/crops/updated")
+            .WithPayload(new CropEvent
+            {
+                CropId = updatedCrop.Id!
+            }.ToJson())
+            .Build());
 
         return Ok(CropMapper.ToDto(updatedCrop));
     }
@@ -118,6 +136,15 @@ public class CropsController(
         var deletedCrops = await cropsRepo.Delete(request.CropIds);
         if (deletedCrops.IsEmpty())
             return BadRequest();
+        
+        var publishEvents = deletedCrops.Select(deletedCropId =>
+            mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                .WithTopic("/simulation/crops/deleted")
+                .WithPayload(new CropEvent { CropId = deletedCropId }.ToJson())
+                .Build())
+        );
+
+        await Task.WhenAll(publishEvents);
 
         return Ok(new DeleteCropsResponse
         {

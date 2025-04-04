@@ -40,7 +40,7 @@ public class UpdateItemRequest
     public string? Type { get; init; }
     public string? Name { get; init; }
     public string? Description { get; init; }
-    public string? GameImage { get; set; }
+    public string? GameImage { get; init; }
 }
 
 public class DeleteItemsRequest
@@ -51,4 +51,9 @@ public class DeleteItemsRequest
 public class DeleteItemsResponse
 {
     public IList<string> ItemIds { get; set; } = new List<string>();
+}
+
+public class ItemEvent
+{
+    public required string ItemId { get; init; }
 }

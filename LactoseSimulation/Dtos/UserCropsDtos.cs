@@ -5,7 +5,7 @@ namespace Lactose.Simulation.Dtos.UserCrops;
 
 public class UserRequest
 {
-    public required string UserId { get; set; }
+    public required string UserId { get; init; }
 }
 
 public class GetUserCropsRequest : UserRequest;
@@ -26,9 +26,9 @@ public class SimulateUserCropsResponse
 
 public class CreateUserCropRequest : UserRequest
 {
-    public required string CropId { get; set; }
-    public required Vector CropLocation { get; set; }
-    public required Vector CropRotation { get; set; }
+    public required string CropId { get; init; }
+    public required Vector CropLocation { get; init; }
+    public required Vector CropRotation { get; init; }
 }
 
 public class CreateUserCropResponse
@@ -38,7 +38,7 @@ public class CreateUserCropResponse
 
 public class HarvestUserCropsRequest : UserRequest
 {
-    public required IList<string> CropInstanceIds { get; set; }
+    public required IList<string> CropInstanceIds { get; init; }
 }
 
 public class HarvestUserCropsResponse
@@ -48,7 +48,7 @@ public class HarvestUserCropsResponse
 
 public class DestroyUserCropsRequest : UserRequest
 {
-    public required IList<string> CropInstanceIds { get; set; }
+    public required IList<string> CropInstanceIds { get; init; }
 }
 
 public class DestroyUserCropsResponse
@@ -58,7 +58,7 @@ public class DestroyUserCropsResponse
 
 public class FertiliseUserCropsRequest : UserRequest
 {
-    public required IList<string> CropInstanceIds { get; set; }
+    public required IList<string> CropInstanceIds { get; init; }
 }
 
 public class FertiliseUserCropsResponse
@@ -68,11 +68,17 @@ public class FertiliseUserCropsResponse
 
 public class SeedUserCropRequest : UserRequest
 {
-    public required IList<string> CropInstanceIds { get; set; }
-    public required string CropId { get; set; }
+    public required IList<string> CropInstanceIds { get; init; }
+    public required string CropId { get; init; }
 }
 
 public class SeedUserCropsResponse
 {
     public required IList<string> SeededCropInstanceIds { get; set; }
+}
+
+public class UserCropInstancesEvent
+{
+    public required string UserId { get; init; }
+    public required IList<string> CropInstanceIds { get; init; }
 }

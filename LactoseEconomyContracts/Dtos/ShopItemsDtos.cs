@@ -25,7 +25,7 @@ public class NewShopItemDto
 
 public class GetShopItemsRequest
 {
-    public required IList<string> ShopItemIds { get; set; }
+    public required IList<string> ShopItemIds { get; init; }
 }
 
 public class GetShopItemsResponse
@@ -35,8 +35,8 @@ public class GetShopItemsResponse
 
 public class GetUserShopItemsRequest
 {
-    public required string UserId { get; set; }
-    public bool RetrieveUserQuantity { get; set; } = false;
+    public required string UserId { get; init; }
+    public bool RetrieveUserQuantity { get; init; } = false;
 }
 
 public class GetUserShopItemsResponse
@@ -46,9 +46,9 @@ public class GetUserShopItemsResponse
 
 public class UpdateUserShopItemsRequest
 {
-    public required string UserId { get; set; }
-    public IList<NewShopItemDto>? NewItems { get; set; }
-    public IList<string>? ItemIdsToRemove { get; set; }
+    public required string UserId { get; init; }
+    public IList<NewShopItemDto>? NewItems { get; init; }
+    public IList<string>? ItemIdsToRemove { get; init; }
 }
 
 public class UpdateUserShopItemsResponse
@@ -59,7 +59,7 @@ public class UpdateUserShopItemsResponse
 
 public class DeleteUserShopRequest
 {
-    public required string UserId { get; set; }
+    public required string UserId { get; init; }
 }
 
 public class DeleteUserShopResponse
@@ -69,9 +69,9 @@ public class DeleteUserShopResponse
 
 public class ShopItemTradeRequest
 {
-    public required string UserId { get; set; }
-    public required string ShopItemId { get; set; }
-    public int Quantity { get; set; } = 1;
+    public required string UserId { get; init; }
+    public required string ShopItemId { get; init; }
+    public int Quantity { get; init; } = 1;
 }
 
 public class ShopItemTradeResponse

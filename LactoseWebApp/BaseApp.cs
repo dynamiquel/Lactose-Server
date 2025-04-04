@@ -118,7 +118,7 @@ public abstract class BaseApp
             builder.Services.AddAuthorization();
         }
 
-        builder.Services.AddServiceInfo(builder.Configuration);
+        builder.Services.AddLactoseService(builder.Configuration);
         builder.Services.AddControllers(options =>
         {
             options.Filters.Add<LogActionFilter>();
@@ -158,13 +158,6 @@ public abstract class BaseApp
     /// <param name="app"></param>
     protected virtual void OnPreRun(WebApplication app)
     {
-        var serviceInfo = app.Services.GetService<IServiceInfo>();
-        if (serviceInfo is null)
-        {
-            throw new ServiceInfoNotFoundException();
-        }
-        
-        serviceInfo.Status = OnlineStatus.Online;
     }
     
     /// <summary>

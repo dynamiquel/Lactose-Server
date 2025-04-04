@@ -29,13 +29,13 @@ public class LogoutResponse;
 public class SignupRequest
 {
     [EmailAddress]
-    public required string Email { get; set; }
+    public required string Email { get; init; }
     
     [MinLength(8)]
-    public required string Password { get; set; }
+    public required string Password { get; init; }
     
     [MinLength(8)]
-    public required string DisplayName { get; set; }
+    public required string DisplayName { get; init; }
 }
 
 public class SignupResponse : BasicClaims;
@@ -52,8 +52,8 @@ public class RefreshRequest
 
 public class AuthenticateTokenRequest
 {
-    public required string AccessToken { get; set; }
-    public string? Audience { get; set; }
+    public required string AccessToken { get; init; }
+    public string? Audience { get; init; }
 }
 
 public class AuthenticateTokenResponse
@@ -62,3 +62,9 @@ public class AuthenticateTokenResponse
 }
 
 public class RefreshResponse : BasicClaims;
+
+public class UserLoggedInEvent
+{
+    public required string UserId { get; init; }
+    public DateTime TimeLastLoggedIn { get; init; }
+}

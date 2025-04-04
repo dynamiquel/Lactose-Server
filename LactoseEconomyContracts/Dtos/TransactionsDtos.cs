@@ -48,3 +48,10 @@ public class TradeResponse
 {
     public TradeResponseReason Reason { get; set; }
 }
+
+public class TradeEvent
+{
+    public string? OutgoingUserId { get; init; }
+    public string? IncomingUserId { get; init; }
+    public required IList<string> TransactionIds { get; init; }
+}

@@ -2,10 +2,12 @@ using Lactose.Economy.Data.Repos;
 using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
+using LactoseWebApp;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet;
 
 namespace Lactose.Economy.Controllers;
 
@@ -14,7 +16,8 @@ namespace Lactose.Economy.Controllers;
 public class TransactionsController(
     ITransactionsRepo transactionsRepo,
     IUserItemsRepo userItemsRepo,
-    ILogger<ITransactionsController> logger) : ControllerBase, ITransactionsController
+    ILogger<ITransactionsController> logger,
+    IMqttClient mqttClient) : ControllerBase, ITransactionsController
 {
     [HttpPost("query", Name = "Query Transactions")]
     [Authorize]
@@ -118,6 +121,8 @@ public class TransactionsController(
         
         var transactionTime = DateTime.UtcNow;
         
+        IList<Transaction> userAToBTransactions = new List<Transaction>();
+        
         // Transfer from User A to User B.
         foreach (var itemToTransfer in request.UserA.Items)
         {
@@ -134,11 +139,15 @@ public class TransactionsController(
             if (transaction is null)
                 return StatusCode(500, "Could not create a new Transaction");
             
+            userAToBTransactions.Add(transaction);
+            
             userAItems?.DecreaseItemQuantity(itemToTransfer.ItemId, itemToTransfer.Quantity);
             userBItems?.IncreaseItemQuantity(itemToTransfer.ItemId, itemToTransfer.Quantity);
             
             logger.LogInformation($"Transferred {itemToTransfer.Quantity} x '{itemToTransfer.ItemId}' from user '{request.UserA.UserId}' to user '{request.UserB.UserId}'");
         }
+
+        IList<Transaction> userBToATransactions = new List<Transaction>();
         
         // Transfer from User B to User A.
         foreach (var itemToTransfer in request.UserB.Items)
@@ -156,6 +165,8 @@ public class TransactionsController(
             if (transaction is null)
                 return StatusCode(500, "Could not create a new Transaction");
             
+            userBToATransactions.Add(transaction);
+
             userBItems?.DecreaseItemQuantity(itemToTransfer.ItemId, itemToTransfer.Quantity);
             userAItems?.IncreaseItemQuantity(itemToTransfer.ItemId, itemToTransfer.Quantity);
             
@@ -175,6 +186,26 @@ public class TransactionsController(
             if (userBItems is null)
                 return StatusCode(500, $"Could not update User Items for user with UserID '{request.UserB.UserId}'");
         }
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/economy/transactions/{request.UserA.UserId ?? "null"}/{request.UserB.UserId ?? "null"}")
+            .WithPayload(new TradeEvent
+            {
+                OutgoingUserId = request.UserA.UserId,
+                IncomingUserId = request.UserB.UserId,
+                TransactionIds = userAToBTransactions.Select(t => t.Id).ToList()!
+            }.ToJson())
+            .Build());
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/economy/transactions/{request.UserB.UserId ?? "null"}/{request.UserA.UserId ?? "null"}")
+            .WithPayload(new TradeEvent
+            {
+                OutgoingUserId = request.UserB.UserId,
+                IncomingUserId = request.UserA.UserId,
+                TransactionIds = userBToATransactions.Select(t => t.Id).ToList()!
+            }.ToJson())
+            .Build());
 
         return Ok(new TradeResponse
         {

@@ -2,10 +2,12 @@ using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Users;
 using Lactose.Identity.Mapping;
 using Lactose.Identity.Models;
+using LactoseWebApp;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet;
 
 namespace Lactose.Identity.Controllers;
 
@@ -13,7 +15,8 @@ namespace Lactose.Identity.Controllers;
 [Route("[controller]")]
 public class UsersController(
     ILogger<UsersController> logger,
-    IUsersRepo usersRepo) 
+    IUsersRepo usersRepo,
+    IMqttClient mqttClient) 
     : ControllerBase
 {
     [HttpPost("query", Name = "Query Users")]
@@ -67,6 +70,14 @@ public class UsersController(
         if (createdUser is null)
             return StatusCode(500, $"Could not create user with name '{request.DisplayName}'");
         
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/identity/users/created")
+            .WithPayload(new UserEvent
+            {
+                UserId = createdUser.Id!
+            }.ToJson())
+            .Build());
+        
         return Ok(UserMapper.ToDto(createdUser));
     }
 
@@ -87,6 +98,14 @@ public class UsersController(
         var response = await usersRepo.Delete(request.UserId);
         if (!response)
             return StatusCode(500, $"User with ID '{request.UserId}' could not be deleted");
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/identity/users/deleted")
+            .WithPayload(new UserEvent
+            {
+                UserId = request.UserId
+            }.ToJson())
+            .Build());
 
         return Ok();
     }

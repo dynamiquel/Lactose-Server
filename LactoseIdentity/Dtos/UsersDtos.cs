@@ -26,3 +26,8 @@ public class CreateUserRequest
     public required string DisplayName { get; init; }
     public IList<string> Roles { get; init; } = new List<string>();
 }
+
+public class UserEvent
+{
+    public required string UserId { get; init; }
+}

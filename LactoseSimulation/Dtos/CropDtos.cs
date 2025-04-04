@@ -34,26 +34,26 @@ public class GetCropsResponse
 
 public class CreateCropRequest
 {
-    public required string Type { get; set; }
-    public required string Name { get; set; }
-    public required IList<UserItem> CostItems { get; set; }
-    public required double HarvestSeconds { get; set; }
-    public required IList<UserItem> HarvestItems { get; set; }
-    public IList<UserItem>? DestroyItems { get; set; }
-    public string? FertiliserItemId { get; set; }
-    public string? GameCrop { get; set; }
+    public required string Type { get; init; }
+    public required string Name { get; init; }
+    public required IList<UserItem> CostItems { get; init; }
+    public required double HarvestSeconds { get; init; }
+    public required IList<UserItem> HarvestItems { get; init; }
+    public IList<UserItem>? DestroyItems { get; init; }
+    public string? FertiliserItemId { get; init; }
+    public string? GameCrop { get; init; }
 }
 
 public class UpdateCropRequest
 {
     public required string CropId { get; init; }
-    public string? Name { get; set; }
-    public IList<UserItem>? CostItems { get; set; }
-    public double? HarvestSeconds { get; set; }
-    public IList<UserItem>? HarvestItems { get; set; }
-    public IList<UserItem>? DestroyItems { get; set; }
-    public string? FertiliserItemId { get; set; }
-    public string? GameCrop { get; set; }
+    public string? Name { get; init; }
+    public IList<UserItem>? CostItems { get; init; }
+    public double? HarvestSeconds { get; init; }
+    public IList<UserItem>? HarvestItems { get; init; }
+    public IList<UserItem>? DestroyItems { get; init; }
+    public string? FertiliserItemId { get; init; }
+    public string? GameCrop { get; init; }
 }
 
 public class DeleteCropsRequest
@@ -64,4 +64,9 @@ public class DeleteCropsRequest
 public class DeleteCropsResponse
 {
     public IList<string> DeletedCropIds { get; set; } = new List<string>();
+}
+
+public class CropEvent
+{
+    public required string CropId { get; init; }
 }

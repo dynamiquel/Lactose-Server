@@ -7,6 +7,7 @@ using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet;
 
 namespace Lactose.Economy.Controllers;
 
@@ -14,7 +15,8 @@ namespace Lactose.Economy.Controllers;
 [Route("[controller]")]
 public class ItemsController(
     ILogger<ItemsController> logger,
-    IItemsRepo itemsRepo) : ControllerBase, IItemsController
+    IItemsRepo itemsRepo,
+    IMqttClient mqttClient) : ControllerBase, IItemsController
 {
     [HttpPost("query", Name = "Query Items")]
     public async Task<ActionResult<QueryItemsResponse>> QueryItems(QueryItemsRequest request)
@@ -57,6 +59,14 @@ public class ItemsController(
         if (createdItem is null)
             return StatusCode(500, $"Could not create Item with name '{request.Name}'");
         
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/economy/items/created")
+            .WithPayload(new ItemEvent
+            {
+                ItemId = createdItem.Id!
+            }.ToJson())
+            .Build());
+        
         return Ok(ItemMapper.ToDto(createdItem));
     }
 
@@ -86,6 +96,14 @@ public class ItemsController(
         var updatedItem = await itemsRepo.Set(existingItem);
         if (updatedItem is null)
             return StatusCode(500, $"Could not update Item with Id '{request.ItemId}'");
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/economy/items/updated")
+            .WithPayload(new ItemEvent
+            {
+                ItemId = updatedItem.Id!
+            }.ToJson())
+            .Build());
 
         return Ok(ItemMapper.ToDto(updatedItem));
     }
@@ -106,6 +124,15 @@ public class ItemsController(
         var deletedItems = await itemsRepo.Delete(request.ItemIds);
         if (deletedItems.IsEmpty())
             return BadRequest();
+
+        var publishEvents = deletedItems.Select(deletedItemId =>
+            mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                .WithTopic("/economy/items/deleted")
+                .WithPayload(new ItemEvent { ItemId = deletedItemId }.ToJson())
+                .Build())
+            );
+
+        await Task.WhenAll(publishEvents);
 
         return Ok(new DeleteItemsResponse
         {

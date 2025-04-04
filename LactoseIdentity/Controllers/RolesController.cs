@@ -5,6 +5,7 @@ using LactoseWebApp;
 using LactoseWebApp.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet;
 
 namespace Lactose.Identity.Controllers;
 
@@ -12,7 +13,8 @@ namespace Lactose.Identity.Controllers;
 [Route("[controller]")]
 public class RolesController(
     ILogger<RolesController> logger, 
-    IRolesRepo rolesRepo) 
+    IRolesRepo rolesRepo,
+    IMqttClient mqttClient) 
     : ControllerBase
 {
     [HttpPost("query", Name = "Query Roles")]
@@ -47,6 +49,11 @@ public class RolesController(
         if (createdRole is null)
             return StatusCode(500, $"Could not create Role with ID '{request.Id}'");
         
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/identity/roles/created")
+            .WithPayload(new RoleEvent { RoleIds = [ createdRole.Id ] }.ToJson())
+            .Build());
+        
         return Ok(RoleMapper.ToDto(createdRole));
     }
 
@@ -58,6 +65,12 @@ public class RolesController(
             return Unauthorized("You do not have permission to delete roles");
         
         var deletedRoles = await rolesRepo.Delete(request.RoleIds);
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic("/identity/roles/deleted")
+            .WithPayload(new RoleEvent { RoleIds = deletedRoles.ToList() }.ToJson())
+            .Build());
+        
         return Ok(new QueryRolesResponse
         {
             RoleIds = deletedRoles.ToList()

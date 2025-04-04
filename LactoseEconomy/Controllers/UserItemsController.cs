@@ -3,11 +3,13 @@ using Lactose.Economy.Dtos.UserItems;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using Lactose.Economy.Options;
+using LactoseWebApp;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MQTTnet;
 
 namespace Lactose.Economy.Controllers;
 
@@ -15,7 +17,8 @@ namespace Lactose.Economy.Controllers;
 [Route("[controller]")]
 public class UserItemsController(
     IUserItemsRepo userItemsRepo, 
-    IOptions<UserStartingItemsOptions> userStartingItems) : ControllerBase, IUserItemsController
+    IOptions<UserStartingItemsOptions> userStartingItems,
+    IMqttClient mqttClient) : ControllerBase, IUserItemsController
 {
     static bool IsValidEconomyUser(string userId) => userId.IsValidObjectId() || userId.StartsWith("vendor");
     
@@ -82,6 +85,15 @@ public class UserItemsController(
             return Unauthorized($"You do not have permission to write user's '{request.UserId}' items");
         
         bool result = await userItemsRepo.Delete(request.UserId);
+        
+        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/economy/useritems/{request.UserId}/deleted")
+            .WithPayload(new UserItemsDeletedEvent()
+            {
+                UserId = request.UserId
+            }.ToJson())
+            .Build());
+        
         return Ok(result);
     }
 

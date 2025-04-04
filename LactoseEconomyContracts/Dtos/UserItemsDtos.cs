@@ -28,3 +28,8 @@ public class CreateVendorResponse
 {
     public required string UserId { get; set; }
 }
+
+public class UserItemsDeletedEvent
+{
+    public required string UserId { get; init; }
+}

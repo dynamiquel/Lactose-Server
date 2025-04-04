@@ -10,11 +10,11 @@ public static class ServiceExtensions
     /// <param name="services"></param>
     /// <param name="config"></param>
     /// <returns></returns>
-    public static IServiceCollection AddServiceInfo(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddLactoseService(this IServiceCollection services, IConfiguration config)
     {
         var serviceOptions = config.GetOptions<ServiceOptions>();
 
-        return services.AddSingleton<IServiceInfo, ServiceInfo>(_ => new ServiceInfo
+        services.AddSingleton<IServiceInfo, ServiceInfo>(_ => new ServiceInfo
         {
             Name = serviceOptions.ServiceName,
             Description = serviceOptions.Description,
@@ -22,5 +22,9 @@ public static class ServiceExtensions
             Version = !string.IsNullOrWhiteSpace(serviceOptions.Version) ? Version.Parse(serviceOptions.Version) : new Version(0, 1),
             Status = OnlineStatus.Starting
         });
+
+        services.AddHostedService<ServiceHealthChecker>();
+
+        return services;
     }
 }

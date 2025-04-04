@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using MQTTnet;
 using LoginRequest = Lactose.Identity.Dtos.Auth.LoginRequest;
 
 namespace Lactose.Identity.Controllers;
@@ -29,6 +30,7 @@ public class AuthController : ControllerBase
     readonly IOptions<PermissionsOptions> _permissionsOptions;
     readonly PermissionsService _permissionsService;
     readonly JwtTokenHandler _tokenHandler;
+    readonly IMqttClient _mqttClient;
 
     public AuthController(
         ILogger<AuthController> logger,
@@ -38,7 +40,8 @@ public class AuthController : ControllerBase
         IOptions<NewUserOptions> newUserOptions,
         IOptions<PermissionsOptions> permissionsOptions,
         PermissionsService permissionsService,
-        JwtTokenHandler tokenHandler)
+        JwtTokenHandler tokenHandler,
+        IMqttClient mqttClient)
     {
         _usersRepo = usersRepo;
         _passwordHasher = passwordHasher;
@@ -47,6 +50,7 @@ public class AuthController : ControllerBase
         _permissionsOptions = permissionsOptions;
         _permissionsService = permissionsService;
         _tokenHandler = tokenHandler;
+        _mqttClient = mqttClient;
      
         logger.LogInformation($"Using Auth Options: {_authOptions.Value.ToIndentedJson()}");
     }
@@ -103,7 +107,16 @@ public class AuthController : ControllerBase
                     Path = GetRefreshActionRelativeUrl()
                 });
         }
-
+        
+        await _mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/identity/presence/{foundUser.Id!}/online")
+            .WithPayload(new UserLoggedInEvent
+            {
+                UserId = foundUser.Id!, 
+                TimeLastLoggedIn = foundUser.TimeLastLoggedIn
+            }.ToJson())
+            .Build());
+        
         return Ok(new LoginResponse
         {
             Id = foundUser.Id,
@@ -165,6 +178,14 @@ public class AuthController : ControllerBase
                     Path = GetRefreshActionRelativeUrl()
                 });
         }
+        
+        await _mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/identity/presence/{createdUser.Id!}/online")
+            .WithPayload(new UserLoggedInEvent
+            {
+                UserId = createdUser.Id!
+            }.ToJson())
+            .Build());
         
         return Ok(new SignupResponse
         {

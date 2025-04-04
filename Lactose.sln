@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LactoseIdentity", "LactoseI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LactoseConfig", "LactoseConfig\LactoseConfig.csproj", "{78223F48-27DF-4973-B442-6E178591C92B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LactoseEvents", "LactoseEvents\LactoseEvents.csproj", "{167700DA-7FCF-4757-9DCA-E6640AE8F481}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LactoseTasks", "LactoseTasks\LactoseTasks.csproj", "{9E23B237-367E-4AD3-A5FE-E7D9072D305D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LactoseEconomy", "LactoseEconomy\LactoseEconomy.csproj", "{892A8532-E707-4ACE-BB61-E946D419CDDB}"
@@ -43,10 +41,6 @@ Global
 		{78223F48-27DF-4973-B442-6E178591C92B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78223F48-27DF-4973-B442-6E178591C92B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78223F48-27DF-4973-B442-6E178591C92B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{167700DA-7FCF-4757-9DCA-E6640AE8F481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{167700DA-7FCF-4757-9DCA-E6640AE8F481}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{167700DA-7FCF-4757-9DCA-E6640AE8F481}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{167700DA-7FCF-4757-9DCA-E6640AE8F481}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E23B237-367E-4AD3-A5FE-E7D9072D305D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E23B237-367E-4AD3-A5FE-E7D9072D305D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E23B237-367E-4AD3-A5FE-E7D9072D305D}.Release|Any CPU.ActiveCfg = Release|Any CPU

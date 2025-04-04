@@ -6,12 +6,15 @@ using LactoseWebApp;
 using LactoseWebApp.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTnet;
 
 namespace Lactose.Config.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ConfigController(IConfigRepo repo) : ControllerBase, IConfigController
+public class ConfigController(
+    IConfigRepo repo,
+    IMqttClient mqttClient) : ControllerBase, IConfigController
 {
     [HttpGet("entry", Name = "Get Entry")]
     public async Task<ActionResult<ConfigEntryResponse>> GetEntry(ConfigEntryRequest entryRequest)

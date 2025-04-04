@@ -30,3 +30,8 @@ public class CreateRoleRequest
     public required string RoleName { get; init; }
     public IList<string> Permissions { get; init; } = new List<string>();
 }
+
+public class RoleEvent
+{
+    public required IList<string> RoleIds { get; init; }
+}
