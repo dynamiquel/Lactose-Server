@@ -104,6 +104,9 @@ public static class JwtServiceExtensions
 
     public static HttpClient UseThisApiForAuth(this HttpClient httpClient, IServiceProvider serviceProvider)
     {
+        // Register this as a dependency.
+        serviceProvider.GetService<ApiAuthService>();
+        
         // Forward the API's Access Token to the HTTP Client.
         JsonWebToken? accessToken = serviceProvider.GetRequiredService<IApiAuthHandler>().AccessToken;
         if (accessToken is not null)

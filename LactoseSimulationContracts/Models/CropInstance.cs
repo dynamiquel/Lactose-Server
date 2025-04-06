@@ -1,4 +1,4 @@
-using LactoseWebApp.Types;
+using Lactose.Types;
 
 namespace Lactose.Simulation.Models;
 

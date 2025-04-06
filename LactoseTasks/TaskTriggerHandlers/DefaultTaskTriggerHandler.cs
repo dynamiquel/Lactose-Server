@@ -1,9 +1,10 @@
+using Lactose.Events;
 using Lactose.Tasks.Models;
 using Task = System.Threading.Tasks.Task;
 
 namespace Lactose.Tasks.TaskTriggerHandlers;
 
-public class DefaultTaskTriggerConfig
+public class DefaultTaskTriggerConfig : TaskHandlerConfig
 {
     /// <summary>
     /// How much progress to provide to the User Task for each time the
@@ -17,7 +18,9 @@ public class DefaultTaskTriggerConfig
 /// </summary>
 public class DefaultTaskTriggerHandler : ITaskTriggerHandler
 {
-    public Type GetConfigType() => typeof(DefaultTaskTriggerConfig);
+    public string Name => "default";
+    public Type ConfigType => typeof(DefaultTaskTriggerConfig);
+    public Type EventType => typeof(UserEvent);
 
     public Task<float> CalculateTaskProgress(Trigger trigger, UserEvent eventPayload)
     {

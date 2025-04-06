@@ -20,4 +20,8 @@
     <ItemGroup>
       <Folder Include="Controllers\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LactoseShared\LactoseShared.csproj" />
+    </ItemGroup>
 </Project>

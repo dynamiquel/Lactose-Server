@@ -54,6 +54,23 @@ public class UserCropsController(
         return Ok(UserCropsMapper.ToDto(userCrops));
     }
 
+    [Authorize]
+    [HttpPost("byid", Name = "Get User Crops by ID")]
+    public async Task<ActionResult<GetUserCropsResponse>> GetCropsById(GetUserCropsByIdRequest request)
+    {
+        if (!request.UserId.IsValidObjectId())
+            return BadRequest($"'{request.UserId}' is not a valid User ID");
+        
+        if (!CanReadThisUserCrops(request))
+            return Unauthorized("You cannot view crops for this user");
+        
+        List<CropInstance> foundCropInstances = await userCropsRepo.GetUserCropsById(request.UserId, request.CropInstanceIds);
+        return Ok(new GetUserCropsResponse
+        {
+            CropInstances = foundCropInstances
+        });
+    }
+
     [HttpPost("simulate", Name = "Simulate User Crops")]
     public async Task<ActionResult<SimulateUserCropsResponse>> SimulateCrops(SimulateUserCropsRequest request)
     {
@@ -203,7 +220,7 @@ public class UserCropsController(
         ICollection<string> cropIds = userCrops.CropInstances.Select(cropInstance => cropInstance.CropId).ToList();
         ICollection<Crop> crops = await cropsRepo.Get(cropIds);
 
-        IList<string> harvestedCropInstanceIds = new List<string>();
+        List<string> harvestedCropInstanceIds = [];
 
         foreach (string requestedCropInstanceId in request.CropInstanceIds)
         {
@@ -292,7 +309,7 @@ public class UserCropsController(
         ICollection<string> cropIds = userCrops.CropInstances.Select(cropInstance => cropInstance.CropId).ToList();
         ICollection<Crop> crops = await cropsRepo.Get(cropIds);
 
-        IList<string> destroyedCropInstanceIds = new List<string>();
+        List<string> destroyedCropInstanceIds = [];
 
         foreach (string requestedCropInstanceId in request.CropInstanceIds)
         {
@@ -369,7 +386,7 @@ public class UserCropsController(
         ICollection<string> cropIds = userCrops.CropInstances.Select(cropInstance => cropInstance.CropId).ToList();
         ICollection<Crop> crops = await cropsRepo.Get(cropIds);
 
-        IList<string> fertilisedCropInstanceIds = new List<string>();
+        List<string> fertilisedCropInstanceIds = [];
 
         foreach (string requestedCropInstanceId in request.CropInstanceIds)
         {
@@ -479,8 +496,8 @@ public class UserCropsController(
         Crop? crop = await cropsRepo.Get(request.CropId);
         if (crop is null)
             return BadRequest($"No Crop could be found with ID: {request.CropId}");
-        
-        IList<string> seededCropInstanceIds = new List<string>();
+
+        List<string> seededCropInstanceIds = [];
 
         foreach (string requestedCropInstanceId in request.CropInstanceIds)
         {

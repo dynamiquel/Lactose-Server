@@ -236,8 +236,39 @@ services:
     build:
       context: .
       dockerfile: LactoseTasks/Dockerfile
+    environment:
+      ASPNETCORE_Kestrel__PathBase: /tasks
+      ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-tasks-api-key
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tasks.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/tasks`)
+      traefik.http.routers.tasks.tls.certResolver: cf
+      traefik.http.services.tasks.loadBalancer.server.scheme: https
+    secrets:
+      - lactose-cert-fullchain
+      - lactose-cert-privkey
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
+      - lactose-tasks-api-key
+    depends_on:
+      - tasks-db
+      - identity
+    restart: always
+    
+  tasks-db:
+    container_name: lactose-tasks-db
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
+    user: "1000"
     ports:
-      - "2030:443"
+      - "2065:27017"
+    volumes:
+      - ./data/TasksDb:/data/db
+    secrets:
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
 
   economy:
     container_name: lactose-economy
@@ -337,3 +368,5 @@ secrets:
     file: ./data/secrets/config-api-key.txt
   lactose-economy-api-key:
     file: ./data/secrets/economy-api-key.txt
+  lactose-tasks-api-key:
+    file: ./data/secrets/tasks-api-key.txt

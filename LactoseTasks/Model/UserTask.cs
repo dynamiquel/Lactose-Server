@@ -1,3 +1,4 @@
+using Lactose.Events;
 using LactoseWebApp.Repo;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -15,10 +16,9 @@ public class UserTask : IBasicKeyValueModel
     public required bool Completed { get; set; }
 }
 
-/// <summary>
-/// Represents any event that has context of a user.
-/// </summary>
-public class UserEvent
+public class UserTaskUpdatedEvent : UserEvent
 {
-    public required string UserId { get; set; }
+    public required string TaskId { get; set; }
+    public required string UserTaskId { get; set; }
+    public required float PreviousProgress { get; set; }
 }

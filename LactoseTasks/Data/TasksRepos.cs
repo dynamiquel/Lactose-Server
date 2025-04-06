@@ -1,9 +1,11 @@
 using Lactose.Tasks.Models;
 using Lactose.Tasks.Options;
+using LactoseWebApp;
 using LactoseWebApp.Mongo;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MQTTnet;
 using Task = System.Threading.Tasks.Task;
 
 namespace Lactose.Tasks.Data;
@@ -12,6 +14,29 @@ public class MongoTasksRepo : MongoBasicKeyValueRepo<MongoTasksRepo, Models.Task
 {
     public MongoTasksRepo(ILogger<MongoTasksRepo> logger, IOptions<TasksDatabaseOptions> databaseOptions) 
         : base(logger, databaseOptions) { }
+
+    public async Task<HashSet<string>> GetAllTriggerTopics()
+    {
+        var results =
+            from item in Collection.AsQueryable()
+            select item.Triggers;
+
+        HashSet<string> allTopics = [];
+        await results.ForEachAsync(taskTriggers => allTopics.Append(taskTriggers.Select(r => r.Topic)));
+        return allTopics;
+    }
+
+    public async Task<List<Models.Task>> GetTasksWithTriggerTopic(string topic)
+    {
+        var results =
+            from item in Collection.AsQueryable()
+            select item;
+
+        var tasks = await results.ToListAsync() ?? [];
+
+        return tasks.Where(task => task.Triggers.Any(t => 
+            MqttTopicFilterComparer.Compare(topic, t.Topic) == MqttTopicFilterCompareResult.IsMatch)).ToList();
+    }
 }
 
 public class MongoUserTasksRepo : MongoBasicKeyValueRepo<MongoUserTasksRepo, UserTask, UserTasksDatabaseOptions>

@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LactoseEconomyClient\LactoseEconomyClient.csproj" />
+      <ProjectReference Include="..\LactoseSimulationClient\LactoseSimulationClient.csproj" />
       <ProjectReference Include="..\LactoseWebApp\LactoseWebApp.csproj" />
     </ItemGroup>
 

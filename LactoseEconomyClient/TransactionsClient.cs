@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Lactose.Economy.Controllers;
 using Lactose.Economy.Dtos.Transactions;
-using LactoseClient;
+using Lactose.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

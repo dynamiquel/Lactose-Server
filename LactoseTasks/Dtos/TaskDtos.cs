@@ -22,13 +22,13 @@ public class TriggerDto
     /// <summary>
     /// The name of the C# Handler class to use to handle the event.
     /// </summary>
-    public required string Handler { get; set; }
+    public string Handler { get; set; } = "default";
 
     /// <summary>
     /// The config object to provide to the specified C# Handler class.
     /// Can be any valid JSON structure.
     /// </summary>
-    public object? HandlerConfig { get; set; }
+    public object? Config { get; set; }
 }
     
 /// <summary>
@@ -68,8 +68,8 @@ public class GetTasksResponse
 public class GetTaskResponse
 {
     public required string Id { get; set; }
-    public required string TaskName { get; set; }
-    public string? TaskDescription { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
     public required float RequiredProgress { get; set; }
     public IList<ItemRewardDto> Rewards { get; set; } = new List<ItemRewardDto>();
 }

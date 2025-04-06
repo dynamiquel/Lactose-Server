@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LactoseClient;
+namespace Lactose.Client;
 
 public static class HttpClientExtensions
 {

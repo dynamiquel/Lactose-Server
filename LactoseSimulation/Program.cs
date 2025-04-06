@@ -1,6 +1,6 @@
 using Lactose.Economy;
 using Lactose.Simulation.Data.Repos;
-using LactoseClient;
+using Lactose.Client;
 using LactoseWebApp.Auth;
 
 new SimulationApi().Start(args);

@@ -12,7 +12,6 @@ namespace LactoseTasks.Controllers;
 [Route("[controller]")]
 public class UserTasksController(
     ILogger<TasksController> logger,
-    IMqttClient mqttClient,
     MongoUserTasksRepo userTasksRepo) : ControllerBase
 {
     [HttpPost("query", Name = "Query User Tasks")]

@@ -102,6 +102,8 @@ public abstract class BaseApp
         {
             builder.Services.AddSingleton<PermissionsService>();
             builder.Services.AddScoped<IClaimsTransformation, PermissionClaimsTransformation>();
+            builder.Services.AddHostedService<ApiAuthService>();
+
             if (authOptions.UseLocalAuth)
             {
                 builder.Services.AddJwtAuthentication(authOptions);
@@ -114,7 +116,7 @@ public abstract class BaseApp
                 var permissionOptions = builder.Configuration.GetOptions<PermissionsOptions>();
                 builder.Services.AddLactoseIdentityAuthentication(authOptions, permissionOptions);
             }
-
+            
             builder.Services.AddAuthorization();
         }
 
@@ -146,7 +148,7 @@ public abstract class BaseApp
         {
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<ApiAuthMiddleware>();
+            //app.UseMiddleware<ApiAuthMiddleware>();
         }
 
         app.MapControllers();

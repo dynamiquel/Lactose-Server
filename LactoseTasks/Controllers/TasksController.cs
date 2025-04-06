@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Lactose.Tasks.Data;
 using Lactose.Tasks.Dtos;
 using Lactose.Tasks.Mapping;
 using Lactose.Tasks.Models;
+using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseWebApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +17,13 @@ namespace LactoseTasks.Controllers;
 public class TasksController(
     ILogger<TasksController> logger,
     IMqttClient mqttClient,
-    MongoTasksRepo tasksRepo) 
+    MongoTasksRepo tasksRepo,
+    TaskTriggerHandlerRegistry triggerHandlerRegistry) 
     : ControllerBase
 {
     [HttpPost("query", Name = "Query Tasks")]
     [Authorize]
-    public async Task<ActionResult<QueryTasksRequest>> QueryTasks(QueryTasksRequest request)
+    public async Task<ActionResult<QueryTasksResponse>> QueryTasks(QueryTasksRequest request)
     {
         ISet<string> foundTasks = await tasksRepo.Query();
 
@@ -41,17 +44,43 @@ public class TasksController(
     [HttpPost("create", Name = "Create Task")]
     public async Task<ActionResult<GetTaskResponse>> CreateTask(CreateTaskRequest request)
     {
-        List<Trigger> triggers = request.Triggers.Select(trigger => new Trigger
+        List<Trigger> triggers = [];
+        foreach (var trigger in request.Triggers)
         {
-            Topic = trigger.Topic, 
-            Handler = trigger.Handler, 
-            Config = trigger.HandlerConfig
-        }).ToList();
+            ITaskTriggerHandler? foundTriggerHandler = triggerHandlerRegistry.FindHandler(trigger.Handler);
+            if (foundTriggerHandler is null)
+                return BadRequest($"Task Trigger Handler with name '{trigger.Handler}' is not found");
+
+            // Since Config is an object?, it should be deserialised as a JsonElement?, indicating it is
+            // valid JSON but the program couldn't figure out its type.
+            // We will figure out its type now based on the Trigger Handler.
+            // We need to do this because Mongo's BSON serialiser doesn't understand JsonElements :(
+
+            object? config = trigger.Config;
+            if (trigger.Config is JsonElement configJson)
+            {
+                try
+                {
+                    config = configJson.Deserialize(foundTriggerHandler.ConfigType);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest($"Failed to parse Handler Config into type {foundTriggerHandler.ConfigType.Name}.\nReceived: {configJson.GetRawText()}\nReason: {e.Message}");
+                }
+            }
+            
+            triggers.Add(new Trigger
+            {
+                Topic = trigger.Topic,
+                Handler = trigger.Handler,
+                Config = (TaskHandlerConfig?)config
+            });
+        }
 
         Lactose.Tasks.Models.Task newTask = new()
         {
-            TaskName = request.Name,
-            TaskDescription = request.Description,
+            Name = request.Name,
+            Description = request.Description,
             RequiredProgress = request.RequiredProgress,
             Triggers = triggers
         };

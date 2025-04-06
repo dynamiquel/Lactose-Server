@@ -6,6 +6,7 @@ namespace Lactose.Simulation.Controllers;
 public interface IUserCropsController
 {
     Task<ActionResult<GetUserCropsResponse>> GetCrops(GetUserCropsRequest request);
+    Task<ActionResult<GetUserCropsResponse>> GetCropsById(GetUserCropsByIdRequest request);
     Task<ActionResult<SimulateUserCropsResponse>> SimulateCrops(SimulateUserCropsRequest request);
     Task<ActionResult<CreateUserCropResponse>> CreateCrop(CreateUserCropRequest request);
     Task<ActionResult<HarvestUserCropsResponse>> HarvestCrops(HarvestUserCropsRequest request);

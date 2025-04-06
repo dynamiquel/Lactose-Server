@@ -12,6 +12,9 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
     protected override void Configure(WebApplicationBuilder builder)
     {
         base.Configure(builder);
+        
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         builder.Services.AddSingleton<IRolesRepo, MongoRolesRepo>();
         builder.Services.AddSingleton<IUsersRepo, MongoUsersRepo>();
@@ -26,5 +29,10 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
     {
         base.OnBuilt(app);
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
     }
 }

@@ -347,6 +347,15 @@ public class AuthController : ControllerBase
         
         // Delete the old refresh token.
         await _tokenHandler.DeleteRefreshToken(refreshToken.Id);
+        
+        await _mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+            .WithTopic($"/identity/presence/{foundUser.Id!}/online")
+            .WithPayload(new UserLoggedInEvent
+            {
+                UserId = foundUser.Id!, 
+                TimeLastLoggedIn = foundUser.TimeLastLoggedIn
+            }.ToJson())
+            .Build());
 
         return Ok(new RefreshResponse
         {

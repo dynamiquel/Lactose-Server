@@ -1,4 +1,4 @@
-namespace LactoseWebApp.Types;
+namespace Lactose.Types;
 
 public class Vector
 {
