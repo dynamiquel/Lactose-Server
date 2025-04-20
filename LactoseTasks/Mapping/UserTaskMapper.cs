@@ -1,6 +1,6 @@
-using Lactose.Tasks.Models;
-using Lactose.Tasks.Repos;
+using Lactose.Tasks.Dtos;
 using Riok.Mapperly.Abstractions;
+using UserTask = Lactose.Tasks.Models.UserTask;
 
 namespace Lactose.Tasks.Mapping;
 

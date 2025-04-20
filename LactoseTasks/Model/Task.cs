@@ -51,7 +51,7 @@ public class Task : IBasicKeyValueModel
     public string? Id { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }
-    public required float RequiredProgress { get; set; }
+    public required double RequiredProgress { get; set; }
     public List<Trigger> Triggers { get; set; } = [];
     public List<ItemReward> Rewards { get; set; } = [];
 }
