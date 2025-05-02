@@ -1,4 +1,4 @@
-using Lactose.Tasks.Dtos;
+using Lactose.Tasks;
 using Riok.Mapperly.Abstractions;
 using UserTask = Lactose.Tasks.Models.UserTask;
 

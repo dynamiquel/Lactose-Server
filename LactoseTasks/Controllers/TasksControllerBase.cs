@@ -12,14 +12,14 @@ namespace Lactose.Tasks;
 public abstract class TasksControllerBase : ControllerBase
 {
     [HttpPost("query", Name = "TasksQuery")]
-    public abstract Task<ActionResult<Lactose.Tasks.Dtos.QueryTasksResponse>> Query(Lactose.Tasks.Dtos.QueryTasksRequest request);
+    public abstract Task<ActionResult<Lactose.Tasks.QueryTasksResponse>> Query(Lactose.Tasks.QueryTasksRequest request);
 
     [HttpPost("get", Name = "TasksGet")]
-    public abstract Task<ActionResult<Lactose.Tasks.Dtos.GetTasksResponse>> Get(Lactose.Tasks.Dtos.GetTasksRequest request);
+    public abstract Task<ActionResult<Lactose.Tasks.GetTasksResponse>> Get(Lactose.Tasks.GetTasksRequest request);
 
     [HttpPost("create", Name = "TasksCreate")]
-    public abstract Task<ActionResult<Lactose.Tasks.Dtos.GetTaskResponse>> Create(Lactose.Tasks.Dtos.CreateTaskRequest request);
+    public abstract Task<ActionResult<Lactose.Tasks.GetTaskResponse>> Create(Lactose.Tasks.CreateTaskRequest request);
 
     [HttpPost("delete", Name = "TasksDelete")]
-    public abstract Task<ActionResult<Lactose.Tasks.Dtos.DeleteTasksResponse>> Delete(Lactose.Tasks.Dtos.DeleteTasksRequest request);
+    public abstract Task<ActionResult<Lactose.Tasks.DeleteTasksResponse>> Delete(Lactose.Tasks.DeleteTasksRequest request);
 }

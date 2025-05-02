@@ -1,5 +1,4 @@
 using Lactose.Tasks.Data;
-using Lactose.Tasks.Dtos;
 using Lactose.Tasks.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,23 +14,23 @@ public class UserTasksController(
     {
         ISet<string> foundUserTasks = await userTasksRepo.Query();
 
-        return Ok(new QueryTasksResponse
+        return new QueryUserTasksResponse
         {
-            TaskIds = foundUserTasks.ToList()
-        });
+            UserTaskIds = foundUserTasks.ToList()
+        };
     }
 
     [Authorize]
     public override async Task<ActionResult<GetUserTasksResponse>> Get(GetUserTasksRequest request)
     {
         var foundUserTasks = await userTasksRepo.Get(request.UserTaskIds.ToHashSet());
-        return Ok(UserTaskMapper.ToDto(foundUserTasks));
+        return UserTaskMapper.ToDto(foundUserTasks);
     }
 
     [Authorize]
     public override async Task<ActionResult<GetUserTasksResponse>> GetById(GetUserTasksFromTaskIdRequest request)
     {
         var foundUserTasks = await userTasksRepo.GetUserTasksByTaskId(request.UserId, request.TaskIds);
-        return Ok(UserTaskMapper.ToDto(foundUserTasks));
+        return UserTaskMapper.ToDto(foundUserTasks);
     }
 }

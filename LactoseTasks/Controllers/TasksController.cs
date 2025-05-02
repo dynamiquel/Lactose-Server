@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Lactose.Tasks.Data;
-using Lactose.Tasks.Dtos;
 using Lactose.Tasks.Mapping;
 using Lactose.Tasks.Models;
 using Lactose.Tasks.TaskTriggerHandlers;
@@ -23,17 +22,17 @@ public class TasksController(
     {
         ISet<string> foundTasks = await tasksRepo.Query();
 
-        return Ok(new QueryTasksResponse
+        return new QueryTasksResponse
         {
             TaskIds = foundTasks.ToList()
-        });
+        };
     }
 
     [Authorize]
     public override async Task<ActionResult<GetTasksResponse>> Get(GetTasksRequest request)
     {
         var foundTasks = await tasksRepo.Get(request.TaskIds.ToHashSet());
-        return Ok(TaskMapper.ToDto(foundTasks));
+        return TaskMapper.ToDto(foundTasks);
     }
 
     [Authorize]
@@ -92,7 +91,7 @@ public class TasksController(
             }.ToJson())
             .Build());
         
-        return Ok(TaskMapper.ToDto(createdTask));
+        return TaskMapper.ToDto(createdTask);
     }
 
     [Authorize]
@@ -117,9 +116,9 @@ public class TasksController(
 
         await Task.WhenAll(publishEvents);
 
-        return Ok(new DeleteTasksResponse
+        return new DeleteTasksResponse
         {
             DeletedTaskIds = deletedTaskIds.ToList()
-        });
+        };
     }
 }
