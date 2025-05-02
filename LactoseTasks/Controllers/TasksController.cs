@@ -10,20 +10,16 @@ using Microsoft.AspNetCore.Mvc;
 using MQTTnet;
 using Task = System.Threading.Tasks.Task;
 
-namespace LactoseTasks.Controllers;
+namespace Lactose.Tasks.Controllers;
 
-[ApiController]
-[Route("[controller]")]
 public class TasksController(
     ILogger<TasksController> logger,
     IMqttClient mqttClient,
     MongoTasksRepo tasksRepo,
     TaskTriggerHandlerRegistry triggerHandlerRegistry) 
-    : ControllerBase
+    : TasksControllerBase
 {
-    [HttpPost("query", Name = "Query Tasks")]
-    [Authorize]
-    public async Task<ActionResult<QueryTasksResponse>> QueryTasks(QueryTasksRequest request)
+    public override async Task<ActionResult<QueryTasksResponse>> Query(QueryTasksRequest request)
     {
         ISet<string> foundTasks = await tasksRepo.Query();
 
@@ -32,17 +28,16 @@ public class TasksController(
             TaskIds = foundTasks.ToList()
         });
     }
-    
-    [HttpPost(Name = "Get Tasks")]
+
     [Authorize]
-    public async Task<ActionResult<GetTasksResponse>> GetTasks(GetTasksRequest request)
+    public override async Task<ActionResult<GetTasksResponse>> Get(GetTasksRequest request)
     {
         var foundTasks = await tasksRepo.Get(request.TaskIds.ToHashSet());
         return Ok(TaskMapper.ToDto(foundTasks));
     }
-    
-    [HttpPost("create", Name = "Create Task")]
-    public async Task<ActionResult<GetTaskResponse>> CreateTask(CreateTaskRequest request)
+
+    [Authorize]
+    public override async Task<ActionResult<GetTaskResponse>> Create(CreateTaskRequest request)
     {
         List<Trigger> triggers = [];
         foreach (var trigger in request.Triggers)
@@ -99,9 +94,9 @@ public class TasksController(
         
         return Ok(TaskMapper.ToDto(createdTask));
     }
-    
-    [HttpPost("delete", Name = "Delete Tasks")]
-    public async Task<ActionResult<DeleteTasksResponse>> DeleteTasks(DeleteTasksRequest request)
+
+    [Authorize]
+    public override async Task<ActionResult<DeleteTasksResponse>> Delete(DeleteTasksRequest request)
     {
         if (request.TaskIds is null)
         {

@@ -4,17 +4,14 @@ using Lactose.Tasks.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LactoseTasks.Controllers;
+namespace Lactose.Tasks.Controllers;
 
-[ApiController]
-[Route("[controller]")]
 public class UserTasksController(
-    ILogger<TasksController> logger,
-    MongoUserTasksRepo userTasksRepo) : ControllerBase
+    ILogger<UserTasksController> logger,
+    MongoUserTasksRepo userTasksRepo) : UserTasksControllerBase
 {
-    [HttpPost("query", Name = "Query User Tasks")]
     [Authorize]
-    public async Task<ActionResult<QueryUserTasksResponse>> QueryTasks(QueryUserTasksRequest request)
+    public override async Task<ActionResult<QueryUserTasksResponse>> Query(QueryUserTasksRequest request)
     {
         ISet<string> foundUserTasks = await userTasksRepo.Query();
 
@@ -23,18 +20,16 @@ public class UserTasksController(
             TaskIds = foundUserTasks.ToList()
         });
     }
-    
-    [HttpPost(Name = "Get User Tasks")]
+
     [Authorize]
-    public async Task<ActionResult<GetTasksResponse>> GetTasks(GetUserTasksRequest request)
+    public override async Task<ActionResult<GetUserTasksResponse>> Get(GetUserTasksRequest request)
     {
         var foundUserTasks = await userTasksRepo.Get(request.UserTaskIds.ToHashSet());
         return Ok(UserTaskMapper.ToDto(foundUserTasks));
     }
-    
-    [HttpPost("byTaskId", Name = "Get User Tasks by Task ID")]
+
     [Authorize]
-    public async Task<ActionResult<GetTasksResponse>> GetTasks(GetUserTasksFromTaskIdRequest request)
+    public override async Task<ActionResult<GetUserTasksResponse>> GetById(GetUserTasksFromTaskIdRequest request)
     {
         var foundUserTasks = await userTasksRepo.GetUserTasksByTaskId(request.UserId, request.TaskIds);
         return Ok(UserTaskMapper.ToDto(foundUserTasks));

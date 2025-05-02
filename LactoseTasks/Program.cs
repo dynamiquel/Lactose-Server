@@ -1,6 +1,5 @@
 using Lactose.Economy;
 using Lactose.Tasks.Data;
-using Lactose.Tasks.Models;
 using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseTasks.Services;
 using LactoseWebApp;
