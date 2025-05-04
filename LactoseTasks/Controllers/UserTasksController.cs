@@ -12,7 +12,7 @@ public class UserTasksController(
     [Authorize]
     public override async Task<ActionResult<QueryUserTasksResponse>> Query(QueryUserTasksRequest request)
     {
-        ISet<string> foundUserTasks = await userTasksRepo.Query();
+        ISet<string> foundUserTasks = await userTasksRepo.QueryUserTasks(request.UserId);
 
         return new QueryUserTasksResponse
         {

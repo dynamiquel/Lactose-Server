@@ -43,7 +43,23 @@ public class MongoUserTasksRepo : MongoBasicKeyValueRepo<MongoUserTasksRepo, Use
 {
     public MongoUserTasksRepo(ILogger<MongoUserTasksRepo> logger, IOptions<UserTasksDatabaseOptions> databaseOptions) 
         : base(logger, databaseOptions) { }
-    
+
+    public Task<ISet<string>> QueryUserTasks(string userId)
+    {
+        Logger.LogInformation("Querying items");
+
+        var results =
+            from item in Collection.AsQueryable()
+            where item.UserId == userId
+            select item.Id;
+
+        var foundItems = results.ToHashSet();
+        
+        Logger.LogInformation($"Queried {foundItems.Count} items");
+
+        return Task.FromResult<ISet<string>>(foundItems);
+    }
+
     public async Task<List<UserTask>> GetUserTasksByTaskId(string userId, IEnumerable<string> taskIds)
     {
         Logger.LogInformation($"Finding User Tasks for '{userId}'");
