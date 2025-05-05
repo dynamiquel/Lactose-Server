@@ -11,6 +11,11 @@ public class TransactionsClient(
     HttpClient httpClient,
     IOptions<EconomyClientOptions> options) : ITransactionsController
 {
+    public void SetAuthToken(string authToken)
+    {
+        httpClient.DefaultRequestHeaders.Authorization = new("Bearer", authToken);
+    }
+    
     public async Task<ActionResult<QueryTransactionsResponse>> QueryTransactions(QueryTransactionsRequest request)
     {
         var httpRequest = new HttpRequestMessage
@@ -43,7 +48,7 @@ public class TransactionsClient(
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri($"{options.Value.Url}/transactions/trade"),
-            Content = JsonContent.Create(request),
+            Content = JsonContent.Create(request)
         };
 
         var response = await httpClient.SendFromJson<TradeResponse>(httpRequest);

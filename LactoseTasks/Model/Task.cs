@@ -1,3 +1,4 @@
+using Lactose.Economy.Models;
 using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseWebApp.Repo;
 using MongoDB.Bson;
@@ -38,12 +39,6 @@ public class Trigger
     public TaskHandlerConfig? Config { get; set; }
 }
 
-public class ItemReward
-{
-    public required string ItemId { get; set; }
-    public required int Quantity { get; set; }
-}
-
 public class Task : IBasicKeyValueModel
 {
     [BsonId]
@@ -53,5 +48,5 @@ public class Task : IBasicKeyValueModel
     public string? Description { get; set; }
     public required double RequiredProgress { get; set; }
     public List<Trigger> Triggers { get; set; } = [];
-    public List<ItemReward> Rewards { get; set; } = [];
+    public List<UserItem> Rewards { get; set; } = [];
 }

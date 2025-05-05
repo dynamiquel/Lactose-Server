@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Lactose.Economy.Models;
 using Lactose.Tasks.Data;
 using Lactose.Tasks.Mapping;
 using Lactose.Tasks.Models;
@@ -71,12 +72,20 @@ public class TasksController(
             });
         }
 
+        List<UserItem> rewards = [];
+        if (request.Rewards is not null)
+        {
+            rewards.AddRange(request.Rewards.Select(rewardDto =>
+                new UserItem { ItemId = rewardDto.ItemId, Quantity = rewardDto.Quantity }));
+        }
+
         Lactose.Tasks.Models.Task newTask = new()
         {
             Name = request.Name,
             Description = request.Description,
             RequiredProgress = request.RequiredProgress,
-            Triggers = triggers
+            Triggers = triggers,
+            Rewards = rewards
         };
         
         var createdTask = await tasksRepo.Set(newTask);

@@ -1,10 +1,14 @@
 using System.Text;
+using Lactose.Economy;
+using Lactose.Economy.Dtos.Transactions;
 using Lactose.Events;
 using Lactose.Tasks.Data;
 using Lactose.Tasks.Models;
 using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseWebApp;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Mqtt;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Formatter;
@@ -19,11 +23,21 @@ public class UserTaskTracker(
     MqttClientFactory mqttFactory,
     MongoTasksRepo tasksRepo,
     MongoUserTasksRepo userTasksRepo,
-    TaskTriggerHandlerRegistry triggerHandlerRegistry) : IHostedService
+    TaskTriggerHandlerRegistry triggerHandlerRegistry,
+    TransactionsClient transactionsClient,
+    IApiAuthHandler authHandler) : IHostedService
 {
     private IMqttClient _mqttClient = null!; // Should never be null. I just cba doing the proper constructor.
+    
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        // Wait until authenticated and notify the transactions' client of it.
+        // This is so fucking hacky. Really need to look into dealing with client-based
+        // auth and DI dependencies.
+        while (authHandler.AccessToken is null)
+            await Task.Delay(100, cancellationToken);
+        transactionsClient.SetAuthToken(authHandler.AccessToken.UnsafeToString());
+        
         _mqttClient = mqttFactory.CreateMqttClient();
 
         var clientOptions = new MqttClientOptionsBuilder()
@@ -136,7 +150,7 @@ public class UserTaskTracker(
             if (userTask is { Completed: true })
             {
                 logger.LogInformation("User '{UserId}' has already completed Task '{TaskId}' under. No progress will be made", 
-                    userEvent.UserId, task.Id);
+                    userEvent!.UserId, task.Id);
                 continue;
             }
             
@@ -217,13 +231,6 @@ public class UserTaskTracker(
                     Progress = taskProgress,
                     Completed = taskProgress >= task.RequiredProgress
                 };
-                
-                userTask = await userTasksRepo.Set(userTask);
-                if (userTask is null)
-                {
-                    logger.LogError("Failed to create User Task");
-                    continue;
-                }
             }
             else
             {
@@ -232,13 +239,36 @@ public class UserTaskTracker(
                 userTask.Progress += taskProgress;
                 if (userTask.Progress >= task.RequiredProgress)
                     userTask.Completed = true;
+            }
 
-                userTask = await userTasksRepo.Set(userTask);
-                if (userTask is null)
+            if (userTask.Completed && task.Rewards.Count > 0)
+            {
+                var tradeRequest = new TradeRequest
                 {
-                    logger.LogError("Failed to update User Task");
+                    UserA = new UserTradeRequest
+                    {
+                        Items = task.Rewards
+                    },
+                    UserB = new UserTradeRequest
+                    {
+                        UserId = userTask.UserId
+                    }
+                };
+
+                ActionResult<TradeResponse> transactionResult = await transactionsClient.Trade(tradeRequest);
+                if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+                {
+                    logger.LogError("Could not claim Task Rewards from User Task '{UserTaskId}' to User '{UserTaskUserId}'", 
+                        userTask.Id, userTask.UserId);
                     continue;
                 }
+            }
+            
+            userTask = await userTasksRepo.Set(userTask);
+            if (userTask is null)
+            {
+                logger.LogError("Failed to update User Task");
+                continue;
             }
             
             logger.LogInformation("User '{UserId}' has made progress on Task '{TaskId}' ({TaskName}) under User Task '{UserTaskId}'. Completed: {Completed}",
