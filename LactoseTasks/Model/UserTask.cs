@@ -13,7 +13,14 @@ public class UserTask : IBasicKeyValueModel
     public required string UserId { get; set; }
     public required string TaskId { get; set; }
     public float Progress { get; set; }
-    public required bool Completed { get; set; }
+    public DateTime? CompleteTime { get; set; }
+
+    [BsonIgnore]
+    public bool Completed
+    {
+        get => CompleteTime is not null;
+        set => CompleteTime = value ? DateTime.UtcNow : null;
+    }
 }
 
 public class UserTaskUpdatedEvent : UserEvent
