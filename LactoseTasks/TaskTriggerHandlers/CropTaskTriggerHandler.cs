@@ -34,7 +34,10 @@ public class CropTaskTriggerHandler(
         if (userCrops.Value is null || userCrops.Value.CropInstances.IsEmpty())
             return 0;
 
-        float progress = userCrops.Value.CropInstances.Count(cropInst => cropInst.CropId == config.CropId);
+        float progress = config.CropId == "any"
+            ? userCrops.Value.CropInstances.Count
+            : userCrops.Value.CropInstances.Count(cropInst => cropInst.CropId == config.CropId);
+        
         return progress;
     }
 }
