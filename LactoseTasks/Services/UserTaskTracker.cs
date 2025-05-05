@@ -2,6 +2,7 @@ using System.Text;
 using Lactose.Economy;
 using Lactose.Economy.Dtos.Transactions;
 using Lactose.Events;
+using Lactose.Tasks;
 using Lactose.Tasks.Data;
 using Lactose.Tasks.Models;
 using Lactose.Tasks.TaskTriggerHandlers;

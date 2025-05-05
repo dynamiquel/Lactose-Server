@@ -22,10 +22,3 @@ public class UserTask : IBasicKeyValueModel
         set => CompleteTime = value ? DateTime.UtcNow : null;
     }
 }
-
-public class UserTaskUpdatedEvent : UserEvent
-{
-    public required string TaskId { get; set; }
-    public required string UserTaskId { get; set; }
-    public required float PreviousProgress { get; set; }
-}

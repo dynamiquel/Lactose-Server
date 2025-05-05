@@ -4,6 +4,7 @@
 //
 
 using System.Collections.Generic;
+using Lactose.Events;
 
 namespace Lactose.Tasks;
 
@@ -105,4 +106,11 @@ public record GetUserTasksResponse
     {
         return System.Text.Json.JsonSerializer.Deserialize<GetUserTasksResponse>(bytes);
     }
+}
+
+public class UserTaskUpdatedEvent : UserEvent
+{
+    public required string TaskId { get; set; }
+    public required string UserTaskId { get; set; }
+    public required double PreviousProgress { get; set; }
 }
