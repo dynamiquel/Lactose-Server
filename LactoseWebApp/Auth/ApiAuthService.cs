@@ -1,25 +1,36 @@
+using Microsoft.IdentityModel.JsonWebTokens;
+
 namespace LactoseWebApp.Auth;
 
 public class ApiAuthService(
     IApiAuthHandler apiAuthHandler,
-    ILogger<ApiAuthService> logger) : IHostedService
+    ILogger<ApiAuthService> logger) : BackgroundService
 {
-    // How to make this execute before any of the dependent HTTP clients?
-    public async Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (apiAuthHandler.AccessToken is not null)
-            return;
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            logger.LogInformation("Authenticating API...");
+            
+            JsonWebToken? accessToken = await apiAuthHandler.Authenticate();
+            if (accessToken is null)
+            {
+                logger.LogError("Failed to authenticate API. Retrying in 5 seconds");
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            }
+            else
+            {
+                logger.LogInformation("API has been authenticated");
+                logger.LogInformation("API Access Token {Token}", accessToken.UnsafeToString());
+                
+                TimeSpan reauthTime = accessToken.ValidTo - DateTime.UtcNow - TimeSpan.FromMinutes(2);
+                logger.LogInformation("Scheduled to reauthenticate at {Time} (in {TimeSpan} mins))", 
+                    (DateTime.Now + reauthTime).ToString("g"), reauthTime.TotalMinutes.ToString("N0"));
+                
+                await Task.Delay(reauthTime, stoppingToken);
+            }
+        }
         
-        var accessToken = await apiAuthHandler.Authenticate();
-        if (accessToken is null)
-            throw new UnauthorizedAccessException("Could not authenticate API");
-
-        logger.LogInformation("API has been authenticated");
-        logger.LogInformation("API Access Token {0}", accessToken.UnsafeToString());
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
+        logger.LogInformation("Authentication loop cancelled");
     }
 }

@@ -23,9 +23,6 @@ public class NativeApiAuthHandler(
 
     public async Task<JsonWebToken?> Authenticate()
     {
-        if (AccessToken is not null && AccessToken.ValidTo > DateTime.UtcNow)
-            return AccessToken;
-        
         string? apiKey = OptionsExtensions.GetRawOrFileString(authOptions.Value.ApiKey);
         if (string.IsNullOrEmpty(apiKey))
             throw new InvalidCredentialException("No API key was provided");
