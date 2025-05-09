@@ -55,8 +55,8 @@ public class TransactionsController(
     [Authorize]
     public async Task<ActionResult<TradeResponse>> Trade([FromBody] TradeRequest request)
     {
-        if (!User.HasBoolClaim(Permissions.WriteTransactions))
-            return Unauthorized("You do not have permission to create trades");
+        //if (!User.HasBoolClaim(Permissions.WriteTransactions))
+        //   return Unauthorized("You do not have permission to create trades");
         
         bool bUserAExists = !string.IsNullOrWhiteSpace(request.UserA.UserId);
         bool bUserBExists = !string.IsNullOrWhiteSpace(request.UserB.UserId);
