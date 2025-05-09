@@ -45,6 +45,7 @@ public class MqttService(
         client.DisconnectedAsync += OnDisconnected;
         client.ConnectingAsync += OnConnecting;
         client.ApplicationMessageReceivedAsync += OnMessageReceived;
+        client.WithAutomaticReconnect(logger, cancellationToken);
 
         MqttClientConnectResult? result = await client.ConnectAsync(clientOptions.Build(), cancellationToken);
         if (result?.ResultCode != MqttClientConnectResultCode.Success)
@@ -88,7 +89,7 @@ public class MqttService(
             .Build(), 
             _cancellationToken);
     }
-    
+
     Task OnDisconnected(MqttClientDisconnectedEventArgs args)
     {
         logger.LogInformation("Disconnected from MQTT broker. Reason: {ReasonCode} - {ReasonStr}", 

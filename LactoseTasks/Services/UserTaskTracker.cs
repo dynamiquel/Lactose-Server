@@ -63,7 +63,9 @@ public class UserTaskTracker(
         {
             clientOptions.WithTcpServer(options.Value.ServerAddress, options.Value.ServerPort);
         }
-        
+
+        mqttClient.WithAutomaticReconnect(logger, cancellationToken);
+
         MqttClientConnectResult? result = await _mqttClient.ConnectAsync(clientOptions.Build(), cancellationToken);
         if (result?.ResultCode != MqttClientConnectResultCode.Success)
         {
