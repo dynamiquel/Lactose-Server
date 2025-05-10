@@ -121,8 +121,11 @@ services:
     restart: always
     
   mosquitto:
-    image: eclipse-mosquitto:latest
     container_name: lactose-mosquitto
+    build:
+      context: ./mosquitto-go-auth # We build our own version of mosquitto-go-auth since it's out-of-date.
+    image: mosquitto-go
+    #image: eclipse-mosquitto:latest
     user: "1000"
     labels:
       traefik.enable: true

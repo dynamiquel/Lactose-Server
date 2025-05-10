@@ -132,7 +132,8 @@ public class JwtTokenHandler
             ValidateLifetime = true,
             ValidateIssuer = true,
             ValidateAudience = !string.IsNullOrEmpty(audience),
-            ValidAudience = audience
+            ValidAudience = audience,
+            ClockSkew = TimeSpan.FromMinutes(1)
         });
 
         return tokenValid;

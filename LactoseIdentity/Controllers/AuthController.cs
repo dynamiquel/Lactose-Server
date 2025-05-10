@@ -23,6 +23,7 @@ namespace Lactose.Identity.Controllers;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
+    readonly ILogger<AuthController> _logger;
     readonly IUsersRepo _usersRepo;
     readonly IOptions<AuthOptions> _authOptions;
     readonly IPasswordHasher<User> _passwordHasher;
@@ -43,6 +44,7 @@ public class AuthController : ControllerBase
         JwtTokenHandler tokenHandler,
         IMqttClient mqttClient)
     {
+        _logger = logger;
         _usersRepo = usersRepo;
         _passwordHasher = passwordHasher;
         _authOptions = authOptions;
@@ -388,6 +390,20 @@ public class AuthController : ControllerBase
         {
             UserRoles = userRoles
         });
+    }
+
+    [HttpPost("authenticate-token-basic", Name = "Authenticate Token (Basic)")]
+    public async Task<ActionResult> AuthenticateTokenBasic()
+    {
+        string? jwt = HttpContext.GetJwtAccessToken();
+        if (string.IsNullOrEmpty(jwt))
+            return Unauthorized();
+        
+        TokenValidationResult? tokenValid = await _tokenHandler.ValidateAccessToken(jwt, null);
+        if (tokenValid is null || !tokenValid.IsValid)
+            return Unauthorized();
+        
+        return Ok();
     }
     
     string GetRefreshActionRelativeUrl()

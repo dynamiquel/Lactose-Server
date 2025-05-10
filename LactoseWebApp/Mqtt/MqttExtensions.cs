@@ -22,6 +22,7 @@ public static class MqttExtensions
         });
 
         services.AddHostedService<MqttService>();
+        //services.AddSingleton<IMqttEnhancedAuthenticationHandler, MqttAuthenticationHandler>();
         
         return services;
     }
@@ -60,6 +61,7 @@ public static class MqttExtensions
     public static IMqttClient WithAutomaticReconnect(
         this IMqttClient client,
         ILogger? logger = null,
+        Action<MqttClientOptions>? modifyOptionsAction = null,
         CancellationToken cancellationToken = default)
     {
         StrongBox<int> reconnectAttempts = new();
@@ -119,6 +121,9 @@ public static class MqttExtensions
             try
             {
                 logger?.LogInformation("Executing MQTT ReconnectAsync...");
+
+                modifyOptionsAction?.Invoke(client.Options);
+                
                 MqttClientConnectResult connectResult = await client.ConnectAsync(client.Options, cancellationToken);
 
                 if (client.IsConnected)

@@ -94,9 +94,7 @@ public abstract class BaseApp
         builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
         builder.Services.AddOptions(builder.Configuration);
         builder.Services.AddHttpClient();
-
-        builder.Services.AddMqtt();
-
+        
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
         if (authOptions is { Enabled: true })
         {
@@ -119,6 +117,8 @@ public abstract class BaseApp
             
             builder.Services.AddAuthorization();
         }
+        
+        builder.Services.AddMqtt();
 
         builder.Services.AddLactoseService(builder.Configuration);
         builder.Services.AddControllers(options =>

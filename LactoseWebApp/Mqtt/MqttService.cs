@@ -1,3 +1,5 @@
+using System.Text;
+using LactoseWebApp.Auth;
 using LactoseWebApp.Service;
 using Microsoft.Extensions.Options;
 using MQTTnet;
@@ -9,7 +11,9 @@ public class MqttService(
     IMqttClient client,
     IOptions<MqttOptions> options,
     IServiceInfo serviceInfo,
-    ILogger<MqttService> logger) : IHostedService
+    ILogger<MqttService> logger,
+    //IMqttEnhancedAuthenticationHandler authenticationHandler,
+    IApiAuthHandler authHandler) : IHostedService
 {
     CancellationToken _cancellationToken;
     
@@ -17,14 +21,26 @@ public class MqttService(
     {
         _cancellationToken = cancellationToken;
 
+        while (authHandler.AccessToken is null)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+        }
+        
+        string mqttAccess = authHandler.AccessToken.EncodedToken;
+        
         var clientOptions = new MqttClientOptionsBuilder()
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .WithWillTopic($"service/{serviceInfo.Id}/offline")
-            .WithTlsOptions(
-                o => o.WithCertificateValidationHandler(
-                    // The used public broker sometimes has invalid certificates. This sample accepts all
-                    // certificates. This should not be used in live environments.
-                    _ => true));
+            .WithTlsOptions(o => o.WithCertificateValidationHandler(
+                // The used public broker sometimes has invalid certificates. This sample accepts all
+                // certificates. This should not be used in live environments.
+                _ => true))
+            //.WithEnhancedAuthentication("JWT")
+            //.WithEnhancedAuthenticationHandler(authenticationHandler); Cannot use Enhanced Auth as most brokers don't support it  :(
+            .WithCredentials(mqttAccess, [69] /* password just needs to be non-empty */);
         
         logger.LogInformation("Attempting to connect to MQTT broker at {IpAddress}:{IpPort}", 
             options.Value.ServerAddress, 
@@ -45,7 +61,7 @@ public class MqttService(
         client.DisconnectedAsync += OnDisconnected;
         client.ConnectingAsync += OnConnecting;
         client.ApplicationMessageReceivedAsync += OnMessageReceived;
-        client.WithAutomaticReconnect(logger, cancellationToken);
+        client.WithAutomaticReconnect(logger, /* TODO */ null, cancellationToken);
 
         MqttClientConnectResult? result = await client.ConnectAsync(clientOptions.Build(), cancellationToken);
         if (result?.ResultCode != MqttClientConnectResultCode.Success)

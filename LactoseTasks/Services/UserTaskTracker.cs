@@ -37,7 +37,7 @@ public class UserTaskTracker(
         // auth and DI dependencies.
         while (authHandler.AccessToken is null)
             await Task.Delay(100, cancellationToken);
-        transactionsClient.SetAuthToken(authHandler.AccessToken.UnsafeToString());
+        transactionsClient.SetAuthToken(authHandler.AccessToken.EncodedToken);
         
         _mqttClient = mqttFactory.CreateMqttClient();
 
@@ -47,7 +47,8 @@ public class UserTaskTracker(
                 o => o.WithCertificateValidationHandler(
                     // The used public broker sometimes has invalid certificates. This sample accepts all
                     // certificates. This should not be used in live environments.
-                    _ => true));
+                    _ => true))
+            .WithCredentials(authHandler.AccessToken.EncodedToken, [69] /* password just needs to be non-empty */);
 
         logger.LogInformation("Attempting to connect to MQTT broker at {IpAddress}:{IpPort}",
             options.Value.ServerAddress,
@@ -64,7 +65,7 @@ public class UserTaskTracker(
             clientOptions.WithTcpServer(options.Value.ServerAddress, options.Value.ServerPort);
         }
 
-        mqttClient.WithAutomaticReconnect(logger, cancellationToken);
+        mqttClient.WithAutomaticReconnect(logger, null, cancellationToken);
 
         MqttClientConnectResult? result = await _mqttClient.ConnectAsync(clientOptions.Build(), cancellationToken);
         if (result?.ResultCode != MqttClientConnectResultCode.Success)

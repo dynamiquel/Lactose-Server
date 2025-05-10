@@ -121,9 +121,9 @@ public static class JwtServiceExtensions
     public static string? GetJwtAccessToken(this HttpContext context)
     {
         // This is fucking stupid but whatever. ASP.NET abstraction bs.
-        if (context.User.Identity is CaseSensitiveClaimsIdentity identity)
-            return identity.SecurityToken.ToString();
-         
+        if (context.User.Identity is CaseSensitiveClaimsIdentity { SecurityToken: JsonWebToken jsonWebToken }) 
+            return jsonWebToken.UnsafeToString();
+
         // Check for the token in the Authorization header first. Assumes 'Bearer {token}' format.
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").LastOrDefault();
                         
