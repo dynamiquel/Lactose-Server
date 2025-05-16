@@ -61,7 +61,6 @@ public static class MqttExtensions
     public static IMqttClient WithAutomaticReconnect(
         this IMqttClient client,
         ILogger? logger = null,
-        Action<MqttClientOptions>? modifyOptionsAction = null,
         CancellationToken cancellationToken = default)
     {
         StrongBox<int> reconnectAttempts = new();
@@ -81,13 +80,13 @@ public static class MqttExtensions
 
             if (cancellationToken.IsCancellationRequested)
             {
-                logger?.LogInformation("Application shutdown requested, not attempting MQTT reconnect");
+                logger?.LogWarning("Application shutdown requested, not attempting MQTT reconnect");
                 return;
             }
 
             if (client.IsConnected)
             {
-                logger?.LogInformation("MQTT client was already reconnected");
+                logger?.LogWarning("MQTT client was already reconnected");
                 reconnectAttempts.Value = 0;
                 return;
             }
@@ -97,7 +96,7 @@ public static class MqttExtensions
             double delaySeconds = Math.Pow(2, reconnectAttempts.Value - 1);
             var delay = TimeSpan.FromSeconds(Math.Min(32, delaySeconds));
             
-            logger?.LogInformation(
+            logger?.LogWarning(
                 "Attempting MQTT reconnect (Attempt #{Attempt}). Waiting for {DelaySeconds} seconds...",
                 reconnectAttempts.Value, delay.TotalSeconds);
             
@@ -107,22 +106,20 @@ public static class MqttExtensions
             }
             catch (TaskCanceledException)
             {
-                logger?.LogInformation("MQTT reconnection delay cancelled");
+                logger?.LogWarning("MQTT reconnection delay cancelled");
                 return;
             }
             
             if (client.IsConnected)
             {
-                logger?.LogInformation("MQTT client was already reconnected");
+                logger?.LogWarning("MQTT client was already reconnected");
                 reconnectAttempts.Value = 0;
                 return;
             }
 
             try
             {
-                logger?.LogInformation("Executing MQTT ReconnectAsync...");
-
-                modifyOptionsAction?.Invoke(client.Options);
+                logger?.LogWarning("Executing MQTT ReconnectAsync...");
                 
                 MqttClientConnectResult connectResult = await client.ConnectAsync(client.Options, cancellationToken);
 
@@ -139,7 +136,7 @@ public static class MqttExtensions
             }
             catch (TaskCanceledException)
             {
-                logger?.LogInformation("MQTT ReconnectAsync was cancelled");
+                logger?.LogWarning("MQTT ReconnectAsync was cancelled");
             }
             catch (MqttCommunicationException ex)
             {
@@ -153,7 +150,7 @@ public static class MqttExtensions
         }
         
         client.DisconnectedAsync += HandleDisconnectedAsync;
-        logger?.LogInformation("MQTT client configured with automatic reconnect logic.");
+        logger?.LogInformation("MQTT client configured with automatic reconnect logic/");
 
         return client;
     }

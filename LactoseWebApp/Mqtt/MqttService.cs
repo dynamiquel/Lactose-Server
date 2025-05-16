@@ -29,8 +29,6 @@ public class MqttService(
             await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
         }
         
-        string mqttAccess = authHandler.AccessToken.EncodedToken;
-        
         var clientOptions = new MqttClientOptionsBuilder()
             .WithProtocolVersion(MqttProtocolVersion.V500)
             .WithWillTopic($"service/{serviceInfo.Id}/offline")
@@ -40,7 +38,8 @@ public class MqttService(
                 _ => true))
             //.WithEnhancedAuthentication("JWT")
             //.WithEnhancedAuthenticationHandler(authenticationHandler); Cannot use Enhanced Auth as most brokers don't support it  :(
-            .WithCredentials(mqttAccess, [69] /* password just needs to be non-empty */);
+            .WithCredentials(new MqttCredentialsProvider(authHandler))
+            .WithClientId($"{serviceInfo.Id}-{Guid.NewGuid().ToString("N")[..8]}");
         
         logger.LogInformation("Attempting to connect to MQTT broker at {IpAddress}:{IpPort}", 
             options.Value.ServerAddress, 
@@ -61,7 +60,7 @@ public class MqttService(
         client.DisconnectedAsync += OnDisconnected;
         client.ConnectingAsync += OnConnecting;
         client.ApplicationMessageReceivedAsync += OnMessageReceived;
-        client.WithAutomaticReconnect(logger, /* TODO */ null, cancellationToken);
+        client.WithAutomaticReconnect(logger, cancellationToken);
 
         MqttClientConnectResult? result = await client.ConnectAsync(clientOptions.Build(), cancellationToken);
         if (result?.ResultCode != MqttClientConnectResultCode.Success)

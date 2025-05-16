@@ -48,7 +48,8 @@ public class UserTaskTracker(
                     // The used public broker sometimes has invalid certificates. This sample accepts all
                     // certificates. This should not be used in live environments.
                     _ => true))
-            .WithCredentials(authHandler.AccessToken.EncodedToken, [69] /* password just needs to be non-empty */);
+            .WithCredentials(authHandler.AccessToken.EncodedToken, [69] /* password just needs to be non-empty */)
+            .WithClientId($"usertasktracker-{Guid.NewGuid().ToString("N")[..8]}");
 
         logger.LogInformation("Attempting to connect to MQTT broker at {IpAddress}:{IpPort}",
             options.Value.ServerAddress,
@@ -65,7 +66,7 @@ public class UserTaskTracker(
             clientOptions.WithTcpServer(options.Value.ServerAddress, options.Value.ServerPort);
         }
 
-        mqttClient.WithAutomaticReconnect(logger, null, cancellationToken);
+        mqttClient.WithAutomaticReconnect(logger, cancellationToken);
 
         MqttClientConnectResult? result = await _mqttClient.ConnectAsync(clientOptions.Build(), cancellationToken);
         if (result?.ResultCode != MqttClientConnectResultCode.Success)
