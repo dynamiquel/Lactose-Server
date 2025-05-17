@@ -1,5 +1,4 @@
 using Lactose.Economy.Models;
-using LactoseEconomyContracts.Dtos.ShopItems;
 using LactoseWebApp.Repo;
 
 namespace Lactose.Economy.Data.Repos;

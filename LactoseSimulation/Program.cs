@@ -1,6 +1,7 @@
 using Lactose.Economy;
 using Lactose.Simulation.Data.Repos;
 using Lactose.Client;
+using Lactose.Economy.Transactions;
 using LactoseWebApp.Auth;
 
 new SimulationApi().Start(args);
@@ -15,7 +16,7 @@ internal sealed class SimulationApi : LactoseWebApp.BaseApp
         builder.Services.AddSingleton<IUserCropsRepo, MongoUserCropsRepo>();
        
         {
-            builder.Services.Configure<EconomyClientOptions>(builder.Configuration.GetSection("Economy"));
+            builder.Services.Configure<TransactionsClientOptions>(builder.Configuration.GetSection("Economy"));
             var clientBuilder = builder.Services.AddHttpClient<TransactionsClient>((provider, client) =>
             {
                 client.UseThisApiForAuth(provider);

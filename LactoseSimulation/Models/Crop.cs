@@ -1,4 +1,4 @@
-using Lactose.Economy.Models;
+using Lactose.Economy.UserItems;
 using LactoseWebApp.Repo;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -25,10 +25,10 @@ public class Crop : IBasicKeyValueModel
     public string? Id { get; set; }
     public required string Type { get; set; }
     public required string Name { get; set; }
-    public required IList<UserItem> CostItems { get; set; }
+    public required List<UserItem> CostItems { get; set; }
     public required double HarvestSeconds { get; set; }
-    public required IList<UserItem> HarvestItems { get; set; }
-    public IList<UserItem>? DestroyItems { get; set; }
+    public required List<UserItem> HarvestItems { get; set; }
+    public List<UserItem>? DestroyItems { get; set; }
     public string? FertiliserItemId { get; set; }
     public string? GameCrop { get; set; }
 }

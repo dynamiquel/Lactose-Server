@@ -1,4 +1,4 @@
-using Lactose.Economy.Dtos.Items;
+using Lactose.Economy.Items;
 using Lactose.Economy.Models;
 using Riok.Mapperly.Abstractions;
 

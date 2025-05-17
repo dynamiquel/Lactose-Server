@@ -1,9 +1,7 @@
 using Lactose.Economy.Data.Repos;
-using Lactose.Economy.Dtos.UserItems;
-using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using Lactose.Economy.Options;
-using LactoseWebApp;
+using Lactose.Economy.UserItems;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
 using Microsoft.AspNetCore.Authorization;
@@ -18,25 +16,23 @@ namespace Lactose.Economy.Controllers;
 public class UserItemsController(
     IUserItemsRepo userItemsRepo, 
     IOptions<UserStartingItemsOptions> userStartingItems,
-    IMqttClient mqttClient) : ControllerBase, IUserItemsController
+    IMqttClient mqttClient) : UserItemsControllerBase
 {
     static bool IsValidEconomyUser(string userId) => userId.IsValidObjectId() || userId.StartsWith("vendor");
-    
-    [HttpPost("query", Name = "Query User Items")]
+
     [Authorize]
-    public async Task<ActionResult<QueryUserItemsResponse>> QueryUserItems(QueryUserItemsRequest request)
+    public override async Task<ActionResult<QueryUserItemsResponse>> Query(QueryUserItemsRequest request)
     {
         ISet<string> foundItems = await userItemsRepo.Query();
 
-        return Ok(new QueryUserItemsResponse
+        return new QueryUserItemsResponse
         {
             UserIds =  foundItems.ToList()
-        });
+        };
     }
-    
-    [HttpPost(Name = "Get User Items")]
+
     [Authorize]
-    public async Task<ActionResult<GetUserItemsResponse>> GetUserItems(GetUserItemsRequest request)
+    public override async Task<ActionResult<GetUserItemsResponse>> Get(GetUserItemsRequest request)
     {
         if (!IsValidEconomyUser(request.UserId))
             return BadRequest($"UserId '{request.UserId}' is not a valid UserId");
@@ -47,13 +43,13 @@ public class UserItemsController(
         if (!bCanRead)
             return Unauthorized($"You do not have permission to read user's '{request.UserId}' items");
 
-        UserItems? foundUserItems = await userItemsRepo.Get(request.UserId);
+        Models.UserItems? foundUserItems = await userItemsRepo.Get(request.UserId);
         if (foundUserItems is null)
         {
             // TODO: Check that user exists with the provided ID before creating a User Items.
             
             // User Items don't exist for the specified user, create it with starting items.
-            var newModel = new UserItems
+            var newModel = new Models.UserItems
             {
                 Id = request.UserId,
                 // Not the most ideal place to do this. I would assume some other system would listen for some kind
@@ -61,16 +57,16 @@ public class UserItemsController(
                 Items = userStartingItems.Value.StartingUserItems
             };
 
-            UserItems? createdModel = await userItemsRepo.Set(newModel);
+            Models.UserItems? createdModel = await userItemsRepo.Set(newModel);
             if (createdModel is null)
                 return StatusCode(500, $"Could not create User Items for User with ID '{request.UserId}'");
             
             foundUserItems = createdModel;
         }
 
-        return Ok(UserMapper.ToDto(foundUserItems));
+        return UserMapper.ToDto(foundUserItems);
     }
-
+    
     [HttpPost("delete", Name = "Delete User Items")]
     [Authorize]
     public async Task<ActionResult<bool>> DeleteUserItems(GetUserItemsRequest request)
@@ -86,42 +82,34 @@ public class UserItemsController(
         
         bool result = await userItemsRepo.Delete(request.UserId);
         
-        await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
-            .WithTopic($"/economy/useritems/{request.UserId}/deleted")
-            .WithPayload(new UserItemsDeletedEvent()
-            {
-                UserId = request.UserId
-            }.ToJson())
-            .Build());
-        
-        return Ok(result);
+        return result;
     }
 
     [HttpPost("createVendor", Name = "Create Vendor")]
     [Authorize]
-    public async Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request)
+    public override async Task<ActionResult<CreateVendorResponse>> CreateVendor(CreateVendorRequest request)
     {
         if (!User.HasBoolClaim(Permissions.WriteVendors))
             return Unauthorized("You do not have permission to create Vendors");
         
         var fullVendorId = $"vendor-{request.VendorId}";
-        UserItems? existingVendorItems = await userItemsRepo.Get(fullVendorId);
+        Models.UserItems? existingVendorItems = await userItemsRepo.Get(fullVendorId);
         
         if (existingVendorItems is not null)
             return Conflict($"Vendor with ID '{fullVendorId}' already exists");
 
-        var newVendorItems = new UserItems
+        var newVendorItems = new Models.UserItems
         {
             Id = fullVendorId
         };
         
-        UserItems? createdVendorItems = await userItemsRepo.Set(newVendorItems);
+        Models.UserItems? createdVendorItems = await userItemsRepo.Set(newVendorItems);
         if (createdVendorItems is null)
             return StatusCode(500, $"Could not create User Items for User with ID '{fullVendorId}'");
         
-        return Ok(new CreateVendorResponse
+        return new CreateVendorResponse
         {
             UserId = fullVendorId
-        });
+        };
     }
 }

@@ -1,7 +1,7 @@
 using Lactose.Economy.Data.Repos;
-using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
+using Lactose.Economy.Transactions;
 using LactoseWebApp;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mongo;
@@ -11,32 +11,39 @@ using MQTTnet;
 
 namespace Lactose.Economy.Controllers;
 
+public class TradeResponseReason
+{
+    public const string Success = "Success";
+    public const string UserANotFound = "UserANotFound";
+    public const string UserBNotFound = "UserBNotFound";
+    public const string UserAInsufficientFunds = "UserAInsufficientFunds";
+    public const string UserBInsufficientFunds = "UserBInsufficientFunds";
+}
+
 [Controller]
 [Route("[controller]")]
 public class TransactionsController(
     ITransactionsRepo transactionsRepo,
     IUserItemsRepo userItemsRepo,
-    ILogger<ITransactionsController> logger,
-    IMqttClient mqttClient) : ControllerBase, ITransactionsController
+    ILogger<TransactionsController> logger,
+    IMqttClient mqttClient) : TransactionsControllerBase
 {
-    [HttpPost("query", Name = "Query Transactions")]
     [Authorize]
-    public async Task<ActionResult<QueryTransactionsResponse>> QueryTransactions(QueryTransactionsRequest request)
+    public override async Task<ActionResult<QueryTransactionsResponse>> Query(QueryTransactionsRequest request)
     {
         if (!User.HasBoolClaim(Permissions.ReadTransactions))
             return Unauthorized("You do not have permission to read transactions");
         
-        ISet<string> foundItems = await transactionsRepo.Query();
-
-        return Ok(new QueryTransactionsResponse
+        ISet<string> foundTransactionItems = await transactionsRepo.Query();
+        
+        return new QueryTransactionsResponse
         {
-            TransactionIds =  foundItems.ToList()
-        });
+            TransactionIds = foundTransactionItems.ToList()
+        };
     }
 
-    [HttpPost(Name = "Get Transactions")]
     [Authorize]
-    public async Task<ActionResult<GetTransactionResponse>> GetTransaction([FromBody] GetTransactionRequest request)
+    public override async Task<ActionResult<GetTransactionResponse>> Get(GetTransactionRequest request)
     {
         if (!request.TransactionId.IsValidObjectId())
             return BadRequest($"TransactionId '{request.TransactionId}' is not a valid TransactionId");
@@ -47,13 +54,13 @@ public class TransactionsController(
         Transaction? foundTransaction = await transactionsRepo.Get(request.TransactionId);
         if (foundTransaction is null)
             return NotFound($"Transaction with ID '{request.TransactionId}' was not found");
-        
-        return Ok(TransactionMapper.ToDto(foundTransaction));
+
+        return TransactionMapper.ToDto(foundTransaction);
     }
 
     [HttpPost("trade", Name = "Trade")]
     [Authorize]
-    public async Task<ActionResult<TradeResponse>> Trade([FromBody] TradeRequest request)
+    public override async Task<ActionResult<TradeResponse>> Trade([FromBody] TradeRequest request)
     {
         //if (!User.HasBoolClaim(Permissions.WriteTransactions))
         //   return Unauthorized("You do not have permission to create trades");
@@ -66,7 +73,7 @@ public class TransactionsController(
         
         // If one of the User IDs are not then assume it is the 'void' with infinite items.
 
-        UserItems? userAItems = null;
+        Models.UserItems? userAItems = null;
 
         // If User A is set, check they have enough items to transfer to User B.
         if (bUserAExists)
@@ -74,10 +81,10 @@ public class TransactionsController(
             userAItems = await userItemsRepo.Get(request.UserA.UserId!);
             if (userAItems is null)
             {
-                return Ok(new TradeResponse
+                return new TradeResponse
                 {
                     Reason = TradeResponseReason.UserANotFound
-                });
+                };
             }
 
             foreach (var itemToRemove in request.UserA.Items)
@@ -93,7 +100,7 @@ public class TransactionsController(
             }
         }
 
-        UserItems? userBItems = null;
+        Models.UserItems? userBItems = null;
         
         // If User B is set, check they have enough items to transfer to User A.
         if (bUserBExists)
@@ -101,10 +108,10 @@ public class TransactionsController(
             userBItems = await userItemsRepo.Get(request.UserB.UserId!);
             if (userBItems is null)
             {
-                return Ok(new TradeResponse
+                return new TradeResponse
                 {
                     Reason = TradeResponseReason.UserBNotFound
-                });
+                };
             }
 
             foreach (var itemToRemove in request.UserB.Items)
@@ -112,10 +119,10 @@ public class TransactionsController(
                 bool bHasEnoughItem = userBItems.Items.Any(item => item.ItemId == itemToRemove.ItemId && (item.Quantity >= itemToRemove.Quantity || item.HasInfiniteQuantity()));
                 if (!bHasEnoughItem)
                 {
-                    return Ok(new TradeResponse
+                    return new TradeResponse
                     {
                         Reason = TradeResponseReason.UserBInsufficientFunds
-                    });
+                    };
                 }
             }
         }
@@ -210,9 +217,9 @@ public class TransactionsController(
             }.ToJson())
             .Build());
 
-        return Ok(new TradeResponse
+        return new TradeResponse
         {
             Reason = TradeResponseReason.Success
-        });
+        };
     }
 }

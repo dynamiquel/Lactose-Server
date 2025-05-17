@@ -1,4 +1,5 @@
 using Lactose.Economy;
+using Lactose.Economy.Transactions;
 using Lactose.Tasks.Data;
 using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseTasks.Services;
@@ -25,7 +26,7 @@ internal sealed class TasksApi : BaseApp
 
         {
             builder.Services
-                .Configure<EconomyClientOptions>(builder.Configuration.GetSection("Economy"))
+                .Configure<TransactionsClientOptions>(builder.Configuration.GetSection("Economy"))
                 .Configure<SimulationClientOptions>(builder.Configuration.GetSection("Simulation"));
 
             var transactionsClientBuilder = builder.Services.AddHttpClient<TransactionsClient>((provider, client) =>

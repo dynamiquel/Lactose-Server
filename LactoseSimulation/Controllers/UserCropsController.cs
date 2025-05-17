@@ -1,6 +1,5 @@
-using Lactose.Economy;
-using Lactose.Economy.Dtos.Transactions;
-using Lactose.Economy.Models;
+using Lactose.Economy.Transactions;
+using Lactose.Economy.UserItems;
 using Lactose.Simulation.Data.Repos;
 using Lactose.Simulation.Dtos.UserCrops;
 using Lactose.Simulation.Mapping;
@@ -158,11 +157,11 @@ public class UserCropsController(
                     UserId = request.UserId,
                     Items = crop.CostItems
                 },
-                UserB = new UserTradeRequest()
+                UserB = new UserTradeRequest { Items = [] }
             };
             
-            var transactionResult = await transactionsClient.Trade(tradeRequest);
-            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            var tradeResponse = await transactionsClient.Trade(tradeRequest);
+            if (tradeResponse.Reason != "Success")
                 return BadRequest($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
         }
 
@@ -257,12 +256,13 @@ public class UserCropsController(
                 },
                 UserB = new UserTradeRequest
                 {
-                    UserId = request.UserId
+                    UserId = request.UserId,
+                    Items = []
                 }
             };
 
-            var transactionResult = await transactionsClient.Trade(tradeRequest);
-            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            var tradeResponse = await transactionsClient.Trade(tradeRequest);
+            if (tradeResponse.Reason != "Success")
             {
                 logger.LogError($"Could not transfer Harvest Items from Crop '{crop.Id}' to User '{request.UserId}'");
                 continue;
@@ -337,12 +337,13 @@ public class UserCropsController(
                     },
                     UserB = new UserTradeRequest
                     {
-                        UserId = request.UserId
+                        UserId = request.UserId,
+                        Items = []
                     }
                 };
             
-                var transactionResult = await transactionsClient.Trade(tradeRequest);
-                if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+                var tradeResponse = await transactionsClient.Trade(tradeRequest);
+                if (tradeResponse.Reason != "Success")
                 {
                     logger.LogError($"Could not transfer Destroy Items from Crop '{crop.Id}' to User '{request.UserId}'");
                 }
@@ -437,13 +438,16 @@ public class UserCropsController(
                 UserA = new UserTradeRequest
                 {
                     UserId = request.UserId,
-                    Items = new List<UserItem>{ new() { ItemId = crop.FertiliserItemId } }
+                    Items = [new() { ItemId = crop.FertiliserItemId }]
                 },
-                UserB = new UserTradeRequest()
+                UserB = new UserTradeRequest
+                {
+                    Items = []
+                }
             };
             
-            var transactionResult = await transactionsClient.Trade(tradeRequest);
-            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            var tradeResponse = await transactionsClient.Trade(tradeRequest);
+            if (tradeResponse.Reason != "Success")
             {
                 logger.LogError($"Could not remove Fertilise Items from User '{request.UserId}' for Crop '{crop.Id}'");
                 continue;
@@ -535,11 +539,14 @@ public class UserCropsController(
                     UserId = request.UserId,
                     Items = crop.CostItems
                 },
-                UserB = new UserTradeRequest()
+                UserB = new UserTradeRequest
+                {
+                    Items = []
+                }
             };
 
-            var transactionResult = await transactionsClient.Trade(tradeRequest);
-            if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+            var tradeResponse = await transactionsClient.Trade(tradeRequest);
+            if (tradeResponse.Reason != "Success")
             {
                 logger.LogError($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
                 continue;

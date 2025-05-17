@@ -5,10 +5,5 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\LactoseEconomyContracts\LactoseEconomyContracts.csproj" />
-      <ProjectReference Include="..\LactoseShared\LactoseShared.csproj" />
-    </ItemGroup>
-
+    
 </Project>

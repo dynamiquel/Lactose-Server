@@ -1,9 +1,9 @@
 using System.Text;
 using Lactose.Economy.Data.Repos;
-using Lactose.Economy.Dtos.Transactions;
 using Lactose.Economy.Mapping;
 using Lactose.Economy.Models;
-using LactoseEconomyContracts.Dtos.ShopItems;
+using Lactose.Economy.ShopItems;
+using Lactose.Economy.Transactions;
 using LactoseWebApp;
 using LactoseWebApp.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -17,34 +17,32 @@ public class ShopItemsController(
     ILogger<ShopItemsController> logger,
     IShopItemsRepo shopItemsRepo,
     IUserItemsRepo userItemsRepo,
-    TransactionsController transactionsController) : ControllerBase, IShopItemsController
+    TransactionsController transactionsController) : ShopItemsControllerBase
 {
-    [HttpPost(Name = "Get Item")]
     [Authorize]
-    public async Task<ActionResult<GetShopItemsRequest>> GetShopItems(GetShopItemsRequest request)
+    public override async Task<ActionResult<GetShopItemsResponse>> Get(GetShopItemsRequest request)
     {
         if (!User.HasBoolClaim(Permissions.Read))
             return Unauthorized("You do not have permission to read items");
         
-        var foundShopItems = await shopItemsRepo.Get(request.ShopItemIds);
-        return Ok(ShopItemMapper.ToShopItemsDto(foundShopItems));
+        ICollection<ShopItem> foundShopItems = await shopItemsRepo.Get(request.ShopItemIds);
+        return ShopItemMapper.ToDto(foundShopItems);
     }
 
-    [HttpPost("usershop", Name = "Get User Shop")]
     [Authorize]
-    public async Task<ActionResult<GetUserShopItemsResponse>> GetUserShopItems(GetUserShopItemsRequest request)
+    public override async Task<ActionResult<GetShopItemsResponse>> GetUserShop(GetShopItemsForUserRequest request)
     {
         if (!User.HasBoolClaim(Permissions.Read))
             return Unauthorized("You do not have permission to read items");
 
         ICollection<ShopItem> foundShopItems = await shopItemsRepo.GetUserShopItems(request.UserId);
 
-        var userShopDto = ShopItemMapper.ToDto(foundShopItems);
+        GetShopItemsResponse userShopDto = ShopItemMapper.ToDto(foundShopItems);
 
         if (request.RetrieveUserQuantity)
         {
             // Do additional processing to get the quantity the user is actually able to sell.
-            UserItems? foundUserItems = await userItemsRepo.Get(request.UserId);
+            Models.UserItems? foundUserItems = await userItemsRepo.Get(request.UserId);
             
             foreach (var shopItemDto in userShopDto.ShopItems)
             {
@@ -59,11 +57,10 @@ public class ShopItemsController(
         return Ok(userShopDto);
     }
 
-    [HttpPost("usershop/update", Name = "Update User Shop")]
     [Authorize]
-    public async Task<ActionResult<UpdateUserShopItemsResponse>> UpdateUserShopItems(UpdateUserShopItemsRequest request)
+    public override async Task<ActionResult<UpdateUserShopItemsResponse>> UpdateUserShop(UpdateUserShopItemsRequest request)
     {
-        if (request.NewItems.IsEmpty() && request.ItemIdsToRemove.IsEmpty())
+        if (request.NewItems.IsEmpty() && request.ItemsToRemove.IsEmpty())
             return BadRequest("You must provide at least one item to update or remove");
         
         if (!User.HasBoolClaim(Permissions.Write))
@@ -83,10 +80,10 @@ public class ShopItemsController(
         
         var removedShopItems = new List<string>();
 
-        if (!request.ItemIdsToRemove.IsEmpty())
+        if (!request.ItemsToRemove.IsEmpty())
         {
             var shopItemsToRemove = foundShopItems
-                .Where(shopItem => request.ItemIdsToRemove.Contains(shopItem.ItemId))
+                .Where(shopItem => request.ItemsToRemove.Contains(shopItem.ItemId))
                 .Select(shopItem => shopItem.Id);
             
             removedShopItems = shopItemsToRemove.ToList()!;
@@ -108,7 +105,7 @@ public class ShopItemsController(
                         UserId = existingShopItem.UserId,
                         ItemId = existingShopItem.ItemId,
                         TransactionType = newShopItem.TransactionType,
-                        TransactionItems = newShopItem.TransactionItems
+                        TransactionItems = UserMapper.FromDto(newShopItem.TransactionItems)
                     });
                 }
                 else
@@ -118,7 +115,7 @@ public class ShopItemsController(
                         UserId = request.UserId,
                         ItemId = newShopItem.ItemId,
                         TransactionType = newShopItem.TransactionType,
-                        TransactionItems = newShopItem.TransactionItems
+                        TransactionItems = UserMapper.FromDto(newShopItem.TransactionItems)
                     });
                 }
             }
@@ -149,7 +146,10 @@ public class ShopItemsController(
 
         var response = new UpdateUserShopItemsResponse
         {
-            AddedItems = completedTasks.Where(set => set?.Id is not null).Select(set => set!.Id!).ToList()
+            AddedItems = completedTasks.Where(set => set?.Id is not null)
+                .Select(set => set!.Id!)
+                .ToList(),
+            RemovedItems = []
         };
 
         if (!removedShopItems.IsEmpty())
@@ -158,12 +158,11 @@ public class ShopItemsController(
             response.RemovedItems = deleted.ToList();
         }
 
-        return Ok(response);
+        return response;
     }
 
-    [HttpPost("usershop/delete", Name = "Delete User Shop")]
     [Authorize]
-    public async Task<ActionResult<DeleteUserShopResponse>> DeleteUserShop(DeleteUserShopRequest request)
+    public override async Task<ActionResult<DeleteUserShopResponse>> DeleteUserShop(DeleteUserShopRequest request)
     {
         if (!User.HasBoolClaim(Permissions.Write))
             return Unauthorized("You do not have permission to write items");
@@ -172,32 +171,32 @@ public class ShopItemsController(
         if (!success)
             return StatusCode(500, $"Could not delete user shop for user with ID '{request.UserId}'");
         
-        return Ok();
+        return new DeleteUserShopResponse();
     }
 
-    [HttpPost("trade")]
-    public async Task<ActionResult<ShopItemTradeResponse>> PerformTrade(ShopItemTradeRequest request)
+    [Authorize]
+    public override async Task<ActionResult<TradeShopItemResponse>> Trade(TradeShopItemRequest request)
     {
         // Get the Shop Item.
         var shopItem = await shopItemsRepo.Get(request.ShopItemId);
         if (shopItem is null)
             return NotFound();
         
-        var desiredUserItem = new UserItem
+        var desiredUserItem = new UserItems.UserItem
         {
             ItemId = shopItem.ItemId,
             Quantity = request.Quantity
         };
 
-        var desiredShopItems = shopItem.TransactionItems.Select(transactionItem => new UserItem
+        var desiredShopItems = UserMapper.ToDto(shopItem.TransactionItems.Select(transactionItem => new UserItem
         {
             ItemId = transactionItem.ItemId, 
             Quantity = transactionItem.Quantity * request.Quantity
-        }).ToList();
+        }).ToList());
 
         // Create the Trade Request.
-        var shopUserTradeItems = new List<UserItem>();
-        var instigatingUserTradeItems = new List<UserItem>();
+        var shopUserTradeItems = new List<UserItems.UserItem>();
+        var instigatingUserTradeItems = new List<UserItems.UserItem>();
         if (shopItem.TransactionType == ShopItemTransactionTypes.Buy)
         {
             shopUserTradeItems.AddRange(desiredShopItems);
@@ -213,7 +212,7 @@ public class ShopItemsController(
             return BadRequest("Unknown transaction type");
         }
         
-        var tradeRequest = new TradeRequest
+        var tradeRequest = new TradeRequest()
         {
             UserA = new UserTradeRequest
             {
@@ -223,17 +222,25 @@ public class ShopItemsController(
             UserB = new UserTradeRequest
             {
                 UserId = shopItem.UserId,
-                Items = shopUserTradeItems
+                Items = (shopUserTradeItems)
             }
         };
 
         var tradeResult = await transactionsController.Trade(tradeRequest);
         if (tradeResult.Result is ObjectResult objectResult)
-            return Ok(new ShopItemTradeResponse
+        {
+            return new TradeShopItemResponse
             {
                 Reason = (objectResult.Value as TradeResponse)!.Reason
-            });
-        
+            };
+        }
+
         return tradeResult.Result ?? StatusCode(500);
     }
+}
+
+public class ShopItemTransactionTypes
+{
+    public const string Buy = "Buy";
+    public const string Sell = "Sell";
 }

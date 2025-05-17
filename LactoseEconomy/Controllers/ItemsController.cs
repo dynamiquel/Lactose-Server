@@ -1,5 +1,5 @@
 using Lactose.Economy.Data.Repos;
-using Lactose.Economy.Dtos.Items;
+using Lactose.Economy.Items;
 using Lactose.Economy.Models;
 using Lactose.Economy.Mapping;
 using LactoseWebApp;
@@ -16,33 +16,31 @@ namespace Lactose.Economy.Controllers;
 public class ItemsController(
     ILogger<ItemsController> logger,
     IItemsRepo itemsRepo,
-    IMqttClient mqttClient) : ControllerBase, IItemsController
+    IMqttClient mqttClient) : ItemsControllerBase
 {
-    [HttpPost("query", Name = "Query Items")]
-    public async Task<ActionResult<QueryItemsResponse>> QueryItems(QueryItemsRequest request)
+    [Authorize]
+    public override async Task<ActionResult<QueryItemsResponse>> Query(QueryItemsRequest request)
     {
         ISet<string> foundItems = await itemsRepo.Query();
 
-        return Ok(new QueryItemsResponse
+        return new QueryItemsResponse
         {
             ItemIds = foundItems.ToList()
-        });
+        };
     }
-    
-    [HttpPost(Name = "Get Items")]
+
     [Authorize]
-    public async Task<ActionResult<GetItemsResponse>> GetItems(GetItemsRequest request)
+    public override async Task<ActionResult<GetItemsResponse>> Get(GetItemsRequest request)
     {
         if (!User.HasBoolClaim(Permissions.Read))
             return Unauthorized("You do not have permission to read items");
         
-        var foundItems = await itemsRepo.Get(request.ItemIds.ToHashSet());
-        return Ok(ItemMapper.ToDto(foundItems));
+        ICollection<Item> foundItems = await itemsRepo.Get(request.ItemIds.ToHashSet());
+        return ItemMapper.ToDto(foundItems);
     }
 
-    [HttpPost("create", Name = "Create Item")]
     [Authorize]
-    public async Task<ActionResult<GetItemResponse>> CreateItem(CreateItemRequest request)
+    public override async Task<ActionResult<GetItemResponse>> Create(CreateItemRequest request)
     {
         if (!User.HasBoolClaim(Permissions.Write))
             return Unauthorized("You do not have permission to write items");
@@ -67,12 +65,11 @@ public class ItemsController(
             }.ToJson())
             .Build());
         
-        return Ok(ItemMapper.ToDto(createdItem));
+        return ItemMapper.ToDto(createdItem);
     }
 
-    [HttpPost("update", Name = "Update Item")]
     [Authorize]
-    public async Task<ActionResult<GetItemResponse>> UpdateItem(UpdateItemRequest request)
+    public override async Task<ActionResult<GetItemResponse>> Update(UpdateItemRequest request)
     {
         if (!request.ItemId.IsValidObjectId())
             return BadRequest($"ItemId '{request.ItemId}' is not a valid ItemId");
@@ -105,12 +102,11 @@ public class ItemsController(
             }.ToJson())
             .Build());
 
-        return Ok(ItemMapper.ToDto(updatedItem));
+        return ItemMapper.ToDto(updatedItem);
     }
 
-    [HttpPost("delete", Name = "Delete Item")]
     [Authorize]
-    public async Task<ActionResult<DeleteItemsResponse>> DeleteItems(DeleteItemsRequest request)
+    public override async Task<ActionResult<DeleteItemsResponse>> Delete(DeleteItemsRequest request)
     {
         if (!User.HasBoolClaim(Permissions.Write))
             return Unauthorized("You do not have permission to write items");
@@ -118,7 +114,7 @@ public class ItemsController(
         if (request.ItemIds is null)
         {
             bool deletedAll = await itemsRepo.Clear();
-            return deletedAll ? Ok(new DeleteItemsResponse()) : BadRequest();
+            return deletedAll ? new DeleteItemsResponse { ItemIds = [] } : BadRequest();
         }
         
         var deletedItems = await itemsRepo.Delete(request.ItemIds);
@@ -130,13 +126,13 @@ public class ItemsController(
                 .WithTopic("/economy/items/deleted")
                 .WithPayload(new ItemEvent { ItemId = deletedItemId }.ToJson())
                 .Build())
-            );
+        );
 
         await Task.WhenAll(publishEvents);
 
-        return Ok(new DeleteItemsResponse
+        return new DeleteItemsResponse
         {
             ItemIds = deletedItems.ToList()
-        });
+        };
     }
 }

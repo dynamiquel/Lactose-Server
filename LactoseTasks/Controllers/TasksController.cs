@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Lactose.Economy.Models;
+using Lactose.Economy.UserItems;
 using Lactose.Tasks.Data;
 using Lactose.Tasks.Mapping;
 using Lactose.Tasks.Models;

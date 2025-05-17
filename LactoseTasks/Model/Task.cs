@@ -1,4 +1,4 @@
-using Lactose.Economy.Models;
+using Lactose.Economy.UserItems;
 using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseWebApp.Repo;
 using MongoDB.Bson;

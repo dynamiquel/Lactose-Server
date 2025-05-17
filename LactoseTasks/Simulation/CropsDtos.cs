@@ -1,4 +1,4 @@
-using Lactose.Economy.Models;
+using Lactose.Economy.UserItems;
 
 namespace LactoseTasks.Simulation;
 

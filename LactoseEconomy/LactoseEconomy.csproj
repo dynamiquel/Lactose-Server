@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LactoseEconomyContracts\LactoseEconomyContracts.csproj" />
+      <ProjectReference Include="..\LactoseEconomyClient\LactoseEconomyClient.csproj" />
       <ProjectReference Include="..\LactoseWebApp\LactoseWebApp.csproj" />
     </ItemGroup>
 

@@ -1,6 +1,6 @@
+using System.Net.Http.Headers;
 using System.Text;
-using Lactose.Economy;
-using Lactose.Economy.Dtos.Transactions;
+using Lactose.Economy.Transactions;
 using Lactose.Events;
 using Lactose.Tasks;
 using Lactose.Tasks.Data;
@@ -9,7 +9,6 @@ using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseWebApp;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Mqtt;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Formatter;
@@ -37,7 +36,7 @@ public class UserTaskTracker(
         // auth and DI dependencies.
         while (authHandler.AccessToken is null)
             await Task.Delay(100, cancellationToken);
-        transactionsClient.SetAuthToken(authHandler.AccessToken.EncodedToken);
+        transactionsClient.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authHandler.AccessToken.EncodedToken);
         
         _mqttClient = mqttFactory.CreateMqttClient();
 
@@ -273,12 +272,13 @@ public class UserTaskTracker(
                     },
                     UserB = new UserTradeRequest
                     {
-                        UserId = userTask.UserId
+                        UserId = userTask.UserId,
+                        Items = []
                     }
                 };
 
-                ActionResult<TradeResponse> transactionResult = await transactionsClient.Trade(tradeRequest);
-                if (transactionResult.Value?.Reason != TradeResponseReason.Success)
+                TradeResponse tradeResponse = await transactionsClient.Trade(tradeRequest);
+                if (tradeResponse.Reason != "Success")
                 {
                     logger.LogError("Could not claim Task Rewards from User Task '{UserTaskId}' to User '{UserTaskUserId}'", 
                         userTask.Id, userTask.UserId);
