@@ -1,0 +1,32 @@
+global: 
+  scrape_interval: 15s
+  
+scrape_configs: 
+  - job_name: prometheus
+    scheme: https
+    scrape_interval: 5s
+    tls_config:
+      # Don't need to verify localhost
+      insecure_skip_verify: true
+    static_configs: 
+      - targets:
+          - localhost:9090
+  - job_name: traefik
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+          - lactose-traefik:8081
+  - job_name: lactose
+    scheme: https
+    scrape_interval: 5s
+    tls_config:
+      # Don't need to verify localhost
+      insecure_skip_verify: true
+    static_configs:
+        - targets:
+          - lactose-identity
+          - lactose-config
+          - lactose-economy
+          - lactose-simulation
+          - lactose-tasks
+          
