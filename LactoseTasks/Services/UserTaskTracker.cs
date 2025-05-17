@@ -158,11 +158,12 @@ public class UserTaskTracker(
                     userEvent!.UserId, task.Id);
                 continue;
             }
-            
-            Trigger? foundTrigger = task.Triggers.FirstOrDefault(t => 
-                MqttTopicFilterComparer.Compare(arg.ApplicationMessage.Topic, t.Topic) == MqttTopicFilterCompareResult.IsMatch);
-            
-            if (foundTrigger is null)
+
+            ICollection<Trigger> triggers = task.Triggers.Where(t =>
+                MqttTopicFilterComparer.Compare(arg.ApplicationMessage.Topic, t.Topic) ==
+                MqttTopicFilterCompareResult.IsMatch).ToArray();
+
+            if (triggers.Count == 0)
             {
                 // This shouldn't happen but handle anyway.
                 logger.LogError("Failed to find a Trigger within Task '{TaskId}' ({TaskName}) that matches Topic '{TopicName}'",
@@ -170,58 +171,74 @@ public class UserTaskTracker(
                 continue;
             }
 
-            ITaskTriggerHandler? foundTriggerHandler = triggerHandlerRegistry.FindHandler(foundTrigger.Handler);
-            if (foundTriggerHandler is null)
+            float taskProgress = 0;
+            
+            foreach (Trigger foundTrigger in triggers)
             {
-                logger.LogError("Failed to find a Trigger Handler with name '{TriggerHandlerName}'", foundTrigger.Handler);
-                continue;
+                logger.LogInformation("Using Trigger with Topic '{TopicName}' for  '{TaskId}' ({TaskName})",
+                    foundTrigger.Topic, task.Id, task.Name);
+
+                ITaskTriggerHandler? foundTriggerHandler = triggerHandlerRegistry.FindHandler(foundTrigger.Handler);
+                if (foundTriggerHandler is null)
+                {
+                    logger.LogError("Failed to find a Trigger Handler with name '{TriggerHandlerName}'",
+                        foundTrigger.Handler);
+                    continue;
+                }
+
+                try
+                {
+                    if (foundTrigger.Config is null)
+                        foundTrigger.Config = null;
+                    else if (foundTrigger.Config.GetType() != foundTriggerHandler.ConfigType)
+                        throw new InvalidCastException(
+                            $"Config is wrong type. Expected '{foundTriggerHandler.ConfigType}'. Received '{foundTrigger.Config.GetType()}'");
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(
+                        "Failed to parse the Config for Trigger Handler '{TriggerHandlerName}' into '{ConfigTypeName}'. Exception:\n{Exception}",
+                        foundTriggerHandler.GetType().Name, foundTriggerHandler.ConfigType.Name, e);
+                    continue;
+                }
+
+                try
+                {
+                    // Try convert the event message to the type the Trigger Handler expects.
+                    userEvent = (UserEvent?)arg.ApplicationMessage.FromJson(foundTriggerHandler.EventType);
+                    if (userEvent is null)
+                        throw new NullReferenceException();
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(
+                        "Failed to parse the Event Payload for Trigger Handler '{TriggerHandlerName}' into '{EventTypeName}'. Exception:\n{Exception}",
+                        foundTriggerHandler.GetType().Name, foundTriggerHandler.EventType.Name, e);
+                    continue;
+                }
+
+                try
+                {
+                    float newProgress = await foundTriggerHandler.CalculateTaskProgress(foundTrigger, userEvent);
+                    
+                    logger.LogInformation("User '{UserId}' has made {Progress:N1} progress on Task '{TaskId}' ({TaskName}) from topic '{TopicName}'",
+                        userEvent!.UserId, newProgress, task.Id, task.Name, foundTrigger.Topic);
+
+                    taskProgress += newProgress;
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(
+                        "Failed to execute Trigger Handler '{TriggerHandlerName}' for the Task '{TaskId}' ({TaskName}). Reason:\n{Reason}",
+                        foundTriggerHandler.GetType().Name, task.Id, task.Name, e.Message);
+                }
             }
 
-            try
-            {
-                if (foundTrigger.Config is null)
-                    foundTrigger.Config = null;
-                else if (foundTrigger.Config.GetType() != foundTriggerHandler.ConfigType)
-                    throw new InvalidCastException($"Config is wrong type. Expected '{foundTriggerHandler.ConfigType}'. Received '{foundTrigger.Config.GetType()}'");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Failed to parse the Config for Trigger Handler '{TriggerHandlerName}' into '{ConfigTypeName}'. Exception:\n{Exception}", 
-                    foundTriggerHandler.GetType().Name, foundTriggerHandler.ConfigType.Name, e);
-                continue;
-            }
-            
-            try
-            {
-                // Try convert the event message to the type the Trigger Handler expects.
-                userEvent = (UserEvent?)arg.ApplicationMessage.FromJson(foundTriggerHandler.EventType);
-                if (userEvent is null)
-                    throw new NullReferenceException();
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Failed to parse the Event Payload for Trigger Handler '{TriggerHandlerName}' into '{EventTypeName}'. Exception:\n{Exception}", 
-                    foundTriggerHandler.GetType().Name, foundTriggerHandler.EventType.Name, e);
-                continue;
-            }
-
-            float taskProgress;
-            try
-            {
-                taskProgress = await foundTriggerHandler.CalculateTaskProgress(foundTrigger, userEvent);
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Failed to execute Trigger Handler '{TriggerHandlerName}' for the Task '{TaskId}' ({TaskName}). Reason:\n{Reason}",
-                    foundTriggerHandler.GetType().Name, task.Id, task.Name, e.Message);
-                continue;
-            }
-            
             if (taskProgress == 0)
                 continue;
             
             logger.LogInformation("User '{UserId}' has made {Progress:N1} progress on Task '{TaskId}' ({TaskName})",
-                userEvent.UserId, taskProgress, task.Id, task.Name);
+                userEvent!.UserId, taskProgress, task.Id, task.Name);
 
             float prevTaskProgress;
             if (userTask is null)

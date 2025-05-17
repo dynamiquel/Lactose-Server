@@ -10,6 +10,7 @@ namespace Lactose.Tasks.TaskTriggerHandlers;
 public class CropTaskTriggerConfig : TaskHandlerConfig
 {
     public required string CropId { get; set; } 
+    public float ProgressMultiplier { get; set; } = 1;
 }
 
 public class CropTaskTriggerHandler(
@@ -38,6 +39,6 @@ public class CropTaskTriggerHandler(
             ? userCrops.Value.CropInstances.Count
             : userCrops.Value.CropInstances.Count(cropInst => cropInst.CropId == config.CropId);
         
-        return progress;
+        return progress * config.ProgressMultiplier;
     }
 }
