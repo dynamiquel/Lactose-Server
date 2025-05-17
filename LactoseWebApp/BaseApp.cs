@@ -6,6 +6,8 @@ using LactoseWebApp.Mqtt;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
 using Microsoft.AspNetCore.Authentication;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using Serilog;
 using Serilog.Formatting.Display;
 
@@ -88,12 +90,20 @@ public abstract class BaseApp
                 int.TryParse(builder.Configuration["Kestrel:Limits:KeepAliveTimeout"], out var timeout)
                 ? timeout : 30);
         });
-
         // Adds the Configuration as a singleton so it can be easily accessed by other services.
         // Ideally, the Options system should be used instead.
-        builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-        builder.Services.AddOptions(builder.Configuration);
-        builder.Services.AddHttpClient();
+        builder.Services
+            .AddSingleton<IConfiguration>(builder.Configuration)
+            .AddOptions(builder.Configuration)
+            .AddHttpClient()
+            .AddOpenTelemetry()
+            .WithMetrics(m => m
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddRuntimeInstrumentation()
+                .AddProcessInstrumentation()
+                .AddPrometheusExporter())
+            .ConfigureResource(r => r.AddService(builder.Configuration.GetOptions<ServiceOptions>().ServiceName));
         
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
         if (authOptions is { Enabled: true })
@@ -152,6 +162,7 @@ public abstract class BaseApp
         }
 
         app.MapControllers();
+        app.MapPrometheusScrapingEndpoint();
     }
 
     /// <summary>

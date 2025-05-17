@@ -85,7 +85,7 @@ services:
     secrets:
       - lactose-cert-fullchain
       - lactose-cert-privkey
-    user: "1001"
+    user: "1000"
     command:
       - --config.file=/etc/prometheus/config/prometheus.yml
       - --web.config.file=/etc/prometheus/config/web.yml
@@ -105,7 +105,7 @@ services:
     secrets:
       - lactose-cert-fullchain
       - lactose-cert-privkey
-    user: "1001"
+    user: "1000"
     depends_on:
       - prometheus
     restart: unless-stopped
