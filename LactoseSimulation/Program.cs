@@ -2,7 +2,9 @@ using Lactose.Economy;
 using Lactose.Simulation.Data.Repos;
 using Lactose.Client;
 using Lactose.Economy.Transactions;
+using Lactose.Simulation.Metrics;
 using LactoseWebApp.Auth;
+using OpenTelemetry.Metrics;
 
 new SimulationApi().Start(args);
 
@@ -25,5 +27,11 @@ internal sealed class SimulationApi : LactoseWebApp.BaseApp
             if (builder.Environment.IsDevelopment())
                 clientBuilder.DisableSslValidation();
         }
+    }
+
+    protected override void ConfigureMeters(MeterProviderBuilder builder)
+    {
+        base.ConfigureMeters(builder);
+        builder.AddMeter(SimulationMetrics.MeterName);
     }
 }

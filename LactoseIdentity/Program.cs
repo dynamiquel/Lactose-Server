@@ -1,9 +1,11 @@
 using Lactose.Identity.Auth;
 using Lactose.Identity.Data.Repos;
+using Lactose.Identity.Metrics;
 using Lactose.Identity.Models;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Auth.Permissions;
 using Microsoft.AspNetCore.Identity;
+using OpenTelemetry.Metrics;
 
 new IdentityApi().Start(args);
 
@@ -12,7 +14,7 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
     protected override void Configure(WebApplicationBuilder builder)
     {
         base.Configure(builder);
-        
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -23,6 +25,12 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
         builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
         builder.Services.AddSingleton<IPermissionsRepo, NativePermissionsRepo>();
         builder.Services.AddSingleton<IApiAuthHandler, NativeApiAuthHandler>();
+    }
+
+    protected override void ConfigureMeters(MeterProviderBuilder builder)
+    {
+        base.ConfigureMeters(builder);
+        builder.AddMeter(IdentityMetrics.MeterName);
     }
 
     protected override void OnBuilt(WebApplication app)

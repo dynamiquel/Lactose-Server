@@ -42,11 +42,10 @@ public class UserTaskTracker(
 
         var clientOptions = new MqttClientOptionsBuilder()
             .WithProtocolVersion(MqttProtocolVersion.V500)
-            .WithTlsOptions(
-                o => o.WithCertificateValidationHandler(
-                    // The used public broker sometimes has invalid certificates. This sample accepts all
-                    // certificates. This should not be used in live environments.
-                    _ => true))
+            .WithTlsOptions(o => o.WithCertificateValidationHandler(
+                // The used public broker sometimes has invalid certificates. This sample accepts all
+                // certificates. This should not be used in live environments.
+                _ => true))
             .WithCredentials(authHandler.AccessToken.EncodedToken, [69] /* password just needs to be non-empty */)
             .WithClientId($"usertasktracker-{Guid.NewGuid().ToString("N")[..8]}");
 
@@ -81,6 +80,9 @@ public class UserTaskTracker(
         }
 
         await SubscribeToTopics(cancellationToken);
+        
+        // For any future reconnects, subscribe to topics again.
+        _mqttClient.ConnectedAsync += async _ => await SubscribeToTopics(CancellationToken.None);
         _mqttClient.ApplicationMessageReceivedAsync += OnTopicMessageReceived;
     }
 

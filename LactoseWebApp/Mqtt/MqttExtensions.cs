@@ -120,7 +120,7 @@ public static class MqttExtensions
             try
             {
                 logger?.LogWarning("Executing MQTT ReconnectAsync...");
-                
+
                 MqttClientConnectResult connectResult = await client.ConnectAsync(client.Options, cancellationToken);
 
                 if (client.IsConnected)

@@ -3,6 +3,10 @@
 // It is recommended not to modify this file. Modify the source spec file instead.
 //
 
+using System.Net.Http.Headers;
+using System.Text;
+using Microsoft.Extensions.Options;
+
 namespace Lactose.Economy.Transactions;
 
 public class TransactionsClientOptions
@@ -12,7 +16,7 @@ public class TransactionsClientOptions
 
 public class TransactionsClient(
     HttpClient httpClient,
-    TransactionsClientOptions options)
+    IOptions<TransactionsClientOptions> options)
 {
     public HttpClient HttpClient => httpClient;
     
@@ -21,10 +25,11 @@ public class TransactionsClient(
         HttpRequestMessage httpRequest = new()
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(options.Url + "/transactions" + "/query"),
-            Content = new ByteArrayContent(request.ToBytes()),
-            Headers = { {"Content-Type", "application/json; charset=utf-8" }}
+            RequestUri = new Uri(options.Value.Url + "/transactions" + "/query"),
+            Content = new ByteArrayContent(request.ToBytes())
         };
+        
+        httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json", "utf-8");
 
         HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest).ConfigureAwait(false);
         httpResponse.EnsureSuccessStatusCode();
@@ -43,10 +48,11 @@ public class TransactionsClient(
         HttpRequestMessage httpRequest = new()
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(options.Url + "/transactions" + "/get"),
-            Content = new ByteArrayContent(request.ToBytes()),
-            Headers = { {"Content-Type", "application/json; charset=utf-8" }}
+            RequestUri = new Uri(options.Value.Url + "/transactions" + "/get"),
+            Content = new ByteArrayContent(request.ToBytes())
         };
+        
+        httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json", "utf-8");
 
         HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest).ConfigureAwait(false);
         httpResponse.EnsureSuccessStatusCode();
@@ -65,10 +71,11 @@ public class TransactionsClient(
         HttpRequestMessage httpRequest = new()
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(options.Url + "/transactions" + "/trade"),
-            Content = new ByteArrayContent(request.ToBytes()),
-            Headers = { {"Content-Type", "application/json; charset=utf-8" }}
+            RequestUri = new Uri(options.Value.Url + "/transactions" + "/trade"),
+            Content = new ByteArrayContent(request.ToBytes())
         };
+        
+        httpRequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json", "utf-8");
 
         HttpResponseMessage httpResponse = await httpClient.SendAsync(httpRequest).ConfigureAwait(false);
         httpResponse.EnsureSuccessStatusCode();

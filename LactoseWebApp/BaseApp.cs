@@ -97,12 +97,7 @@ public abstract class BaseApp
             .AddOptions(builder.Configuration)
             .AddHttpClient()
             .AddOpenTelemetry()
-            .WithMetrics(m => m
-                .AddAspNetCoreInstrumentation()
-                .AddHttpClientInstrumentation()
-                .AddRuntimeInstrumentation()
-                .AddProcessInstrumentation()
-                .AddPrometheusExporter())
+            .WithMetrics(ConfigureMeters)
             .ConfigureResource(r => r.AddService(builder.Configuration.GetOptions<ServiceOptions>().ServiceName));
         
         var authOptions = builder.Configuration.TryGetOptions<AuthOptions>();
@@ -135,6 +130,16 @@ public abstract class BaseApp
         {
             options.Filters.Add<LogActionFilter>();
         }).AddControllersAsServices();
+    }
+
+    protected virtual void ConfigureMeters(MeterProviderBuilder builder)
+    {
+        builder
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddProcessInstrumentation()
+            .AddPrometheusExporter();
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Lactose.Identity.Auth;
 using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Auth;
+using Lactose.Identity.Metrics;
 using Lactose.Identity.Models;
 using Lactose.Identity.Options;
 using LactoseWebApp;
@@ -119,6 +120,8 @@ public class AuthController : ControllerBase
             }.ToJson())
             .Build());
         
+        IdentityMetrics.LoginsCounter.Add(1);
+        
         return Ok(new LoginResponse
         {
             Id = foundUser.Id,
@@ -189,6 +192,8 @@ public class AuthController : ControllerBase
             }.ToJson())
             .Build());
         
+        IdentityMetrics.SignupsCounter.Add(1);
+        
         return Ok(new SignupResponse
         {
             Id = createdUser.Id,
@@ -247,6 +252,7 @@ public class AuthController : ControllerBase
                 });
         }
 
+        IdentityMetrics.LogoutsCounter.Add(1);
 
         return Ok(new LogoutResponse());
     }
@@ -358,6 +364,9 @@ public class AuthController : ControllerBase
                 TimeLastLoggedIn = foundUser.TimeLastLoggedIn
             }.ToJson())
             .Build());
+        
+        IdentityMetrics.RefreshTokensCounter.Add(1);
+        IdentityMetrics.LoginsCounter.Add(1);
 
         return Ok(new RefreshResponse
         {

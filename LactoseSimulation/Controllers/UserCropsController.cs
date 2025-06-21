@@ -3,6 +3,7 @@ using Lactose.Economy.UserItems;
 using Lactose.Simulation.Data.Repos;
 using Lactose.Simulation.Dtos.UserCrops;
 using Lactose.Simulation.Mapping;
+using Lactose.Simulation.Metrics;
 using Lactose.Simulation.Models;
 using Lactose.Simulation.Options;
 using LactoseWebApp;
@@ -110,7 +111,10 @@ public class UserCropsController(
                 userCrop.State = CropInstanceStates.Harvestable;
             }
             
-            logger.LogInformation($"Simulated User Crop with ID {userCrop.Id}. From {currentHarvestSeconds} Harvest seconds to {userCrop.RemainingHarvestSeconds} Harvest seconds");
+            logger.LogInformation("Simulated User Crop with ID {UserCropId}. From {CurrentHarvestSeconds} Harvest seconds to {UserCropRemainingHarvestSeconds} Harvest seconds", 
+                userCrop.Id, currentHarvestSeconds, userCrop.RemainingHarvestSeconds);
+            
+            SimulationMetrics.CropsSimulatedCounter.Add(1, new KeyValuePair<string, object?>("cropId", userCrop.CropId));
         }
 
         userCrops.PreviousSimulationTime = timeNow;
@@ -119,7 +123,8 @@ public class UserCropsController(
         if (userCrops is null)
             return StatusCode(StatusCodes.Status500InternalServerError, $"Could not update Crops for User '{request.UserId}'");
         
-        logger.LogInformation($"Simulated User Crops for User with ID {request.UserId} by {secondsDelta} seconds");
+        logger.LogInformation("Simulated User Crops for User with ID {RequestUserId} by {SecondsDelta} seconds", 
+            request.UserId, secondsDelta);
         
         return Ok(new SimulateUserCropsResponse
         {
@@ -195,6 +200,8 @@ public class UserCropsController(
                 CropInstanceIds = [cropInstance.Id]
             }.ToJson())
             .Build());
+        
+        SimulationMetrics.CropCreatedCounter.Add(1, new KeyValuePair<string, object?>("cropName", crop?.Name));
 
         return Ok(new CreateUserCropResponse
         {
@@ -264,12 +271,14 @@ public class UserCropsController(
             var tradeResponse = await transactionsClient.Trade(tradeRequest);
             if (tradeResponse.Reason != "Success")
             {
-                logger.LogError($"Could not transfer Harvest Items from Crop '{crop.Id}' to User '{request.UserId}'");
+                logger.LogError("Could not transfer Harvest Items from Crop '{CropId}' to User '{RequestUserId}'", crop.Id, request.UserId);
                 continue;
             }
             
             harvestedCropInstanceIds.Add(requestedCropInstanceId);
-            logger.LogInformation($"User has harvested User Crop with ID '{requestedCropInstanceId}'. Next harvest in {foundCropInstance.RemainingHarvestSeconds} seconds");
+            logger.LogInformation("User has harvested User Crop with ID '{RequestedCropInstanceId}'. Next harvest in {RemainingHarvestSeconds} seconds", requestedCropInstanceId, foundCropInstance.RemainingHarvestSeconds);
+            
+            SimulationMetrics.CropHarvestedCounter.Add(1, new KeyValuePair<string, object?>("cropName", crop.Name));
         }
 
         if (!harvestedCropInstanceIds.IsEmpty())
@@ -318,15 +327,18 @@ public class UserCropsController(
 
             if (foundCropInstance is null)
             {
-                logger.LogWarning($"User wanted to destroy a User Crop with ID '{requestedCropInstanceId}' but it doesn't exist");
+                logger.LogWarning("User wanted to destroy a User Crop with ID '{RequestedCropInstanceId}' but it doesn't exist", requestedCropInstanceId);
                 continue;
             }
             
             destroyedCropInstanceIds.Add(requestedCropInstanceId);
             userCrops.CropInstances.Remove(foundCropInstance);
-            logger.LogInformation($"User has destroyed User Crop with ID '{requestedCropInstanceId}'");
+            logger.LogInformation("User has destroyed User Crop with ID '{RequestedCropInstanceId}'", requestedCropInstanceId);
             
             Crop? crop = crops.FirstOrDefault(crop => crop.Id == foundCropInstance.CropId);
+            
+            SimulationMetrics.CropsDestroyedCounter.Add(1, new KeyValuePair<string, object?>("cropName", crop?.Name));
+            
             if (/* bCropHasDestroyItems = */ crop is not null && !crop.DestroyItems.IsEmpty())
             {
                 var tradeRequest = new TradeRequest
@@ -345,7 +357,7 @@ public class UserCropsController(
                 var tradeResponse = await transactionsClient.Trade(tradeRequest);
                 if (tradeResponse.Reason != "Success")
                 {
-                    logger.LogError($"Could not transfer Destroy Items from Crop '{crop.Id}' to User '{request.UserId}'");
+                    logger.LogError("Could not transfer Destroy Items from Crop '{CropId}' to User '{RequestUserId}'", crop.Id, request.UserId);
                 }
             }
         }
@@ -396,26 +408,26 @@ public class UserCropsController(
 
             if (foundCropInstance is null)
             {
-                logger.LogWarning($"User wanted to fertilise a User Crop with ID '{requestedCropInstanceId}' but it doesn't exist");
+                logger.LogWarning("User wanted to fertilise a User Crop with ID '{RequestedCropInstanceId}' but it doesn't exist", requestedCropInstanceId);
                 continue;
             }
             
             Crop? crop = crops.FirstOrDefault(crop => crop.Id == foundCropInstance.CropId);
             if (crop is null)
             {
-                logger.LogWarning($"User wanted to fertilise User Crop with ID '{requestedCropInstanceId}' but no Crop exists with ID '{foundCropInstance.CropId}'");
+                logger.LogWarning("User wanted to fertilise User Crop with ID '{RequestedCropInstanceId}' but no Crop exists with ID '{CropId}'", requestedCropInstanceId, foundCropInstance.CropId);
                 continue;
             }
 
             if (foundCropInstance.State != CropInstanceStates.Growing)
             {
-                logger.LogWarning($"User wanted to fertilise User Crop with ID '{requestedCropInstanceId}' but it is not Growing");
+                logger.LogWarning("User wanted to fertilise User Crop with ID '{RequestedCropInstanceId}' but it is not Growing", requestedCropInstanceId);
                 continue;
             }
 
             if (string.IsNullOrEmpty(crop.FertiliserItemId))
             {
-                logger.LogWarning($"User wanted to fertilise User Crop but Crop '{foundCropInstance.CropId}' does not have a Fertiliser");
+                logger.LogWarning("User wanted to fertilise User Crop but Crop '{CropId}' does not have a Fertiliser", foundCropInstance.CropId);
                 continue;
             }
 
@@ -429,7 +441,7 @@ public class UserCropsController(
             double currentFertiliserSeconds = foundCropInstance.RemainingFertiliserSeconds;
             if (currentFertiliserSeconds >= maxFertiliserSeconds)
             {
-                logger.LogWarning($"User wanted to fertilise User Crop with ID '{requestedCropInstanceId}' but has already reached max fertilisation");
+                logger.LogWarning("User wanted to fertilise User Crop with ID '{RequestedCropInstanceId}' but has already reached max fertilisation", requestedCropInstanceId);
                 continue;
             }
             
@@ -449,7 +461,7 @@ public class UserCropsController(
             var tradeResponse = await transactionsClient.Trade(tradeRequest);
             if (tradeResponse.Reason != "Success")
             {
-                logger.LogError($"Could not remove Fertilise Items from User '{request.UserId}' for Crop '{crop.Id}'");
+                logger.LogError("Could not remove Fertilise Items from User '{RequestUserId}' for Crop '{CropId}'", request.UserId, crop.Id);
                 continue;
             }
 
@@ -460,7 +472,8 @@ public class UserCropsController(
                 maxFertiliserSeconds);
             
             fertilisedCropInstanceIds.Add(requestedCropInstanceId);
-            logger.LogInformation($"User has fertilised User Crop with ID '{requestedCropInstanceId}'. From {currentFertiliserSeconds} seconds to {foundCropInstance.RemainingFertiliserSeconds} seconds");
+            logger.LogInformation("User has fertilised User Crop with ID '{RequestedCropInstanceId}'. From {CurrentFertiliserSeconds} seconds to {RemainingFertiliserSeconds} seconds", requestedCropInstanceId, currentFertiliserSeconds, foundCropInstance.RemainingFertiliserSeconds);
+            SimulationMetrics.CropsFertilisedCounter.Add(1, new KeyValuePair<string, object?>("cropName", crop.Name));
         }
 
         if (!fertilisedCropInstanceIds.IsEmpty())
@@ -510,13 +523,13 @@ public class UserCropsController(
 
             if (foundCropInstance is null)
             {
-                logger.LogWarning($"User wanted to seed a User Crop with ID '{requestedCropInstanceId}' but it doesn't exist");
+                logger.LogWarning("User wanted to seed a User Crop with ID '{RequestedCropInstanceId}' but it doesn't exist", requestedCropInstanceId);
                 continue;
             }
 
             if (foundCropInstance.State != CropInstanceStates.Empty)
             {
-                logger.LogWarning($"User wanted to seed a User Crop with ID '{requestedCropInstanceId}' but it is unavailable to seed");
+                logger.LogWarning("User wanted to seed a User Crop with ID '{RequestedCropInstanceId}' but it is unavailable to seed", requestedCropInstanceId);
                 continue;
             }
 
@@ -527,7 +540,7 @@ public class UserCropsController(
                 Crop? existingCrop = await cropsRepo.Get(foundCropInstance.CropId);
                 if (existingCrop?.Type != CropTypes.Plot)
                 {
-                    logger.LogError($"Attempted to seed an empty Crop but it is not a Plot. Crop Instance '{requestedCropInstanceId}, Existing Crop: {foundCropInstance.CropId}");
+                    logger.LogError("Attempted to seed an empty Crop but it is not a Plot. Crop Instance '{RequestedCropInstanceId}, Existing Crop: {CropId}", requestedCropInstanceId, foundCropInstance.CropId);
                     continue;
                 }
             }
@@ -548,7 +561,7 @@ public class UserCropsController(
             var tradeResponse = await transactionsClient.Trade(tradeRequest);
             if (tradeResponse.Reason != "Success")
             {
-                logger.LogError($"Could not remove Cost Items from User '{request.UserId}' for Crop '{crop.Id}'");
+                logger.LogError("Could not remove Cost Items from User '{RequestUserId}' for Crop '{CropId}'", request.UserId, crop.Id);
                 continue;
             }
             
@@ -558,6 +571,8 @@ public class UserCropsController(
             foundCropInstance.RemainingHarvestSeconds = crop.HarvestSeconds;
 
             seededCropInstanceIds.Add(requestedCropInstanceId);
+            
+            SimulationMetrics.CropsSeededCounter.Add(1, new KeyValuePair<string, object?>("cropName", crop.Name));
         }
         
         userCrops = await userCropsRepo.Set(userCrops);

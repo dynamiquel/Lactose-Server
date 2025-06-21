@@ -4,6 +4,7 @@
 //
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Lactose.Economy.Transactions;
 
@@ -110,6 +111,7 @@ public record TradeRequest
 
 public record TradeResponse
 {
+    [JsonPropertyName("reason")]
     public required string Reason { get; set; }
 
     public byte[] ToBytes()
