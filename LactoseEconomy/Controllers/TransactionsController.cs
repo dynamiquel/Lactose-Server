@@ -154,7 +154,8 @@ public class TransactionsController(
             userAItems?.DecreaseItemQuantity(itemToTransfer.ItemId, itemToTransfer.Quantity);
             userBItems?.IncreaseItemQuantity(itemToTransfer.ItemId, itemToTransfer.Quantity);
             
-            logger.LogInformation($"Transferred {itemToTransfer.Quantity} x '{itemToTransfer.ItemId}' from user '{request.UserA.UserId}' to user '{request.UserB.UserId}'");
+            logger.LogInformation("Transferred {Quantity} x '{ItemId}' from user '{UserAUserId}' to user '{UserBUserId}'", 
+                itemToTransfer.Quantity, itemToTransfer.ItemId, request.UserA.UserId, request.UserB.UserId);
         }
 
         IList<Transaction> userBToATransactions = new List<Transaction>();

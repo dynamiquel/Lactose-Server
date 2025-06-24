@@ -222,16 +222,16 @@ public class ShopItemsController(
             UserB = new UserTradeRequest
             {
                 UserId = shopItem.UserId,
-                Items = (shopUserTradeItems)
+                Items = shopUserTradeItems
             }
         };
 
         var tradeResult = await transactionsController.Trade(tradeRequest);
-        if (tradeResult.Result is ObjectResult objectResult)
+        if (tradeResult.Value is not null)
         {
             return new TradeShopItemResponse
             {
-                Reason = (objectResult.Value as TradeResponse)!.Reason
+                Reason = tradeResult.Value.Reason
             };
         }
 
