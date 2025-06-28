@@ -48,6 +48,7 @@ public abstract class BaseApp
         }
         catch (Exception e)
         {
+            Console.WriteLine($"Application terminated unexpectedly. Exception: {e}");
             Log.Fatal(e, "Application terminated unexpectedly. Check logs for more info");
         }
         finally

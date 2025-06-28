@@ -157,6 +157,9 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /identity
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-identity-api-key
+      ASPNETCORE_Roles__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-identity-db:27017/identitydb?authSource=admin++roles
+      ASPNETCORE_Users__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-identity-db:27017/identitydb?authSource=admin++users
+      ASPNETCORE_RefreshTokens__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-identity-db:27017/identitydb?authSource=admin++refresh_tokens
     labels:
       traefik.enable: true
       traefik.http.routers.identity.rule: (Host(`lactose.mookrata.ovh`)) && PathPrefix(`/identity`)
@@ -202,6 +205,7 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /config
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-config-api-key
+      ASPNETCORE_Config__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-config-db:27017/configdb?authSource=admin++config
     labels:
       traefik.enable: true
       traefik.http.routers.config.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/config`)
@@ -242,6 +246,8 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /tasks
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-tasks-api-key
+      ASPNETCORE_Tasks__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-tasks-db:27017/tasksdb?authSource=admin++tasks
+      ASPNETCORE_UserTasks__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-tasks-db:27017/tasksdb?authSource=admin++user_tasks
     labels:
       traefik.enable: true
       traefik.http.routers.tasks.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/tasks`)
@@ -282,6 +288,9 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /economy
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-economy-api-key
+      ASPNETCORE_Items__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-economy-db:27017/economydb?authSource=admin++items
+      ASPNETCORE_UserItems__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-economy-db:27017/economydb?authSource=admin++user_items
+      ASPNETCORE_Transactions__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-economy-db:27017/economydb?authSource=admin++transactions
     labels:
       traefik.enable: true
       traefik.http.routers.economy.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/economy`)
@@ -322,6 +331,8 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /simulation
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-simulation-api-key
+      ASPNETCORE_Crops__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-simulation-db:27017/simulationdb?authSource=admin++crops
+      ASPNETCORE_UserCrops__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-simulation-db:27017/simulationdb?authSource=admin++user_crops
     labels:
       traefik.enable: true
       traefik.http.routers.simulation.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/simulation`)

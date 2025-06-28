@@ -1,32 +1,34 @@
-using LactoseWebApp.Options;
+using System.Text.Json.Serialization;
 
 namespace LactoseWebApp.Mongo;
 
 public class MongoDatabaseOptions
 {
+    /// <summary>
+    /// The Mongo URL to connect to.
+    /// It adheres to the standard Mongo URL expression but also supports an optional collection name, as well
+    /// as providing usernames and passwords as files.
+    /// 
+    /// Expected format: <code>mongodb://username:password@host:port/database?optionalArgs++optionalCollection</code>
+    /// </summary>
     public required string Connection { get; set; }
-    public required string Database { get; set; }
-    public required string Collection { get; set; }
-    public required string Username { get; set; } = "/run/secrets/lactose-mongodb-username";
-    public required string Password { get; set; } = "/run/secrets/lactose-mongodb-pass";
 
-    public string ConnectionWithBasicAuth
+    [JsonIgnore]
+    public MongoUrlEx ConnectionUrl
     {
         get
         {
-            string? username = OptionsExtensions.GetRawOrFileString(Username);
-            string? password = OptionsExtensions.GetRawOrFileString(Password);
+            if (_connectionUrl is null)
+            {
+                if (string.IsNullOrEmpty(Connection))
+                    throw new NullReferenceException($"{GetType()} has no {nameof(Connection)} set");
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-                return Connection;
+                _connectionUrl = new MongoUrlEx(Connection);
+            }
 
-            // Connection string needs to be URL-encoded and if passwords contain %, these
-            // need to be addressed.
-            password = password.Replace("%", "%25");
-
-            string connectionWithoutProtocol = Connection.Replace("mongodb://", null);
-
-            return $"mongodb://{username}:{password}@{connectionWithoutProtocol}";
+            return _connectionUrl;
         }
     }
+    
+    MongoUrlEx? _connectionUrl;
 }
