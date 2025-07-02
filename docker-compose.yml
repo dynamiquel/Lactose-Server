@@ -147,6 +147,21 @@ services:
       - ./data/mosquitto/data:/mosquitto/data
       - ./data/mosquitto/log:/mosquitto/log
     restart: always
+    
+  main-db:
+    container_name: lactose-main-db
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
+    user: "1000"
+    ports:
+      - "2008:27017"
+    volumes:
+      - ./data/MainDb:/data/db
+    secrets:
+      - lactose-mongodb-username
+      - lactose-mongodb-pass
   
   identity:
     container_name: lactose-identity
@@ -157,9 +172,9 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /identity
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-identity-api-key
-      ASPNETCORE_Roles__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-identity-db:27017/identitydb?authSource=admin++roles
-      ASPNETCORE_Users__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-identity-db:27017/identitydb?authSource=admin++users
-      ASPNETCORE_RefreshTokens__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-identity-db:27017/identitydb?authSource=admin++refresh_tokens
+      ASPNETCORE_Roles__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/identitydb?authSource=admin++roles
+      ASPNETCORE_Users__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/identitydb?authSource=admin++users
+      ASPNETCORE_RefreshTokens__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/identitydb?authSource=admin++refresh_tokens
     labels:
       traefik.enable: true
       traefik.http.routers.identity.rule: (Host(`lactose.mookrata.ovh`)) && PathPrefix(`/identity`)
@@ -178,23 +193,8 @@ services:
       - lactose-identity-api-key
     depends_on:
       - traefik
-      - identity-db
+      - main-db
     restart: always
-      
-  identity-db:
-    container_name: lactose-identity-db
-    image: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
-    user: "1000"
-    ports:
-      - "2015:27017"
-    volumes:
-      - ./data/IdentityDb:/data/db
-    secrets:
-      - lactose-mongodb-username
-      - lactose-mongodb-pass
       
   config:
     container_name: lactose-config
@@ -205,7 +205,7 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /config
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-config-api-key
-      ASPNETCORE_Config__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-config-db:27017/configdb?authSource=admin++config
+      ASPNETCORE_Config__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/configdb?authSource=admin++config
     labels:
       traefik.enable: true
       traefik.http.routers.config.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/config`)
@@ -219,23 +219,8 @@ services:
       - lactose-config-api-key
     depends_on:
       - traefik
-      - config-db
+      - main-db
     restart: always
-        
-  config-db:
-    container_name: lactose-config-db
-    image: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
-    user: "1000"
-    ports:
-      - "2025:27017"
-    volumes:
-      - ./data/ConfigDb:/data/db
-    secrets:
-      - lactose-mongodb-username
-      - lactose-mongodb-pass
 
   tasks:
     container_name: lactose-tasks
@@ -246,8 +231,8 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /tasks
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-tasks-api-key
-      ASPNETCORE_Tasks__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-tasks-db:27017/tasksdb?authSource=admin++tasks
-      ASPNETCORE_UserTasks__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-tasks-db:27017/tasksdb?authSource=admin++user_tasks
+      ASPNETCORE_Tasks__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/tasksdb?authSource=admin++tasks
+      ASPNETCORE_UserTasks__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/tasksdb?authSource=admin++user_tasks
     labels:
       traefik.enable: true
       traefik.http.routers.tasks.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/tasks`)
@@ -260,24 +245,9 @@ services:
       - lactose-mongodb-pass
       - lactose-tasks-api-key
     depends_on:
-      - tasks-db
+      - main-db
       - identity
     restart: always
-    
-  tasks-db:
-    container_name: lactose-tasks-db
-    image: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
-    user: "1000"
-    ports:
-      - "2065:27017"
-    volumes:
-      - ./data/TasksDb:/data/db
-    secrets:
-      - lactose-mongodb-username
-      - lactose-mongodb-pass
 
   economy:
     container_name: lactose-economy
@@ -288,9 +258,9 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /economy
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-economy-api-key
-      ASPNETCORE_Items__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-economy-db:27017/economydb?authSource=admin++items
-      ASPNETCORE_UserItems__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-economy-db:27017/economydb?authSource=admin++user_items
-      ASPNETCORE_Transactions__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-economy-db:27017/economydb?authSource=admin++transactions
+      ASPNETCORE_Items__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/economydb?authSource=admin++items
+      ASPNETCORE_UserItems__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/economydb?authSource=admin++user_items
+      ASPNETCORE_Transactions__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/economydb?authSource=admin++transactions
     labels:
       traefik.enable: true
       traefik.http.routers.economy.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/economy`)
@@ -303,24 +273,9 @@ services:
       - lactose-mongodb-pass
       - lactose-economy-api-key
     depends_on:
-      - economy-db
+      - main-db
       - identity
     restart: always
-    
-  economy-db:
-    container_name: lactose-economy-db
-    image: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/lactose-mongodb-username
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/lactose-mongodb-pass
-    user: "1000"
-    ports:
-      - "2045:27017"
-    volumes:
-      - ./data/EconomyDb:/data/db
-    secrets:
-      - lactose-mongodb-username
-      - lactose-mongodb-pass
 
   simulation:
     container_name: lactose-simulation
@@ -331,8 +286,8 @@ services:
     environment:
       ASPNETCORE_Kestrel__PathBase: /simulation
       ASPNETCORE_Auth__ApiKey: /run/secrets/lactose-simulation-api-key
-      ASPNETCORE_Crops__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-simulation-db:27017/simulationdb?authSource=admin++crops
-      ASPNETCORE_UserCrops__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-simulation-db:27017/simulationdb?authSource=admin++user_crops
+      ASPNETCORE_Crops__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/simulationdb?authSource=admin++crops
+      ASPNETCORE_UserCrops__Database__Connection: mongodb:///run/secrets/lactose-mongodb-username:/run/secrets/lactose-mongodb-pass@lactose-main-db:27017/simulationdb?authSource=admin++user_crops
     labels:
       traefik.enable: true
       traefik.http.routers.simulation.rule: Host(`lactose.mookrata.ovh`) && PathPrefix(`/simulation`)
@@ -345,21 +300,9 @@ services:
       - lactose-mongodb-pass
       - lactose-simulation-api-key
     depends_on:
-      - simulation-db
+      - main-db
       - identity
     restart: always
-    
-  simulation-db:
-    container_name: lactose-simulation-db
-    image: mongo
-    user: "1000"
-    ports:
-      - "2055:27017"
-    volumes:
-      - ./data/SimulationDb:/data/db
-    secrets:
-      - lactose-mongodb-username
-      - lactose-mongodb-pass
 
 secrets:
   lactose-jwt-key:
