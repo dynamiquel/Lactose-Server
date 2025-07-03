@@ -24,10 +24,9 @@ public abstract class BaseApp
 
     public BaseApp Start(ReadOnlySpan<string> args)
     {
-        // Don't allow multiple starts.
         if (_started)
         {
-            Log.Error("The app has already started and is being requested to start again");
+            Console.Error.WriteLine("The app has already started and is being requested to start again");
             return this;
         }
 
@@ -35,24 +34,33 @@ public abstract class BaseApp
 
         try
         {
+            Console.WriteLine("Initialising service...");
             OnInitialise(args);
             
-            var appBuilder = WebApplication.CreateBuilder(args.ToArray() /* Copied coz .NET still using legacy shit 😞*/ );
+            var appBuilder = WebApplication.CreateBuilder(args.ToArray());
+            
+            Console.WriteLine("Configuring service...");
             Configure(appBuilder);
 
+            Console.WriteLine("Building service...");
             App = appBuilder.Build();
+            
+            Console.WriteLine("Post-building service...");
             OnBuilt(App);
 
+            Console.WriteLine("Pre-running service...");
             OnPreRun(App);
+            
+            Console.WriteLine("Running service...");
             App.Run();
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Application terminated unexpectedly. Exception: {e}");
-            Log.Fatal(e, "Application terminated unexpectedly. Check logs for more info");
+            Console.Error.WriteLine($"Application failed to start: {e}");
         }
         finally
         {
+            Console.WriteLine("Shutting down service...");
             OnShutdown();
         }
 
@@ -74,6 +82,8 @@ public abstract class BaseApp
     /// <param name="builder"></param>
     protected virtual void Configure(WebApplicationBuilder builder)
     {
+        builder.Services.AddLactoseService(builder.Configuration);
+
         // Initialises Serilog so meaningful information can be outputted to the console and log files.
         builder.Host.UseSerilog((context, configuration) =>
         {
@@ -91,6 +101,7 @@ public abstract class BaseApp
                 int.TryParse(builder.Configuration["Kestrel:Limits:KeepAliveTimeout"], out var timeout)
                 ? timeout : 30);
         });
+        
         // Adds the Configuration as a singleton so it can be easily accessed by other services.
         // Ideally, the Options system should be used instead.
         builder.Services
@@ -126,7 +137,6 @@ public abstract class BaseApp
         
         builder.Services.AddMqtt();
 
-        builder.Services.AddLactoseService(builder.Configuration);
         builder.Services.AddControllers(options =>
         {
             options.Filters.Add<LogActionFilter>();
@@ -164,7 +174,6 @@ public abstract class BaseApp
         {
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.UseMiddleware<ApiAuthMiddleware>();
         }
 
         app.MapControllers();
@@ -180,15 +189,10 @@ public abstract class BaseApp
     }
     
     /// <summary>
-    /// Executed when the web app has been requested to shutdown or has unexpectedly terminated.
+    /// Executed when the web app has been requested to shut down or has unexpectedly terminated.
     /// </summary>
     protected virtual void OnShutdown()
     {
-        Log.CloseAndFlush();
-    }
-
-    class WebAppPreRunFailedException : Exception
-    {
-        internal WebAppPreRunFailedException() : base("Web App has failed the PreRun stage. Check logs for more info") {}
+        
     }
 }

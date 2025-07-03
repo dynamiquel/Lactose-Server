@@ -14,6 +14,19 @@ public static class ServiceExtensions
     {
         var serviceOptions = config.GetOptions<ServiceOptions>();
 
+        ServiceInfo serviceInfo = new()
+        {
+            Name = serviceOptions.ServiceName,
+            Description = serviceOptions.Description,
+            Dependencies = serviceOptions.Dependencies,
+            Version = !string.IsNullOrWhiteSpace(serviceOptions.Version)
+                ? Version.Parse(serviceOptions.Version)
+                : new Version(0, 1),
+            Status = OnlineStatus.Starting
+        };
+        
+        Console.WriteLine($"Initialising Lactose Service {serviceOptions.ServiceName} (v. {serviceInfo.Version} b. {serviceInfo.BuildTime})...");
+
         services.AddSingleton<IServiceInfo, ServiceInfo>(_ => new ServiceInfo
         {
             Name = serviceOptions.ServiceName,

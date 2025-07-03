@@ -38,7 +38,6 @@ public interface IServiceInfo
 
 public class ServiceInfo : IServiceInfo
 {
-    
     public string Name { get; init; }
     
     public string Description { get; init; }
