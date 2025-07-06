@@ -5,5 +5,5 @@ namespace Lactose.Identity.Data.Repos;
 
 public interface IUsersRepo : IBasicKeyValueRepo<User>
 {
-    public Task<User?> GetUserByEmail(string email);
+    public Task<User?> GetUserByEmail(string email, CancellationToken ct = default);
 }

@@ -10,7 +10,9 @@ namespace LactoseWebApp.Mongo;
 /// </summary>
 public class MongoUrlEx : MongoUrl
 {
-    public string? CollectionName { get; private set; }
+    public string? CollectionName { get; }
+
+    public string DebugName => $"{Scheme.ToString().ToLower()}://{Server}/{DatabaseName}++{CollectionName}";
     
     public MongoUrlEx(string url) : base(CreateMongoUrlString(url))
     {
@@ -80,5 +82,10 @@ public class MongoUrlEx : MongoUrl
                     
             connectionUrl = connectionUrl.Replace(credentials, convertedCredentials);
         }
+    }
+
+    public override string ToString()
+    {
+        return $"{base.ToString()}++{CollectionName}";
     }
 }

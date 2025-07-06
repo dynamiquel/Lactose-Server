@@ -25,8 +25,9 @@ public abstract class MongoBasicKeyValueRepo<TParent, TModel, TDatabaseOptions> 
 
     public MongoBasicKeyValueRepo(ILogger<TParent> logger, IOptions<TDatabaseOptions> databaseOptions)
     {
+        logger.LogInformation("Connecting to Mongo Database: {Url}", databaseOptions.Value.ConnectionUrl.DebugName);
+        
         MongoClient mongoClient = new(databaseOptions.Value.ConnectionUrl);
-        mongoClient.Settings.ConnectTimeout = TimeSpan.FromSeconds(10);
         
         var mongoDb = mongoClient.GetDatabase(databaseOptions.Value.ConnectionUrl.DatabaseName);
         Collection = mongoDb.GetCollection<TModel>(databaseOptions.Value.ConnectionUrl.CollectionName);

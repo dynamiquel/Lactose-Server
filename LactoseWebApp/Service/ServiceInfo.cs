@@ -49,6 +49,8 @@ public class ServiceInfo : IServiceInfo
     public DateTime BuildTime { get; init; }
 
     public OnlineStatus Status { get; set; }
+
+    public string Hostname => Environment.MachineName;
     
     public string Runtime =>
         System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
@@ -67,7 +69,7 @@ public class ServiceInfo : IServiceInfo
     {
         Name = "Unnamed Service";
         Description = string.Empty;
-        Dependencies = Array.Empty<string>();
+        Dependencies = [];
         StartTime = Process.GetCurrentProcess().StartTime.ToUniversalTime();
         
         // Entry Assembly is the the actual assembly of the application and not the assembly of this library.

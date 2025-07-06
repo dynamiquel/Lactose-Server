@@ -12,15 +12,11 @@ public class MongoUsersRepo : MongoBasicKeyValueRepo<IUsersRepo, User, UsersData
         : base(logger, databaseOptions) 
     { }
 
-    public Task<User?> GetUserByEmail(string email)
+    public async Task<User?> GetUserByEmail(string email, CancellationToken ct)
     {
-        Logger.LogInformation($"Finding user by email: {email}");
+        Logger.LogInformation("Finding user by email: {Email}", email);
 
-        var results =
-            from item in Collection.AsQueryable()
-            where item.Email == email
-            select item;
-        
-        return Task.FromResult(results.FirstOrDefault());
+        User? user = await (await Collection.FindAsync(f => f.Email == email, cancellationToken: ct)).FirstOrDefaultAsync(cancellationToken: ct);
+        return user;
     }
 }
