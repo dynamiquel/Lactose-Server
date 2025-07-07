@@ -1,7 +1,9 @@
+using System.Security.Cryptography.X509Certificates;
 using Lactose.Identity.Options;
 using LactoseWebApp.Auth;
 using LactoseWebApp.Auth.Permissions;
 using LactoseWebApp.Filters;
+using LactoseWebApp.Http;
 using LactoseWebApp.Mqtt;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
@@ -107,7 +109,7 @@ public abstract class BaseApp
         builder.Services
             .AddSingleton<IConfiguration>(builder.Configuration)
             .AddOptions(builder.Configuration)
-            .AddHttpClient()
+            .AddHttpClientFactory()
             .AddOpenTelemetry()
             .WithMetrics(ConfigureMeters)
             .ConfigureResource(r => r.AddService(builder.Configuration.GetOptions<ServiceOptions>().ServiceName));
@@ -163,6 +165,7 @@ public abstract class BaseApp
         app.UseReverseProxySupport();
         app.UseHttpsRedirection();
         app.UseRouting();
+        
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error", createScopeForErrors: true);

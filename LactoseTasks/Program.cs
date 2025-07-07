@@ -5,6 +5,7 @@ using Lactose.Tasks.TaskTriggerHandlers;
 using LactoseTasks.Services;
 using LactoseWebApp;
 using LactoseWebApp.Auth;
+using LactoseWebApp.Http;
 
 new TasksApi().Start(args);
 
