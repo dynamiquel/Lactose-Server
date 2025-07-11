@@ -1,4 +1,5 @@
 using Lactose.Identity.Auth;
+using Lactose.Identity.Data;
 using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Metrics;
 using Lactose.Identity.Models;
@@ -15,16 +16,17 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
     {
         base.Configure(builder);
 
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
-        builder.Services.AddSingleton<IRolesRepo, MongoRolesRepo>();
-        builder.Services.AddSingleton<IUsersRepo, MongoUsersRepo>();
-        builder.Services.AddSingleton<IRefreshTokensRepo, MongoRefreshTokensRepo>();
-        builder.Services.AddSingleton<JwtTokenHandler>();
-        builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-        builder.Services.AddSingleton<IPermissionsRepo, NativePermissionsRepo>();
-        builder.Services.AddSingleton<IApiAuthHandler, NativeApiAuthHandler>();
+        builder.Services
+            .AddEndpointsApiExplorer()
+            .AddSwaggerGen()
+            .AddSingleton<IRolesRepo, MongoRolesRepo>()
+            .AddSingleton<IUsersRepo, MongoUsersRepo>()
+            .AddSingleton<IRefreshTokensRepo, MongoRefreshTokensRepo>()
+            .AddSingleton<JwtTokenHandler>()
+            .AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>()
+            .AddSingleton<IPermissionsRepo, NativePermissionsRepo>()
+            .AddSingleton<IApiAuthHandler, NativeApiAuthHandler>()
+            .AddHostedService<MigrationService>();
     }
 
     protected override void ConfigureMeters(MeterProviderBuilder builder)
@@ -39,8 +41,9 @@ internal sealed class IdentityApi : LactoseWebApp.BaseApp
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app
+                .UseSwagger()
+                .UseSwaggerUI();
         }
     }
 }

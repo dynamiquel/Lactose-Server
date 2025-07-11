@@ -1,6 +1,7 @@
 using Lactose.Identity.Data.Repos;
 using Lactose.Identity.Dtos.Roles;
 using Lactose.Identity.Mapping;
+using Lactose.Identity.Models;
 using LactoseWebApp;
 using LactoseWebApp.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -30,8 +31,29 @@ public class RolesController(
     [HttpPost(Name = "Get Roles")]
     public async Task<IActionResult> GetRoles(RolesRequest request)
     {
-        var foundRoles = await rolesRepo.Get(request.RoleIds.ToHashSet());
-        return Ok(RoleMapper.ToDto(foundRoles));
+        //ICollection<Role> foundRoles = await rolesRepo.Get(request.RoleIds.ToHashSet());
+        
+        // Atm, the REST API does not support the concept of 'inheritedRoles' or 'all' permissions, so
+        // let's do the conversion here.
+        // This is quite inefficient but fuck it. It's temporary.
+        ICollection<Role> allRoles = await rolesRepo.Get(await rolesRepo.Query());
+
+        void FlattenPermissionsForRole(Role role)
+        {
+            if (role.InheritedRoles.IsEmpty())
+                return;
+            
+            IEnumerable<Role> inheritedRoles = role.InheritedRoles.Select(ir => allRoles.First(r => r.Id == ir));
+            foreach (var inheritedRole in inheritedRoles)
+            {
+                FlattenPermissionsForRole(inheritedRole);
+                role.Permissions.Append(inheritedRole.Permissions);
+            }
+        }
+
+        List<Role> desiredRoles = allRoles.Where(r => request.RoleIds.Contains(r.Id)).ToList();
+        desiredRoles.ForEach(FlattenPermissionsForRole);
+        return Ok(RoleMapper.ToDto(desiredRoles));
     }
 
     [HttpPost("create", Name = "Create Role")]

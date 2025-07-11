@@ -10,5 +10,6 @@ public class Role : IBasicKeyValueModel
     [BsonRepresentation(BsonType.String)]
     public required string Id { get; set; }
     public required string RoleName { get; set; }
-    public ISet<string> Permissions { get; set; } = new HashSet<string>();
+    public HashSet<string> InheritedRoles { get; set; } = [];
+    public HashSet<string> Permissions { get; set; } = [];
 }
