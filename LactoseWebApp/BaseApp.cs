@@ -8,6 +8,7 @@ using LactoseWebApp.Mqtt;
 using LactoseWebApp.Service;
 using LactoseWebApp.Options;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc.Razor;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
@@ -139,10 +140,21 @@ public abstract class BaseApp
         
         builder.Services.AddMqtt();
 
-        builder.Services.AddControllers(options =>
+        builder.Services.AddControllersWithViews(options =>
         {
             options.Filters.Add<LogActionFilter>();
         }).AddControllersAsServices();
+
+        builder.Services.Configure<RazorViewEngineOptions>(options =>
+        {
+            // Add support for VSA-based views.
+            options.ViewLocationFormats.AddRange([
+                "/{1}/{0}.cshtml",
+                "/{1}/Views/{0}.cshtml",
+                "/Features/{1}/{0}.cshtml",
+                "/Features/{1}/Views/{0}.cshtml"
+            ]);
+        });
     }
 
     protected virtual void ConfigureMeters(MeterProviderBuilder builder)

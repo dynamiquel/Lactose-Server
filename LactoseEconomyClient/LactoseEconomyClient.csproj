@@ -7,9 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Options">
-        <HintPath>..\..\..\..\..\..\..\home\dyna\.nuget\packages\microsoft.extensions.options\9.0.0\lib\net9.0\Microsoft.Extensions.Options.dll</HintPath>
-      </Reference>
+      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.7" />
     </ItemGroup>
     
 </Project>

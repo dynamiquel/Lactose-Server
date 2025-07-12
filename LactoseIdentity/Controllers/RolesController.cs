@@ -47,7 +47,7 @@ public class RolesController(
             foreach (var inheritedRole in inheritedRoles)
             {
                 FlattenPermissionsForRole(inheritedRole);
-                role.Permissions.Append(inheritedRole.Permissions);
+                role.Permissions.AddRange(inheritedRole.Permissions);
             }
         }
 

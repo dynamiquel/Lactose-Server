@@ -7,14 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore.Mvc.Core">
-        <HintPath>..\..\..\..\..\..\..\home\dyna\.nuget\packages\microsoft.aspnetcore.mvc.core\2.2.5\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\LactoseEconomyClient\LactoseEconomyClient.csproj" />
+      <ProjectReference Include="..\LactoseShared\LactoseShared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LactoseEconomyClient\LactoseEconomyClient.csproj" />
-      <ProjectReference Include="..\LactoseShared\LactoseShared.csproj" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
     </ItemGroup>
 
 </Project>

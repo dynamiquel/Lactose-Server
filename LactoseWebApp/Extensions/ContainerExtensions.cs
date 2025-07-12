@@ -19,13 +19,18 @@ public static class ContainerExtensions
         return collection is null || collection.Count == 0;
     }
 
-    public static void Append<T>(this ISet<T> set, IEnumerable<T> items)
+    public static void AddRange<T>(this ISet<T> set, IEnumerable<T> items)
     {
         if (set is HashSet<T> hashSet)
             hashSet.EnsureCapacity(set.Count + items.Count());
         
         foreach (var item in items)
             set.Add(item);
+    }
+
+    public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+    {
+        ((List<T>)list).AddRange(items);
     }
     
     public static int Remove<T>(this ICollection<T> collection, Predicate<T> matchingCondition)

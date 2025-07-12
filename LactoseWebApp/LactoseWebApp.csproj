@@ -25,10 +25,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <ProjectReference Include="..\LactoseShared\LactoseShared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LactoseShared\LactoseShared.csproj" />
+      <_ContentIncludedByDefault Remove="Slices\ServiceHomePage.cshtml" />
+      <_ContentIncludedByDefault Remove="Slices\_ViewImports.cshtml" />
     </ItemGroup>
 </Project>

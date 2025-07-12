@@ -1,5 +1,3 @@
-using MQTTnet;
-
 namespace LactoseWebApp.Service;
 
 public class ServiceHealthChecker(

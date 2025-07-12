@@ -1,23 +1,27 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 443
 EXPOSE 443/udp
 
 ENV ASPNETCORE_HTTPS_PORTS=443
+USER app
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
 ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
 COPY ["LactoseTasks/LactoseTasks.csproj", "LactoseTasks/"]
 RUN dotnet restore "LactoseTasks/LactoseTasks.csproj"
 COPY . .
+
 WORKDIR "/src/LactoseTasks"
-RUN dotnet build "LactoseTasks.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "LactoseTasks.csproj" -c $BUILD_CONFIGURATION -o /app/build 
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "LactoseTasks.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "LactoseTasks.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:Deterministic=true /p:ContinuousIntegrationBuild=true
+
+RUN ls -l /app/publish
 
 FROM base AS final
 WORKDIR /app

@@ -25,6 +25,8 @@ public interface IServiceInfo
     
     public OnlineStatus Status { get; set; }
     
+    public string Hostname { get; }
+    
     string Runtime { get; }
     
     string OperatingSystem { get; }

@@ -1,30 +1,14 @@
-﻿using System.Text;
-using LactoseWebApp.Service;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace LactoseWebApp.Service;
 
 [Route("")]
 [ApiController]
-public class ServiceController(IServiceInfo serviceInfo) : ControllerBase
+public class ServiceController(IServiceInfo serviceInfo) : Controller
 {
     [HttpGet]
-    public IActionResult Home()
-    {
-        var sb = new StringBuilder(256);
-        sb.AppendLine($"<!DOCTYPE html> <html> <head> <title>Aurora {serviceInfo.Name}</title> </head>")
-            .AppendLine($"<h1>Lactose {serviceInfo.Name} is {serviceInfo.Status.ToString().ToLower()}!</h1>")
-            .AppendLine().AppendLine($"{serviceInfo.Id}")
-            .AppendLine().AppendLine($"{serviceInfo.Description}.")
-            .AppendLine().AppendLine($"<h2>Dependencies ({serviceInfo.Dependencies.Length})</h2>")
-            .AppendLine("<ul>");
-        foreach (var dependency in serviceInfo.Dependencies)
-            sb.AppendLine($"<li>{dependency}</li>");
-        sb.AppendLine("</ul>").AppendLine("</body> </html>");
+    public IActionResult HomePage() => View(serviceInfo);
 
-        return Content(sb.ToString(), "text/html");
-    }
-    
     [HttpGet("status", Name = "Status")]
     [HttpGet("info", Name = "Info")]
     public IActionResult GetInfo()

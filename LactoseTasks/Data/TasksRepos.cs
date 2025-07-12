@@ -22,7 +22,7 @@ public class MongoTasksRepo : MongoBasicKeyValueRepo<MongoTasksRepo, Models.Task
             select item.Triggers;
 
         HashSet<string> allTopics = [];
-        await results.ForEachAsync(taskTriggers => allTopics.Append(taskTriggers.Select(r => r.Topic)));
+        await results.ForEachAsync(taskTriggers => allTopics.AddRange(taskTriggers.Select(r => r.Topic)));
         return allTopics;
     }
 
