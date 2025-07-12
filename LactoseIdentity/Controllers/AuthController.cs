@@ -63,10 +63,10 @@ public class AuthController : ControllerBase
     {
         User? foundUser = await _usersRepo.GetUserByEmail(request.Email);
         if (foundUser is null)
-            return BadRequest();
+            return BadRequest("No user found");
         
         if (foundUser.PasswordHash is null)
-            return BadRequest();
+            return BadRequest("No user found");
         
         PasswordVerificationResult result = _passwordHasher.VerifyHashedPassword(
             foundUser, 
@@ -74,7 +74,7 @@ public class AuthController : ControllerBase
             request.Password);
         
         if (result == PasswordVerificationResult.Failed)
-            return BadRequest();
+            return BadRequest("Invalid password");
 
         string refreshToken = await _tokenHandler.CreateJwtRefreshTokenForUser(foundUser);
         string accessToken = _tokenHandler.CreateJwtAccessTokenForUser(foundUser);
