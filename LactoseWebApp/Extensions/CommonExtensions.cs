@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -77,6 +78,7 @@ public static class CommonExtensions
     public static bool IsNullable(this object obj) => obj.GetType().IsNullable();
     public static bool IsCollection(this Type type) => type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
     public static bool IsList(this Type type) => typeof(IList).IsAssignableFrom(type);
-
+    public static bool HasRequiredProperties(this Type type) => type.GetProperties().Any(p => p.GetCustomAttribute<RequiredAttribute>() != null);
+    public static bool IsDefaultConstructable(this Type type) => type.GetConstructor(Type.EmptyTypes) != null && !type.HasRequiredProperties();
     public static bool Implements<T>(this Type type) => type.GetInterface(nameof(T)) is not null;
 }

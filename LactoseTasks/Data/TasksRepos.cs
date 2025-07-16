@@ -55,14 +55,14 @@ public class MongoUserTasksRepo : MongoBasicKeyValueRepo<MongoUserTasksRepo, Use
 
         var foundItems = results.ToHashSet();
         
-        Logger.LogInformation($"Queried {foundItems.Count} items");
+        Logger.LogInformation("Queried {FoundItemsCount} items", foundItems.Count);
 
         return Task.FromResult<ISet<string>>(foundItems);
     }
 
     public async Task<List<UserTask>> GetUserTasksByTaskId(string userId, IEnumerable<string> taskIds)
     {
-        Logger.LogInformation($"Finding User Tasks for '{userId}'");
+        Logger.LogInformation("Finding User Tasks for '{UserId}'", userId);
 
         var results =
             from item in Collection.AsQueryable()

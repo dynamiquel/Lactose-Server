@@ -190,10 +190,18 @@ public class UserTaskTracker(
                 try
                 {
                     if (foundTrigger.Config is null)
-                        foundTrigger.Config = null;
+                    {
+                        if (foundTriggerHandler.ConfigType.IsDefaultConstructable())
+                            foundTrigger.Config = (TaskHandlerConfig)Activator.CreateInstance(foundTriggerHandler.ConfigType)!;
+                        else
+                            throw new NullReferenceException(
+                                $"Config for Trigger {foundTrigger.Handler} is null. Expected '{foundTriggerHandler.ConfigType}'");
+                    }
                     else if (foundTrigger.Config.GetType() != foundTriggerHandler.ConfigType)
+                    {
                         throw new InvalidCastException(
                             $"Config is wrong type. Expected '{foundTriggerHandler.ConfigType}'. Received '{foundTrigger.Config.GetType()}'");
+                    }
                 }
                 catch (Exception e)
                 {

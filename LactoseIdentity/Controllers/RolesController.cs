@@ -43,7 +43,7 @@ public class RolesController(
             if (role.InheritedRoles.IsEmpty())
                 return;
             
-            IEnumerable<Role> inheritedRoles = role.InheritedRoles.Select(ir => allRoles.First(r => r.Id == ir));
+            IEnumerable<Role> inheritedRoles = role.InheritedRoles.SelectMany(ir => allRoles.Where(r => r.Id == ir));
             foreach (var inheritedRole in inheritedRoles)
             {
                 FlattenPermissionsForRole(inheritedRole);
