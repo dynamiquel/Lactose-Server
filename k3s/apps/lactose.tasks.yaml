@@ -1,0 +1,163 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lactose-tasks-config
+  namespace: lactose
+data:
+  Kestrel__PathBase: /tasks
+  Kestrel__Certificates__Default__Path: /etc/ssl/certs/internal/tls.crt
+  Kestrel__Certificates__Default__KeyPath: /etc/ssl/certs/internal/tls.key
+  Auth__IdentityUrl: https://lactose-identity-service
+  Economy__Url: https://lactose-identity-service
+  Simulation__Url: https://lactose-simulation-service
+  Mqtt__ServerAddress: lactose-mosquitto-service
+  MONGO_DATABASE_URL: maindb-service:27017/tasksdb?authSource=admin&replicaSet=rs0&connectTimeoutMS=3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lactose-tasks
+  namespace: lactose
+spec:
+  replicas: 1 # increase once MQTT clustering crap is in
+  selector:
+    matchLabels:
+      app: lactose-tasks
+  template:
+    metadata:
+      labels:
+        app: lactose-tasks
+    spec:
+      containers:
+      - name: lactose-tasks
+        image: ghcr.io/dynamiquel/lactose-tasks:staging
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+        envFrom:
+        - configMapRef:
+            name: lactose-tasks-config
+        env:
+        - name: Auth__ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: secret.lactose.api.keys
+              key: tasks
+        - name: LACTOSE_MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: username
+        - name: LACTOSE_MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: password
+        - name: Tasks__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++tasks
+        - name: UserTasks__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++user_tasks
+        securityContext:
+          runAsUser: 0
+        command: ["sh", "-c"]
+        args:
+          - |
+            set -ex 
+            apt-get update
+            apt-get install -y ca-certificates
+            mkdir -p /usr/local/share/ca-certificates/internal/
+            cp /etc/ssl/certs/internal/ca.crt /usr/local/share/ca-certificates/internal/ca.crt
+            update-ca-certificates
+            exec su -p app -c "dotnet LactoseTasks.dll"
+        volumeMounts:
+        - name: lactose-tasks-certs
+          mountPath: /etc/ssl/certs/internal
+          readOnly: true
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 250m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+      volumes:
+      - name: lactose-tasks-certs
+        secret:
+          secretName: lactose-tasks-tls-secret
+      - name: lactose-local-ca
+        secret:
+          secretName: internal.root.tls
+          items:
+          - key: ca.crt
+            path: ca.crt
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lactose-tasks-service
+  namespace: lactose
+  labels:
+    app: lactose-tasks
+spec:
+  selector:
+    app: lactose-tasks
+  ports:
+  - port: 443
+    targetPort: 443
+    name: https
+  type: ClusterIP
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lactose-tasks-tls
+  namespace: lactose
+spec:
+  secretName: lactose-tasks-tls-secret
+  isCA: false
+  issuerRef:
+    name: internal.issuer
+  dnsNames:
+    - lactose-tasks-service.lactose.svc.cluster.local
+    - lactose-tasks-service
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: lactose-tasks-transport
+  namespace: lactose
+spec:
+  serverName: lactose-tasks-service.lactose.svc.cluster.local
+  rootCAsSecrets:
+  - internal.root.tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: lactose-tasks-http
+  namespace: lactose
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`lactose2.mookrata.ovh`) && PathPrefix(`/tasks`)
+    services:
+    - kind: Service
+      name: lactose-tasks-service
+      scheme: https
+      port: 443
+      serversTransport: lactose-tasks-transport
+  tls:
+    certResolver: external.issuer
+    secretName: lactose.mookrata.ovh.tls

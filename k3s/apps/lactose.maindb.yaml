@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: maindb
+  namespace: lactose
+spec:
+  selector:
+    matchLabels:
+      app: maindb
+  serviceName: maindb-service
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: maindb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        command:
+        - mongod
+        - --replSet
+        - rs0
+        - --bind_ip_all
+        - --auth
+        - --keyFile
+        - /etc/mongo/keyfile
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: password
+        volumeMounts:
+        - name: maindb-data-volume
+          mountPath: /data/db
+        - name: maindb-keyfile-volume
+          mountPath: /etc/mongo
+        livenessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 30
+          timeoutSeconds: 3
+        #readinessProbe:
+        #  exec:
+        #    command:
+        #    - mongosh
+        #    - --eval
+        #    - "db.adminCommand('replSetGetStatus')"
+        #  initialDelaySeconds: 45
+        #  timeoutSeconds: 3
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi
+            cpu: 400m
+      volumes:
+      - name: maindb-keyfile-volume
+        secret:
+          secretName: secret.mongo.auth
+          defaultMode: 0400
+  volumeClaimTemplates:
+  - metadata:
+      name: maindb-data-volume
+      namespace: lactose
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maindb-service
+  namespace: lactose
+spec:
+  clusterIP: None
+  selector:
+    app: maindb
+  ports:
+  - port: 27017

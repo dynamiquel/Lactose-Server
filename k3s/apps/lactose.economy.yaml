@@ -1,0 +1,165 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lactose-economy-config
+  namespace: lactose
+data:
+  Kestrel__PathBase: /economy
+  Kestrel__Certificates__Default__Path: /etc/ssl/certs/internal/tls.crt
+  Kestrel__Certificates__Default__KeyPath: /etc/ssl/certs/internal/tls.key
+  Auth__IdentityUrl: https://lactose-identity-service
+  Mqtt__ServerAddress: lactose-mosquitto-service
+  MONGO_DATABASE_URL: maindb-service:27017/economydb?authSource=admin&replicaSet=rs0&connectTimeoutMS=3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lactose-economy
+  namespace: lactose
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lactose-economy
+  template:
+    metadata:
+      labels:
+        app: lactose-economy
+    spec:
+      containers:
+      - name: lactose-economy
+        image: ghcr.io/dynamiquel/lactose-economy:staging
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+        envFrom:
+        - configMapRef:
+            name: lactose-economy-config
+        env:
+        - name: Auth__ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: secret.lactose.api.keys
+              key: economy
+        - name: LACTOSE_MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: username
+        - name: LACTOSE_MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: password
+        - name: Items__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++items
+        - name: UserItems__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++user_items
+        - name: ShopItems__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++shop_items
+        - name: Transactions__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++transactions
+        securityContext:
+          runAsUser: 0
+        command: ["sh", "-c"]
+        args:
+          - |
+            set -ex 
+            apt-get update
+            apt-get install -y ca-certificates
+            mkdir -p /usr/local/share/ca-certificates/internal/
+            cp /etc/ssl/certs/internal/ca.crt /usr/local/share/ca-certificates/internal/ca.crt
+            update-ca-certificates
+            exec su -p app -c "dotnet LactoseEconomy.dll"
+        volumeMounts:
+        - name: lactose-economy-certs
+          mountPath: /etc/ssl/certs/internal
+          readOnly: true
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 125m
+          limits:
+            memory: 128Mi
+            cpu: 250m
+      volumes:
+      - name: lactose-economy-certs
+        secret:
+          secretName: lactose-economy-tls-secret
+      - name: lactose-local-ca
+        secret:
+          secretName: internal.root.tls
+          items:
+          - key: ca.crt
+            path: ca.crt
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lactose-economy-service
+  namespace: lactose
+  labels:
+    app: lactose-economy
+spec:
+  selector:
+    app: lactose-economy
+  ports:
+  - port: 443
+    targetPort: 443
+    name: https
+  type: ClusterIP
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lactose-economy-tls
+  namespace: lactose
+spec:
+  secretName: lactose-economy-tls-secret
+  isCA: false
+  issuerRef:
+    name: internal.issuer
+  dnsNames:
+    - lactose-economy-service.lactose.svc.cluster.local
+    - lactose-economy-service
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: lactose-economy-transport
+  namespace: lactose
+spec:
+  serverName: lactose-economy-service.lactose.svc.cluster.local
+  rootCAsSecrets:
+  - internal.root.tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: lactose-economy-http
+  namespace: lactose
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`lactose2.mookrata.ovh`) && PathPrefix(`/economy`)
+    services:
+    - kind: Service
+      name: lactose-economy-service
+      scheme: https
+      port: 443
+      serversTransport: lactose-economy-transport
+  tls:
+    certResolver: external.issuer
+    secretName: lactose.mookrata.ovh.tls

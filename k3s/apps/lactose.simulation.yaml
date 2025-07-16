@@ -1,0 +1,165 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lactose-simulation-config
+  namespace: lactose
+data:
+  Kestrel__PathBase: /simulation
+  Kestrel__Certificates__Default__Path: /etc/ssl/certs/internal/tls.crt
+  Kestrel__Certificates__Default__KeyPath: /etc/ssl/certs/internal/tls.key
+  Auth__IdentityUrl: https://lactose-identity-service
+  Economy__Url: https://lactose-economy-service
+  Mqtt__ServerAddress: lactose-mosquitto-service
+  MONGO_DATABASE_URL: maindb-service:27017/simulationdb?authSource=admin&replicaSet=rs0&connectTimeoutMS=3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lactose-simulation
+  namespace: lactose
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lactose-simulation
+  template:
+    metadata:
+      labels:
+        app: lactose-simulation
+    spec:
+      containers:
+      - name: lactose-simulation
+        image: ghcr.io/dynamiquel/lactose-simulation:staging
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+        envFrom:
+        - configMapRef:
+            name: lactose-simulation-config
+        env:
+        - name: Auth__ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: secret.lactose.api.keys
+              key: simulation
+        - name: LACTOSE_MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: username
+        - name: LACTOSE_MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: password
+        - name: Crops__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++crops
+        - name: UserCrops__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++user_crops
+        securityContext:
+          runAsUser: 0
+        command: ["sh", "-c"]
+        args:
+          - |
+            set -ex 
+            apt-get update
+            apt-get install -y ca-certificates
+            mkdir -p /usr/local/share/ca-certificates/internal/
+            cp /etc/ssl/certs/internal/ca.crt /usr/local/share/ca-certificates/internal/ca.crt
+            update-ca-certificates
+            exec su -p app -c "dotnet LactoseSimulation.dll"
+        volumeMounts:
+        - name: lactose-simulation-certs
+          mountPath: /etc/ssl/certs/internal
+          readOnly: true
+        - name: lactose-local-ca
+          mountPath: /etc/ssl/certs/internal
+          readOnly: true 
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 250m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+      volumes:
+      - name: lactose-simulation-certs
+        secret:
+          secretName: lactose-simulation-tls-secret
+      - name: lactose-local-ca
+        secret:
+          secretName: internal.root.tls
+          items:
+          - key: ca.crt
+            path: ca.crt
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lactose-simulation-service
+  namespace: lactose
+  labels:
+    app: lactose-simulation
+spec:
+  selector:
+    app: lactose-simulation
+  ports:
+  - port: 443
+    targetPort: 443
+    name: https
+  type: ClusterIP
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lactose-simulation-tls
+  namespace: lactose
+spec:
+  secretName: lactose-simulation-tls-secret
+  isCA: false
+  issuerRef:
+    name: internal.issuer
+  dnsNames:
+    - lactose-simulation-service.lactose.svc.cluster.local
+    - lactose-simulation-service
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: lactose-simulation-transport
+  namespace: lactose
+spec:
+  serverName: lactose-simulation-service.lactose.svc.cluster.local
+  rootCAsSecrets:
+  - internal.root.tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: lactose-simulation-http
+  namespace: lactose
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`lactose2.mookrata.ovh`) && PathPrefix(`/simulation`)
+    services:
+    - kind: Service
+      name: lactose-simulation-service
+      scheme: https
+      port: 443
+      serversTransport: lactose-simulation-transport
+  tls:
+    certResolver: external.issuer
+    secretName: lactose.mookrata.ovh.tls

@@ -1,0 +1,155 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lactose-identity-config
+  namespace: lactose
+data:
+  Kestrel__PathBase: /identity
+  Kestrel__Certificates__Default__Path: /etc/ssl/certs/internal/tls.crt
+  Kestrel__Certificates__Default__KeyPath: /etc/ssl/certs/internal/tls.key
+  Mqtt__ServerAddress: lactose-mosquitto-service
+  MONGO_DATABASE_URL: maindb-service:27017/identity?authSource=admin&replicaSet=rs0&connectTimeoutMS=3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lactose-identity
+  namespace: lactose
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lactose-identity
+  template:
+    metadata:
+      labels:
+        app: lactose-identity
+    spec:
+      containers:
+      - name: lactose-identity
+        image: ghcr.io/dynamiquel/lactose-identity:staging
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+        envFrom:
+        - configMapRef:
+            name: lactose-identity-config
+        env:
+        - name: Auth__ApiKey
+          valueFrom:
+            secretKeyRef:
+              name: secret.lactose.api.keys
+              key: identity
+        - name: Auth__JwtTokenKey
+          valueFrom:
+            secretKeyRef:
+              name: secret.lactose.jwt.key
+              key: value
+        - name: LACTOSE_MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: username
+        - name: LACTOSE_MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret.mongo.auth
+              key: password
+        - name: Roles__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++roles
+        - name: Users__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++users
+        - name: RefreshTokens__Database__Connection
+          value: mongodb://$(LACTOSE_MONGO_USERNAME):$(LACTOSE_MONGO_PASSWORD)@$(MONGO_DATABASE_URL)++refresh_tokens
+        volumeMounts:
+        - name: lactose-identity-certs
+          mountPath: /etc/ssl/certs/internal
+          readOnly: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+      volumes:
+      - name: lactose-identity-certs
+        secret:
+          secretName: lactose-identity-tls-secret
+      - name: lactose-local-ca
+        secret:
+          secretName: internal.root.tls
+          items:
+          - key: ca.crt
+            path: ca.crt
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lactose-identity-service
+  namespace: lactose
+  labels:
+    app: lactose-identity
+spec:
+  selector:
+    app: lactose-identity
+  ports:
+  - port: 443
+    targetPort: 443
+    name: https
+  type: ClusterIP
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lactose-identity-tls
+  namespace: lactose
+spec:
+  secretName: lactose-identity-tls-secret
+  isCA: false
+  issuerRef:
+    name: internal.issuer
+  dnsNames:
+    - lactose-identity-service.lactose.svc.cluster.local
+    - lactose-identity-service
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: lactose-identity-transport
+  namespace: lactose
+spec:
+  serverName: lactose-identity-service.lactose.svc.cluster.local
+  rootCAsSecrets:
+  - internal.root.tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: lactose-identity-http
+  namespace: lactose
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`lactose2.mookrata.ovh`) && PathPrefix(`/identity`)
+    services:
+    - kind: Service
+      name: lactose-identity-service
+      scheme: https
+      port: 443
+      serversTransport: lactose-identity-transport
+  tls:
+    certResolver: external.issuer
+    secretName: lactose.mookrata.ovh.tls

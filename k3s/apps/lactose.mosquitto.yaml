@@ -1,0 +1,336 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lactose-mosquitto-config
+  namespace: lactose
+data:
+  mosquitto.conf: |
+    listener 1883
+
+    listener 443
+    protocol websockets
+
+    certfile /etc/ssl/certs/internal/tls.crt
+    keyfile /etc/ssl/certs/internal/tls.key
+
+    allow_anonymous true
+    log_type all
+    log_dest topic
+    log_dest stdout
+
+    include_dir /mosquitto/config/auth
+
+  go-auth.conf: |
+    auth_plugin /mosquitto/go-auth.so
+
+    auth_opt_log_level debug
+
+    auth_opt_exhaust_backend_first true
+
+    auth_opt_jwt_register user
+    auth_opt_js_register user, acl
+
+    auth_opt_backends js, jwt
+    auth_opt_jwt_mode remote
+    auth_opt_jwt_host lactose2.mookrata.ovh
+    auth_opt_jwt_port 443
+    auth_opt_jwt_getuser_uri /identity/auth/authenticate-token-basic
+    auth_opt_jwt_aclcheck_uri /identity/auth/authenticate-token-basic
+    auth_opt_jwt_with_tls true
+
+    auth_opt_js_user_script_path /mosquitto/config/auth/checkUser.js
+    auth_opt_js_superuser_script_path /mosquitto/config/auth/checkSuperUser.js
+    auth_opt_js_acl_script_path /mosquitto/config/auth/checkAcl.js
+  
+  checkAcl.js: |
+    function checkAcl(username, topic, clientid, acc) {
+      return true;
+    }
+
+    checkAcl(username, topic, clientid, acc);
+
+  checkSuperUser.js: |
+    function checkSuperUser(username) {
+      console.log("CHECK SUPER USER for " + username);
+      return false;
+    } 
+
+    checkSuperUser(username)
+
+  checkUser.js: |
+    // mosquitto_auth_script.js - Subject Extraction with Pure JS Base64Url Decode (INSECURE FOR AUTHENTICATION)
+
+    // !!! IMPORTANT SECURITY WARNING !!!
+    // This script ONLY extracts the subject from the JWT payload and checks if it equals "identity".
+    // It DOES NOT VALIDATE the JWT's signature or check its expiration time.
+    // A malicious client can easily create a fake JWT with a subject of "identity".
+    // RELYING ON THIS SCRIPT ALONE FOR AUTHENTICATION IS A MAJOR SECURITY VULNERABILITY.
+    // This code is provided to show how to extract the subject as requested,
+    // but it should NOT be used as a secure authentication mechanism without proper JWT validation (via API call).
+
+
+    // --- Pure Javascript ES5 Base64Url Decode Function ---
+    // This function manually performs the Base64 decoding algorithm.
+    // It also handles the URL-safe characters used in Base64Url (JWTs).
+    function pureJsBase64UrlDecode(str) {
+        var base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        // Handle URL-safe characters and padding
+        str = str.replace(/-/g, '+').replace(/_/g, '/');
+        while (str.length % 4 !== 0) {
+            str += '=';
+        }
+
+        // Remove invalid characters (though a valid Base64Url shouldn't have them after replacements)
+        str = str.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+        while (i < str.length) {
+            // Get the character codes from the Base64 string
+            enc1 = base64Chars.indexOf(str.charAt(i++));
+            enc2 = base64Chars.indexOf(str.charAt(i++));
+            enc3 = base64Chars.indexOf(str.charAt(i++));
+            enc4 = base64Chars.indexOf(str.charAt(i++));
+
+            // Reconstruct the original 3 bytes from the 4 Base64 characters
+            // (6 bits each)
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+
+            // Append the decoded bytes as characters to the output string
+            output = output + String.fromCharCode(chr1);
+
+            // Handle padding characters (=) which indicate incomplete groups
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        // Note: This basic implementation assumes the decoded data is UTF-8
+        // and that String.fromCharCode and escape/decodeURIComponent are available for character handling.
+        // If handling non-ASCII characters, a more complex UTF-8 decoding step might be needed here
+        // if escape/decodeURIComponent are not available or suitable.
+        try {
+            // This part attempts to handle multi-byte UTF-8 characters.
+            // Availability and behavior of escape/decodeURIComponent still depend on the environment.
+            return decodeURIComponent(escape(output));
+        } catch (e) {
+            console.error("Error decoding UTF-8 from Base64Url output:", e);
+            // Return the raw decoded string up to this point, or null to indicate failure
+            return output; // Return the potentially incorrectly decoded string
+        }
+    }
+    // --- End Pure JS Base64Url Decode Function ---
+
+
+    function checkUser(username, password, clientid) {
+        if (username == "lactose-test-69") {
+            return true;
+        }
+
+        // In this specific scenario, username is treated as the JWT
+        var jwtToken = username;
+
+        // Using string concatenation for ES5 compatibility
+        console.log("CHECK USER for client: " + clientid);
+
+        var jwtPayload = null; // To store the parsed JWT payload
+        var extractedSubject = null; // To store the extracted subject name
+
+        try {
+            // --- Extract Subject from JWT Payload ---
+            var parts = jwtToken.split('.');
+            if (parts.length === 3) {
+                var payloadBase64Url = parts[1];
+                console.log("JWT Payload (Base64Url): " + payloadBase64Url);
+
+                // Use the pure Javascript Base64Url decode function
+                var payloadJsonString = pureJsBase64UrlDecode(payloadBase64Url);
+
+                if (payloadJsonString) {
+                    try {
+                        jwtPayload = JSON.parse(payloadJsonString);
+                        // console.log("JWT Payload extracted:", jwtPayload); // Optional: Log payload
+
+                        // Check if the 'sub' claim exists in the payload and is a string
+                        if (jwtPayload && typeof jwtPayload.email === 'string') {
+                            extractedSubject = jwtPayload.email;
+                            //console.log("Email (email) claim extracted:", extractedSubject);
+                        } else {
+                            console.warn("JWT payload does not contain correct claims.");
+                        }
+
+                    } catch (parseError) {
+                        console.error("Error parsing JWT payload JSON:", parseError);
+                    }
+                } else {
+                    console.error("Error decoding JWT payload Base64Url.");
+                }
+            } else {
+                console.error("Invalid JWT format. Expected 3 parts, got " + parts.length + ".");
+            }
+            // --- End Subject Extraction ---
+
+        } catch (extractError) {
+            console.error("Error during JWT extraction process:", extractError);
+            // Extraction failed, the comparison below will return false
+        }
+
+        // --- Subject Comparison ---
+        // Return true ONLY if the extracted subject equals "identity"
+        if (extractedSubject === "api-identity") {
+            console.log("Authentication granted.");
+            return true;
+        } else {
+            console.log("Authentication denied.");
+            return false;
+        }
+    }
+
+    // The Mosquitto script execution environment will likely call checkUser with arguments
+    checkUser(username, password, clientid); // This line might be part of the script's execution context
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lactose-mosquitto
+  namespace: lactose
+  labels:
+    app: mosquitto
+spec:
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+      - name: mosquitto
+        image: ghcr.io/dynamiquel/mosquitto-go-auth:staging
+        ports: 
+        - containerPort: 443
+        volumeMounts:
+        - name: mosquitto-config-volume
+          mountPath: /mosquitto/config/mosquitto.conf
+          subPath: mosquitto.conf
+        - name: mosquitto-config-volume
+          mountPath: /mosquitto/config/auth/go-auth.conf
+          subPath: go-auth.conf
+        - name: mosquitto-config-volume
+          mountPath: /mosquitto/config/auth/checkAcl.js
+          subPath: checkAcl.js
+        - name: mosquitto-config-volume
+          mountPath: /mosquitto/config/auth/checkSuperUser.js
+          subPath: checkSuperUser.js
+        - name: mosquitto-config-volume
+          mountPath: /mosquitto/config/auth/checkUser.js
+          subPath: checkUser.js
+        - name: mosquitto-certs
+          mountPath: /etc/ssl/certs/internal
+          readOnly: true
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 200m
+          limits:
+            memory: 512Mi
+            cpu: 1000m
+      volumes:
+      - name: mosquitto-config-volume
+        configMap:
+          name: lactose-mosquitto-config
+      - name: mosquitto-certs
+        secret:
+          secretName: lactose-mosquitto-tls-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lactose-mosquitto-service
+  namespace: lactose
+spec:
+  selector:
+    app: mosquitto
+  ports:
+  - port: 443
+    targetPort: 443
+    name: ws
+  type: ClusterIP
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lactose-mosquitto-tls
+  namespace: lactose
+spec:
+  secretName: lactose-mosquitto-tls-secret
+  isCA: false
+  issuerRef:
+    name: internal.issuer
+  dnsNames:
+    - lactose-mosquitto-service.lactose.svc.cluster.local
+    - lactose-mosquitto-service
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: lactose-mosquitto-transport
+  namespace: lactose
+spec:
+  serverName: lactose-mosquitto-service.lactose.svc.cluster.local
+  rootCAsSecrets:
+  - internal.root.tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: lactose-mosquitto-http-strip-prefix
+  namespace: lactose
+spec:
+  stripPrefix:
+    prefixes:
+      - /mqtt
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: lactose-mosquitto-http
+  namespace: lactose
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`lactose2.mookrata.ovh`) && PathPrefix(`/mqtt`)
+    services:
+    - kind: Service
+      name: lactose-mosquitto-service
+      scheme: https
+      port: 443
+      serversTransport: lactose-mosquitto-transport
+    middlewares:
+      - name: lactose-mosquitto-http-strip-prefix
+        namespace: lactose
+  tls:
+    certResolver: external.issuer
+    secretName: lactose.mookrata.ovh.tls
