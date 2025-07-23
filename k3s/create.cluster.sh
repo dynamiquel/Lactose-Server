@@ -4,7 +4,7 @@ helm upgrade \
     --install \
     kubernetes-dashboard \
     kubernetes-dashboard/kubernetes-dashboard \
-    --namespace kubernetes-dashboard --create-namespace
+    -n kubernetes-dashboard --create-namespace
 
 kubectl create serviceaccount \
     -n kubernetes-dashboard \
@@ -17,13 +17,19 @@ kubectl create clusterrolebinding \
     --serviceaccount=kubernetes-dashboard:admin-user
 
 helm repo add jetstack https://charts.jetstack.io
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
 helm repo update
 
 helm install cert-manager \
     jetstack/cert-manager \
-    --namespace cert-manager --create-namespace \
+    -n cert-manager --create-namespace \
     --version v1.14.5 \
     --set installCRDs=true
+
+helm install \
+    prometheus \
+    prometheus-community/kube-prometheus-stack \
+    -n metrics --create-namespace
 
 ./apply.cluster.sh

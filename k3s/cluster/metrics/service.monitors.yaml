@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1 
+kind: ServiceMonitor 
+metadata:
+  name: lactose-net-metrics
+  namespace: metrics
+  labels:
+    app: lactose.net
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      metrics: lactose.net
+  endpoints:
+  - interval: 5s
+    port: https
+    scheme: https
+    tlsConfig: # https://docs.redhat.com/en/documentation/openshift_container_platform/4.12/html/monitoring_apis/servicemonitor-monitoring-coreos-com-v1#spec-endpoints-tlsconfig
+      insecureSkipVerify: true
+  namespaceSelector:
+    any: true
+

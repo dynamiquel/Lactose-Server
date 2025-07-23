@@ -1,0 +1,20 @@
+# todo: grafana needs to be aware of path prefix
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana-http
+  namespace: metrics
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`lactose2.mookrata.ovh`) && PathPrefix(`/grafana`)
+    services:
+    - kind: Service
+      name: prometheus-grafana
+      scheme: http
+      port: 80
+  tls:
+    certResolver: external.issuer
+    secretName: lactose/lactose.mookrata.ovh.tls

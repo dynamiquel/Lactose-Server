@@ -97,6 +97,7 @@ metadata:
   namespace: lactose
   labels:
     app: lactose-config
+    metrics: lactose.net
 spec:
   selector:
     app: lactose-config

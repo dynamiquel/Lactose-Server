@@ -103,6 +103,7 @@ metadata:
   namespace: lactose
   labels:
     app: lactose-simulation
+    metrics: lactose.net
 spec:
   selector:
     app: lactose-simulation

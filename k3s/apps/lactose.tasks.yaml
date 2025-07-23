@@ -101,6 +101,7 @@ metadata:
   namespace: lactose
   labels:
     app: lactose-tasks
+    metrics: lactose.net
 spec:
   selector:
     app: lactose-tasks
