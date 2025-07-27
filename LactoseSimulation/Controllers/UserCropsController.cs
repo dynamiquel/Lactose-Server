@@ -253,7 +253,7 @@ public class UserCropsController(
             }
 
             foundCropInstance.State = crop.Type == CropTypes.Plot ? CropInstanceStates.Empty : CropInstanceStates.Growing;
-            foundCropInstance.RemainingHarvestSeconds = crop.HarvestSeconds;
+            foundCropInstance.RemainingHarvestSeconds = crop.Type == CropTypes.Plot ? crop.HarvestSeconds : crop.HarvestSeconds / 2;
             
             var tradeRequest = new TradeRequest
             {
