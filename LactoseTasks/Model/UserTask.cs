@@ -1,4 +1,3 @@
-using Lactose.Events;
 using LactoseWebApp.Repo;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;

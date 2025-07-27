@@ -81,6 +81,8 @@ public record UserTaskDto
     public required double Progress { get; set; }
 
     public required bool Completed { get; set; }
+    
+    public DateTime? CompleteTime { get; set; }
 
     public byte[] ToBytes()
     {

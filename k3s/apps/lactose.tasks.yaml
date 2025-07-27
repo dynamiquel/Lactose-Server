@@ -9,7 +9,7 @@ data:
   Kestrel__Certificates__Default__Path: /etc/ssl/certs/internal/tls.crt
   Kestrel__Certificates__Default__KeyPath: /etc/ssl/certs/internal/tls.key
   Auth__IdentityUrl: https://lactose-identity-service
-  Economy__Url: https://lactose-identity-service
+  Economy__Url: https://lactose-economy-service
   Simulation__Url: https://lactose-simulation-service
   Mqtt__ServerAddress: lactose-mosquitto-service
   MONGO_DATABASE_URL: maindb-service:27017/tasksdb?authSource=admin&replicaSet=rs0&connectTimeoutMS=3000
