@@ -74,9 +74,6 @@ spec:
         - name: lactose-simulation-certs
           mountPath: /etc/ssl/certs/internal
           readOnly: true
-        - name: lactose-local-ca
-          mountPath: /etc/ssl/certs/internal
-          readOnly: true 
         resources:
           requests:
             memory: 128Mi
