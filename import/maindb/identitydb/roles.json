@@ -1,0 +1,70 @@
+[{
+  "_id": "admin",
+  "RoleName": "Admin",
+  "InheritedRoles": [
+    "player",
+    "user"
+  ],
+  "Permissions": [
+    "simulation-admin",
+    "simulation-others-w",
+    "identity-admin",
+    "identity-others-w",
+    "identity-roles-w",
+    "config-w",
+    "config-admin",
+    "economy-admin",
+    "economy-w",
+    "economy-user-others-w",
+    "economy-transactions-r",
+    "economy-vendors-w"
+  ]
+},
+{
+  "_id": "player",
+  "RoleName": "Player",
+  "InheritedRoles": [
+    "user"
+  ],
+  "Permissions": [
+    "simulation-self-r",
+    "simulation-self-w",
+    "simulation-others-r",
+    "config-r",
+    "economy-r",
+    "economy-user-self-r",
+    "economy-user-others-r"
+  ]
+},
+{
+  "_id": "user",
+  "RoleName": "User",
+  "Permissions": [
+    "identity-self-r",
+    "identity-self-w",
+    "identity-others-r"
+  ]
+},
+{
+  "_id": "api",
+  "RoleName": "API",
+  "Permissions": [
+  ]
+},
+{
+  "_id": "api-tasks",
+  "RoleName": "Tasks API",
+  "Permissions": [
+    "simulation-others-r",
+    "economy-transactions-w"
+  ]
+},
+{
+  "_id": "api-simulation",
+  "RoleName": "Simulation API",
+  "Permissions": [
+    "economy-r",
+    "economy-user-others-r",
+    "economy-transactions-w"
+  ]
+}]

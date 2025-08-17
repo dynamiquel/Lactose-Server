@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "67548b2183bb90dc5cae0529"
+  },
+  "Key": "motds",
+  "Value": "{\"motds\": [{\"Title\":\"Hello, there!\",\"Body\":\"Whoever you are, thank you for hopping on this random project of mine.\nIn case you didn't know by now, this game you are playing is a fairly simple farming game I made as my introduction to backend web development.\nPretty much everything you will see is all powered by the magic of the cloud. Now go have fun on your farming adventure!\n<3 dynamiquel\"}]}",
+  "Conditions": null
+},
+{
+  "_id": {
+    "$oid": "67548c5183bb90dc5cae056b"
+  },
+  "Key": "vendors",
+  "Value": "{\"config\": [{\"vendorId\":\"vendor-basic\",\"vendorName\":\"Jeremy\", \"unlockTask\": \"6818e290ca6258b1fb9946d4\"},{\"vendorId\":\"vendor-warm\",\"vendorName\":\"Mia\", \"unlockTask\":\"68286fc5614ecf8ede948860\"},{\"vendorId\":\"vendor-animals\",\"vendorName\":\"Ellis\"},{\"vendorId\":\"vendor-misc\",\"vendorName\":\"Anna\"}]}",
+  "Conditions": null
+}]

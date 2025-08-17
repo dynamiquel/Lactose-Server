@@ -7,7 +7,7 @@ SERVICE_NAME="maindb-service"
 REPLICA_SET_NAME="rs0"
 SECRET_NAME="secret.mongo.auth"
 DB_NAME="maindb"
-IMPORT_DATA_DIR="../data/maindb"
+IMPORT_DATA_DIR="../import/maindb"
 
 echo "Reading credentials from secret '$SECRET_NAME' in namespace '$NAMESPACE'..."
 MONGO_USER=$(kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o jsonpath='{.data.username}' | base64 --decode)

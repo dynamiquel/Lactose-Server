@@ -1,0 +1,392 @@
+[{
+  "_id": {
+    "$oid": "67715875cf36930b86a3d8bb"
+  },
+  "UserId": "vendor-basic",
+  "ItemId": "670aab82eb16b7e464057247",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 1
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677158d7cf36930b86a3d8bc"
+  },
+  "UserId": "vendor-basic",
+  "ItemId": "670aaebb5437f00b0f7fae1e",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf1"
+  },
+  "UserId": "",
+  "ItemId": "67391403f9092f5b4e2560ed",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf3"
+  },
+  "UserId": "",
+  "ItemId": "67391420f9092f5b4e2560ef",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 6
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf5"
+  },
+  "UserId": "",
+  "ItemId": "67391430f9092f5b4e2560f1",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 10
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf7"
+  },
+  "UserId": "",
+  "ItemId": "67391442f9092f5b4e2560f3",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 7
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf9"
+  },
+  "UserId": "",
+  "ItemId": "67391450f9092f5b4e2560f5",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 6
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf2"
+  },
+  "UserId": "",
+  "ItemId": "6739141bf9092f5b4e2560ee",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 10
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf4"
+  },
+  "UserId": "",
+  "ItemId": "67391425f9092f5b4e2560f0",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 6
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cfb"
+  },
+  "UserId": "",
+  "ItemId": "67391459f9092f5b4e2560f7",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf8"
+  },
+  "UserId": "",
+  "ItemId": "67391446f9092f5b4e2560f4",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 7
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cfa"
+  },
+  "UserId": "",
+  "ItemId": "67391454f9092f5b4e2560f6",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 6
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "677166d7eb11e2e67e075cf6"
+  },
+  "UserId": "",
+  "ItemId": "6739143bf9092f5b4e2560f2",
+  "TransactionType": "Buy",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 7
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "67a8e8069936afefb8d6abec"
+  },
+  "UserId": "vendor-basic",
+  "ItemId": "670aaf025437f00b0f7fae21",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "67a8e8069936afefb8d6abed"
+  },
+  "UserId": "vendor-basic",
+  "ItemId": "670aaf175437f00b0f7fae22",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "67a8e8069936afefb8d6abef"
+  },
+  "UserId": "vendor-basic",
+  "ItemId": "6739146af9092f5b4e2560fa",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 1
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "67a8e8069936afefb8d6abee"
+  },
+  "UserId": "vendor-basic",
+  "ItemId": "6739181af9092f5b4e2560fb",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b0715"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "670aab90eb16b7e464057248",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b0716"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "670ab03b063e3af5c51a61fc",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b0718"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "670aae795437f00b0f7fae1d",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b071b"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "670aaf315437f00b0f7fae23",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 3
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b071a"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "67391846f9092f5b4e2560fe",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 10
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b0719"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "67548539b60b1242c1923947",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 3
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286b7fa7323749be6b0717"
+  },
+  "UserId": "vendor-warm",
+  "ItemId": "670aae635437f00b0f7fae1c",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 1
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286c8aa7323749be6b071c"
+  },
+  "UserId": "vendor-misc",
+  "ItemId": "67548595b60b1242c192394a",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286c8aa7323749be6b071d"
+  },
+  "UserId": "vendor-misc",
+  "ItemId": "675485bab60b1242c192394b",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 4
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286c8aa7323749be6b071e"
+  },
+  "UserId": "vendor-misc",
+  "ItemId": "6754855eb60b1242c1923948",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 8
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286c8aa7323749be6b071f"
+  },
+  "UserId": "vendor-misc",
+  "ItemId": "67548573b60b1242c1923949",
+  "TransactionType": "Sell",
+  "TransactionItems": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 10
+    }
+  ]
+}]

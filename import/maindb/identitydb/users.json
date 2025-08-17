@@ -1,0 +1,21 @@
+[{
+  "_id": {
+    "$oid": "67026efde05aacf9d6c79af6"
+  },
+  "DisplayName": "Liam Dyna",
+  "Roles": [
+    "admin",
+    "player",
+    "user"
+  ],
+  "TimeCreated": {
+    "$date": "2024-10-06T11:05:33.394Z"
+  },
+  "TimeLastLoggedIn": {
+    "$date": {
+      "$numberLong": "-62135596800000"
+    }
+  },
+  "Email": "liam@lactose.mookrata.ovh",
+  "PasswordHash": "AQAAAAIAAYagAAAAEHBtfa3n3dHEd1hvXzjps4zlIkTMBpZf+C4ySHdIUHwZyS9joc9ZNDnY7axyNRX3Sg=="
+}]

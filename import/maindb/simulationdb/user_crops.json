@@ -1,0 +1,3090 @@
+[{
+  "_id": {
+    "$oid": "67026efde05aacf9d6c79af6"
+  },
+  "PreviousSimulationTime": {
+    "$date": "2025-06-24T20:20:45.668Z"
+  },
+  "CropInstances": [
+    {
+      "_id": "3504873e-0096-497f-a01a-5e8b813a048b",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": 200,
+        "Y": 400,
+        "Z": 0
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-11-09T15:10:09.074Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "c1110f89-907e-488b-b6cc-9001e59ba13c",
+      "CropId": "671d0748d51e1cb523a2c58d",
+      "State": "Harvestable",
+      "Location": {
+        "X": 200,
+        "Y": 600,
+        "Z": 0
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-11-09T15:10:09.074Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5e491930-f9c8-470f-8679-5ca5c522b0b5",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": 502.19073261580706,
+        "Y": 792.768913287487,
+        "Z": 9.064303299055609e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-20T16:47:39.205Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "044dc591-9b34-4495-bf6c-e00501fa32c0",
+      "CropId": "673916c9f56ddb42e0c41d8d",
+      "State": "Empty",
+      "Location": {
+        "X": 329.69845075567525,
+        "Y": 840.8157422526851,
+        "Z": 2.158415384201362e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-20T16:47:41.391Z"
+      },
+      "RemainingHarvestSeconds": 800,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "ac0de284-4021-46ec-8aff-25bf29213f21",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": 96.47465924519874,
+        "Y": 1058.8305079222657,
+        "Z": 0.0000041083506516770285
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-20T16:47:53.459Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "fcef6ad8-4e50-4e93-95de-f1af47c2ff33",
+      "CropId": "673916c9f56ddb42e0c41d8d",
+      "State": "Harvestable",
+      "Location": {
+        "X": -328.7526535493657,
+        "Y": 1049.929335766799,
+        "Z": 0.0000035626884198336484
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-20T16:47:58.576Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1699cc13-d324-468d-827d-9657412c6ee9",
+      "CropId": "671d0613d51e1cb523a2c58a",
+      "State": "Harvestable",
+      "Location": {
+        "X": 324.0581527761019,
+        "Y": 49.502467379113334,
+        "Z": 0.000006227740556141725
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-20T17:53:13.236Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "6c0f4b34-dcdb-423d-9177-247c2fcb79b8",
+      "CropId": "673915c6f56ddb42e0c41d86",
+      "State": "Harvestable",
+      "Location": {
+        "X": 30.05572837021697,
+        "Y": 202.42915384010632,
+        "Z": -0.000003989680578797561
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-23T13:14:42.961Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "55f26725-7fe0-4cab-a042-9051a1cf2499",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -277.79010978093925,
+        "Y": 468.11841478743344,
+        "Z": 0.0000025653164641425974
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:19:10.469Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "3f460433-c5d1-401a-ac42-a541d3fafd1c",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -412.81566160312843,
+        "Y": 519.6891570381974,
+        "Z": -0.0000021831041863151768
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:19:11.265Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d7ae0152-217f-48a6-84d7-cafa31354bd6",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -360.85154502762225,
+        "Y": 423.12868682676896,
+        "Z": 0.000003991836848626917
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:19:17.418Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "20d37db4-fc07-4c21-912a-2f5aa31be42d",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -447.89754928556135,
+        "Y": 415.1212269791124,
+        "Z": 0.000006965582855400498
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:19:18.073Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "4f5df43b-db04-4fd6-b5aa-8a36fee5e15e",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -505.3391662250176,
+        "Y": 509.7465523975438,
+        "Z": 0.000003923347094314522
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:19:18.782Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "383189c3-374b-450f-8756-d1ee9d9fadd0",
+      "CropId": "671d0613d51e1cb523a2c58a",
+      "State": "Harvestable",
+      "Location": {
+        "X": 662.9128196332109,
+        "Y": 388.7055323014721,
+        "Z": -0.0000017807709582484677
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:36:46.509Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "bc8af05d-8f72-487a-8030-46c5ce6699df",
+      "CropId": "673916acf56ddb42e0c41d8c",
+      "State": "Empty",
+      "Location": {
+        "X": 866.3853896404162,
+        "Y": 323.1994588583822,
+        "Z": -0.000006107559840984322
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:36:47.732Z"
+      },
+      "RemainingHarvestSeconds": 800,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "01540092-8e33-4106-9ad7-006b8317cb4c",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": 767.3573816318246,
+        "Y": 220.93300685978116,
+        "Z": 0.000003136178520435351
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:36:51.349Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "924c5f85-dd2c-47f4-b6d4-4d04b3c0b3f2",
+      "CropId": "673916acf56ddb42e0c41d8c",
+      "State": "Harvestable",
+      "Location": {
+        "X": 49.25803524312738,
+        "Y": 1274.8902965033014,
+        "Z": -0.000003978027251605454
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:36:56.600Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5e6eca4b-43e3-490f-94a2-07f232853649",
+      "CropId": "671d0613d51e1cb523a2c58a",
+      "State": "Harvestable",
+      "Location": {
+        "X": 350.8883014107106,
+        "Y": 249.76339992866997,
+        "Z": -2.6420033805152343e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2024-12-24T12:37:04.058Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b766b028-ed10-4d60-8bfb-68940c3f5a10",
+      "CropId": "673916acf56ddb42e0c41d8c",
+      "State": "Harvestable",
+      "Location": {
+        "X": 449.9318460620919,
+        "Y": 387.6733393460135,
+        "Z": 0.000008172910582970871
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-01-01T20:00:15.660Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e63655f1-2a15-4745-94a0-c6ca5f63b660",
+      "CropId": "673916acf56ddb42e0c41d8c",
+      "State": "Harvestable",
+      "Location": {
+        "X": 155.3074479236942,
+        "Y": -242.17786806402802,
+        "Z": 0.000006805035525303538
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-01-01T20:00:30.296Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d3f98b06-ab6d-45a2-93d2-5ed3de0ae764",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -117.98543742649062,
+        "Y": 208.43746659935087,
+        "Z": -0.000010639938636813895
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-01-01T20:00:38.023Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "26b512fe-1c7a-443e-a3c6-768f24316211",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -166.95063276016742,
+        "Y": 341.42104690469927,
+        "Z": -0.0000054076528499535925
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-01-05T16:42:47.818Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e0792017-fe16-41f0-b4d7-4f4e031ebcb8",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -351.33508151922683,
+        "Y": 279.43151306729743,
+        "Z": -0.000004655704771039382
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-01-05T16:42:51.332Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "dcaf2b9f-0204-49f6-a828-9b6fa8849141",
+      "CropId": "673916acf56ddb42e0c41d8c",
+      "State": "Harvestable",
+      "Location": {
+        "X": 480.013140346408,
+        "Y": 1289.375972110888,
+        "Z": -0.000007439111215035155
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-02-09T17:38:35.318Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "cadf926f-8d90-4fa2-8058-b131a5812f4c",
+      "CropId": "673916c9f56ddb42e0c41d8d",
+      "State": "Harvestable",
+      "Location": {
+        "X": 548.4732593599996,
+        "Y": 1388.8031106873361,
+        "Z": -0.0000012345986135642306
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-02-09T17:38:36.787Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "9956940c-affc-4268-bc27-6168c136549c",
+      "CropId": "673916c9f56ddb42e0c41d8d",
+      "State": "Harvestable",
+      "Location": {
+        "X": -286.4252252789938,
+        "Y": -305.3262434389675,
+        "Z": 0.0000010983056881741504
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-02-16T13:32:06.241Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1039518a-4142-498e-86ee-8fdb0b108361",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -530.4875515000095,
+        "Y": -366.73945551161984,
+        "Z": 0.000009319235601878972
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-02-16T14:05:32.906Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "35c8c707-2513-441d-b44b-2f92a4b06391",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -716.7681549131266,
+        "Y": -516.5630610465232,
+        "Z": -6.357397523970576e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-02-16T14:09:22.755Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d9a91028-8800-49c4-8ac7-983767c4ca15",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": -767.6086511043129,
+        "Y": 1094.8100132083011,
+        "Z": -5.32098312078233e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-02-16T14:09:58.747Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "00fc2619-60f5-4b6e-91c4-aa3ebbffe23b",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -979.5373927978459,
+        "Y": 496.6482681579078,
+        "Z": -0.000013584043841774474
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T11:54:57.896Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0b44283e-34fd-46ec-ae2f-c36331cfdca6",
+      "CropId": "673915c6f56ddb42e0c41d86",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1063.2112124076814,
+        "Y": 796.8529751691037,
+        "Z": 0.0000019677034401865967
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T11:55:10.396Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0d751168-8a35-456e-b283-d122fc0d7587",
+      "CropId": "673915c6f56ddb42e0c41d86",
+      "State": "Harvestable",
+      "Location": {
+        "X": -998.3576647051092,
+        "Y": 834.9974498387546,
+        "Z": -0.0000024277227339553065
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T11:55:11.520Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "2f1617b1-5cbc-4cf5-b1f3-1d17ba88efd8",
+      "CropId": "673915c6f56ddb42e0c41d86",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1111.9620064073242,
+        "Y": 749.0895484682418,
+        "Z": -0.0000013175467756809667
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T11:55:12.601Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "882af246-e429-45e8-a719-7b69c444f536",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -677.2060047127811,
+        "Y": 936.6841114138481,
+        "Z": 0.000010356957460544436
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T12:57:39.485Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0064a4ce-c6b4-4bf1-a1e1-9cf79966ca93",
+      "CropId": "6739165cf56ddb42e0c41d89",
+      "State": "Harvestable",
+      "Location": {
+        "X": -99.66777833126483,
+        "Y": 784.200674143379,
+        "Z": -0.000007395731643100589
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T17:17:11.168Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "83599ec3-a479-4d75-a251-c7aeccf67a31",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": -101.72000466066874,
+        "Y": 712.435473146474,
+        "Z": 0.000007947289475396246
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T17:17:12.207Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "581d9a04-99e6-4efd-b46f-189d1b5eac0e",
+      "CropId": "6739165cf56ddb42e0c41d89",
+      "State": "Empty",
+      "Location": {
+        "X": -108.48385991506285,
+        "Y": 606.8561596546185,
+        "Z": -0.000009103118316033942
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T17:17:13.215Z"
+      },
+      "RemainingHarvestSeconds": 1200,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "9d2fdccc-359f-4ade-a341-7e5f1e8751a3",
+      "CropId": "673916c9f56ddb42e0c41d8d",
+      "State": "Harvestable",
+      "Location": {
+        "X": -112.16210785057484,
+        "Y": 484.82031342279674,
+        "Z": -0.000006626815121535401
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-05-17T17:17:14.021Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "793bbe2a-b4c3-4a35-adde-b8b3894015b4",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1485.8219168117807,
+        "Y": 515.9487973516742,
+        "Z": -0.0000045448838363881805
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:22:54.967Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5e4270a9-7628-4d40-8a27-3c553681228b",
+      "CropId": "6739165cf56ddb42e0c41d89",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1460.8793859442592,
+        "Y": 533.4760557053248,
+        "Z": -0.000004135340617494876
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:22:56.175Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b84778ba-ae88-420e-8418-ad1747fe9b0e",
+      "CropId": "6739165cf56ddb42e0c41d89",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1457.1134965525146,
+        "Y": 423.7690200110967,
+        "Z": -0.0000014176155502809706
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:22:56.818Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "ad8d3131-9f1c-458a-8377-a10c01058c07",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": 732.046244590722,
+        "Y": -528.2958925703476,
+        "Z": -0.0000025072058349451254
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:38.112Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "9240051f-8b68-42a0-b8f1-4fa310f793b0",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": 689.6168056375232,
+        "Y": -716.5957495926064,
+        "Z": 0.0000053354675344507996
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:38.896Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1ecbd779-72a1-4e9e-8c99-8d82427abcfc",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": 962.8750709972164,
+        "Y": -732.9513859533683,
+        "Z": 0.0000015342094172865473
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:42.489Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "efb1da78-f26e-43aa-b6de-d58769b0f028",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": 952.4112103821167,
+        "Y": -816.6679528078482,
+        "Z": -4.7380601131408184e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:42.756Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0fc329b6-a95e-4838-8680-4ce99bdc9688",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": 920.5500975999488,
+        "Y": -872.5328227528112,
+        "Z": -0.0000024411855577000097
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:43.155Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "a08315d2-5452-45a5-aa6f-11a9ff4da404",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": 835.1008291798336,
+        "Y": -913.4194306221756,
+        "Z": -0.0000024411855577000097
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:43.685Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e2df8e66-7b11-494e-8edb-cdff9cc2730a",
+      "CropId": "671d0650d51e1cb523a2c58b",
+      "State": "Harvestable",
+      "Location": {
+        "X": 799.8992485095397,
+        "Y": -837.1447178896447,
+        "Z": 0.000006681882751990997
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:34:44.090Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d9e4db53-a732-42d2-b9e5-82e890590129",
+      "CropId": "673915f4f56ddb42e0c41d87",
+      "State": "Harvestable",
+      "Location": {
+        "X": -143.91648052707166,
+        "Y": -13.755786270203082,
+        "Z": -0.000004175401500106091
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T12:39:16.662Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b18a62d3-b1d6-46d2-b564-889428c49920",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -430.70221597941304,
+        "Y": 1066.488250474746,
+        "Z": -0.00000790684643448003
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T15:39:56.532Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b690b261-4ecd-4938-9be9-1df51d59db76",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -285.01125660797925,
+        "Y": 746.172774556548,
+        "Z": -0.000004890383792144348
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:28.568Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e17ee988-0c08-4af3-bb99-df035ceb2044",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -101.57442407963782,
+        "Y": 962.0881560374859,
+        "Z": -0.0000054976625847302785
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:34.750Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "ddbb5248-25db-486c-bfe6-23fc17d9213c",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -614.1435384915684,
+        "Y": 1060.6956192383047,
+        "Z": 0.000003668167948944756
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:42.633Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "f4db18d6-4e15-4ac9-82cd-d6b835a31050",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -615.0071887754394,
+        "Y": 1060.6722407158102,
+        "Z": 0.000003668167948944756
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:42.816Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "da3fe986-4834-4876-b8c4-4f37a4f05f30",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -615.0071887754394,
+        "Y": 1060.6722407158102,
+        "Z": 0.000003668167948944756
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:43.000Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "64dcbd27-4ecb-417c-9e06-8fa79463d6e3",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -614.5669065393273,
+        "Y": 1060.6834860576216,
+        "Z": 0.000003668167948944756
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:43.265Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e060bd39-58c3-4772-97ed-c17e43946353",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -804.4676713010186,
+        "Y": 1058.9800488596252,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:45.372Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e69bbdaa-fab7-4727-bd83-e6659da27785",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -981.7935009417835,
+        "Y": 1059.055609572351,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:47.834Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "f48bf570-4cfc-44e0-b061-afc742ae9048",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -985.8785721404281,
+        "Y": 1059.0573502713337,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:47.995Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "c4f46ada-57f8-486e-bf43-491a00d3385c",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -985.8785721404281,
+        "Y": 1059.0573502713337,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:48.182Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "455d46e6-f7a7-4af9-baaa-3fff034466cf",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -985.8785721404281,
+        "Y": 1059.0573502713337,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:48.363Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "c408b105-33e9-4b3d-a572-4badf6b928d6",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -985.8785721404281,
+        "Y": 1059.0573502713337,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:48.580Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "67164307-063e-492d-bffe-bc3548d251d5",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -985.8785721404281,
+        "Y": 1059.0573502713337,
+        "Z": 0.0000036681679205230466
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:49.029Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "7767d69c-ddad-407e-bb98-c68c9171c3b8",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -985.8813256595292,
+        "Y": 1052.5953935025366,
+        "Z": 1.438320111901703e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:49.450Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1976e8d9-bbdb-482c-894c-f8b6914701ea",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1190.5276506816074,
+        "Y": 1052.03677080737,
+        "Z": 1.438320111901703e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:54.115Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0f91694f-05f7-47ed-970d-10f636041203",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1290.360238534446,
+        "Y": 1051.7743888092111,
+        "Z": 1.438320111901703e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:54.281Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e7e78b5f-74dc-4bab-b03b-339f8c5c7493",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1380.4009253434674,
+        "Y": 1051.5377420806362,
+        "Z": 1.438320111901703e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:54.429Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "a4900ade-b5c4-4e14-9c16-7b1c94d63668",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1470.3793091226014,
+        "Y": 1051.301259098127,
+        "Z": 1.438320111901703e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:07:54.580Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d797426d-6bbd-4bf3-8950-003e43b5e9fc",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1473.4981548582446,
+        "Y": 872.5878180752309,
+        "Z": -0.000007176001361131057
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:08:03.914Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "34b157b1-7005-41c7-a490-e4ada4c7195e",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1482.4827541555592,
+        "Y": 869.203084449032,
+        "Z": 0.000005965743071101315
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:08:04.297Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "cda08e69-3482-44dd-b87e-71a189cbbbe7",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -277.5214589301289,
+        "Y": 500.7607755315372,
+        "Z": -0.000010289978405353395
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:23:10.196Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "03c56bbe-f8ff-4b9f-a0ae-6afa03fa9ecf",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -112.36224852638757,
+        "Y": 334.25177403999317,
+        "Z": -0.000009204603117041188
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:28:15.741Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "7f32b5cd-f111-447a-ae1e-1097dca54381",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": 37.69855874351628,
+        "Y": 333.64698631746455,
+        "Z": -0.000005016161082949111
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:28:23.978Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0e5f352a-6305-4436-a362-2053613311bb",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -125.97479684189824,
+        "Y": 183.2542029572457,
+        "Z": 5.543278689401632e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:30:26.791Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "8debaccc-ea15-4ec7-bd5a-4c2150d0ca9d",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -337.57152773201756,
+        "Y": 1230.143549492024,
+        "Z": 0.000008577072492244042
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:32:34.863Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "63bd90d3-c0a8-4f12-b0d3-d62b7097763b",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1322.714352479647,
+        "Y": 873.7362913892059,
+        "Z": -0.0000029608164595629205
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:35:26.337Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "3b481786-119d-43f2-aadd-07c67df001a6",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -442.1052099281402,
+        "Y": 745.0681282046953,
+        "Z": -0.000008511108148923086
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:40:36.353Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "fba15e81-2b0e-4a02-b298-b375104c0192",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -595.6974020764649,
+        "Y": 744.1984007606509,
+        "Z": 0.00000551609784338325
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:40:38.735Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5234b374-1394-4b65-8fea-173d73870c2c",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -490.86461404883596,
+        "Y": 1229.236053589361,
+        "Z": 0.0000034149178418374504
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:15.866Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "021dead9-740d-4d64-8009-dd6fa1331ed1",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -641.0365958567298,
+        "Y": 1228.7805311351813,
+        "Z": 0.000014921352430974366
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:17.713Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "62fb6fc5-a1d7-44a5-b389-27dc97a43e6f",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -639.7639821513295,
+        "Y": 1382.9761857560409,
+        "Z": -2.48507234346107e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:19.267Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "ca05bd75-962f-4d99-bf75-79af2682d8b0",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -495.9678550507038,
+        "Y": 1381.1981047495442,
+        "Z": 0.0000013117587513988838
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:20.630Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e71dbd2a-17ac-4d4a-a9c7-2c98ce62c970",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -335.63037696142504,
+        "Y": 1385.0944382326336,
+        "Z": 0.000011193456259661616
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:22.775Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b44151bd-50d6-4a8a-b205-67b6ee982c53",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -349.96087831872785,
+        "Y": 1554.8250351815955,
+        "Z": 0.000006142136442122137
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:24.800Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b4e72a60-c7c0-44ae-8489-bd626b8eb403",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -359.2857641896445,
+        "Y": 1568.9278151955243,
+        "Z": -0.0000016709481940324622
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:24.944Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "dbf84d43-8533-4e3a-9b57-71309320f8a3",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -550.9583509014112,
+        "Y": 1551.5386137997687,
+        "Z": 0.000004458172924159953
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:26.809Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "7c470977-5a85-4537-83ce-1374a1da1744",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -549.1385030512861,
+        "Y": 1551.5703981416716,
+        "Z": 0.000004458172895738244
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:26.975Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1079601b-bfda-4f22-96a6-c640e85855a0",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -869.7404428842472,
+        "Y": 1561.3352803662474,
+        "Z": 0.0000024486065512974164
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:28.285Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "cf055cab-480f-4477-8263-beff04b44335",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -959.7514542763068,
+        "Y": 1564.1652488078955,
+        "Z": 0.0000024486065512974164
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:28.429Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "7d44237b-87dd-45e8-bc0f-8d2e1d3ddee6",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1049.5969194813563,
+        "Y": 1566.9881952389228,
+        "Z": 0.0000024486065512974164
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:28.577Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "08ccc347-bdd6-404f-8646-d9cc0c5bc91f",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1130.804824823964,
+        "Y": 1569.539480006827,
+        "Z": 0.0000024486065512974164
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:28.727Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "8eaa0b2c-3411-4dcf-895f-1d47f8941f91",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1125.224291611827,
+        "Y": 1569.3641766226544,
+        "Z": 0.0000024486065512974164
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:28.875Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1e96b6b9-0a4d-415b-b990-c2d45ae28eb9",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -936.9040207803048,
+        "Y": 1228.452010173404,
+        "Z": -0.000002591114451888643
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:30.297Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "3c49d136-1c17-4384-9e92-fcbf90455616",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -942.9696639640222,
+        "Y": 1227.8843174255437,
+        "Z": -0.000002591114451888643
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:30.479Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0dbcc245-4d36-4cde-9066-f1600c060d6e",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1002.4357963062981,
+        "Y": 1239.3058806518166,
+        "Z": -0.000002591114451888643
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:30.627Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "9e78eba4-dace-4a03-82af-8013ef7b60e7",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1090.9391637993476,
+        "Y": 1254.480987735359,
+        "Z": 0.0000034782157172230654
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:30.778Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "295baf61-525a-4ee1-9d8c-a3cf6a805840",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1169.4382939705781,
+        "Y": 1269.3778117183126,
+        "Z": 0.0000034782157172230654
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:43:30.908Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "8d66a50e-c399-4573-9b9c-03beb84f5444",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1476.1584033250992,
+        "Y": 1457.9471080484702,
+        "Z": 0.0000010154606115975184
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:44:04.077Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "3453aa44-db6f-40c5-b392-4f6a9fde7dca",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1524.8380577175808,
+        "Y": 2025.393217303744,
+        "Z": 0.0000012999951479741867
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:44:05.092Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "40ae5bb9-4069-4947-abd5-2c01b6cf1f9a",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1485.9173196306895,
+        "Y": 2323.0691484882454,
+        "Z": 0.0000012999951479741867
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:44:05.594Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "7afc81df-ab60-443b-b3ce-31a202eef60b",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1450.9178446760584,
+        "Y": 2590.7429072065393,
+        "Z": 0.0000012999951479741867
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:44:06.063Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "f9758fe9-f02f-4ad1-bf60-620b9eb62884",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1417.2181781121753,
+        "Y": 2848.4757827373905,
+        "Z": 0.0000012999951479741867
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:44:06.476Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "74107377-5dd3-4549-be3b-8f5f323bc3d9",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1379.6177926580071,
+        "Y": 3136.0411044906396,
+        "Z": 0.0000012999951479741867
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T16:44:06.958Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "a8313e2e-b53e-407e-8409-dbe34cd5d650",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -229.68069977081345,
+        "Y": 334.09529919126135,
+        "Z": -0.000002625897565167179
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:18:37.631Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "2279499e-325a-41d8-873b-01f6ef933f62",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": 106.16928147691205,
+        "Y": 208.6833570486783,
+        "Z": 0.0000025744728873178246
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:24:59.643Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "683b7a80-efbd-4eb6-b997-aca6d07201db",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -300,
+        "Y": -900,
+        "Z": 1.5347501403084607e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:26:38.187Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5dd6eafa-1ab0-4d6f-be23-bbefbdb55cbf",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -600,
+        "Y": -900,
+        "Z": -0.000016683721014487674
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:26:44.662Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e45992ce-b9e3-40da-9d98-cb92c8e8bdd5",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -750,
+        "Y": 750,
+        "Z": -0.000011340894587874573
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:26:54.697Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "a037ed46-1396-4b7f-b161-428683269c69",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": 750,
+        "Z": 0.0000017365789233281248
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:26:57.886Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "df82ba23-8e02-4d5b-8a5f-85ef98c7292d",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": 450,
+        "Z": -0.000004425516550554676
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:27:00.281Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "4cef4737-103f-4fa9-9a83-648a6e9ff2d0",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": 300,
+        "Z": -0.0000027760546856825385
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:27:00.865Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e70f9db5-f694-4dc5-9120-685dfb7004cb",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": 150,
+        "Z": 0.000002181075416274325
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:27:01.770Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "a065dab7-03bb-4fe3-9880-95f1f5270432",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1950,
+        "Y": 750,
+        "Z": -0.0000018229733029784256
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:27:15.628Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "9c1e6008-3f29-47a6-9837-0e8190b5e0b8",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1950,
+        "Y": 600,
+        "Z": 0.0000023696208302226296
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:27:15.949Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "c6f6fff5-7921-4b34-920c-2711270859b5",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": 150,
+        "Z": 9.936059939263941e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:33:05.773Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "8c49179b-8750-4556-81f1-7ddef3dcdf22",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": 300,
+        "Z": -0.000002698449435456496
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:33:06.538Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0edc2eed-56ff-4231-93b9-71030bda089c",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": 450,
+        "Z": 1.9035928744415287e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:33:07.541Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "a19e8379-34e5-4aa0-9d3b-c85ecf1a32f8",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -300,
+        "Y": 150,
+        "Z": -0.00000428422660547767
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:35:52.278Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "fb857fd8-e000-4b8d-bacf-bcc93c9ffaf2",
+      "CropId": "673916acf56ddb42e0c41d8c",
+      "State": "Harvestable",
+      "Location": {
+        "X": -600,
+        "Y": 0,
+        "Z": -0.0000029143452309199347
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:36:57.430Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "170aada3-4d92-4f11-8043-fab009a24326",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -600,
+        "Y": -150,
+        "Z": -0.0000029143452309199347
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:36:58.497Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "20cc2b82-5a8d-48b2-8d48-49f1597726d7",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -750,
+        "Y": -150,
+        "Z": -0.0000029143452309199347
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:36:59.648Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1349878f-0246-43ea-a1ec-0ea6a34c2b15",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": -750,
+        "Y": 0,
+        "Z": -0.0000029143452309199347
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:00.230Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1d31c1d9-542d-4345-b351-fd1522979029",
+      "CropId": "67391778f56ddb42e0c41d92",
+      "State": "Harvestable",
+      "Location": {
+        "X": -900,
+        "Y": 0,
+        "Z": -0.000010461740004075182
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:03.701Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "af898fb0-ba86-4288-8b4e-53ae8d52b33d",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -900,
+        "Y": -150,
+        "Z": 0.000005664375464675686
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:04.364Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d593d8d3-3a07-4646-ae3f-ae08d6d95530",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": -150,
+        "Z": -0.000010461740004075182
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:04.916Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d4881290-6d97-49a9-89ec-f5392ed81cee",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": 0,
+        "Z": -0.000010461740004075182
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:05.465Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "f9705574-59ad-42ea-8dc8-5d74799e0f40",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": 0,
+        "Z": 0.000002181075416274325
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:05.947Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "1fa14dc3-f630-4de8-aba5-763eb74e6983",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": -150,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:06.283Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "e30564db-5121-47e3-954e-a38e80bd0353",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": -300,
+        "Z": -0.000010461740004075182
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:06.704Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "884541b7-4e52-4384-901d-1694c983e85e",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": -300,
+        "Z": 0.000005664375464675686
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:07.065Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "394f1fd1-aeca-463c-83b7-6d931591b1aa",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -900,
+        "Y": -300,
+        "Z": 0.0000051917089649577974
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:07.536Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "3d5a726c-8dd7-4db9-b419-c80af778788a",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -750,
+        "Y": -300,
+        "Z": 2.0903979702779907e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:07.915Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "9c53438e-a05e-4dd1-b63c-bb43e8a50e7c",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -600,
+        "Y": -300,
+        "Z": 2.0903979702779907e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:37:08.900Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "3ab10002-ca96-440d-9137-9f583bc09894",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1800,
+        "Y": 1050,
+        "Z": 0.000006558442350979021
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:13.955Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "6f97b768-5371-41fd-9e35-bb9f28570879",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1800,
+        "Y": 1200,
+        "Z": 7.41155474770494e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:14.357Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "0678c9f1-5b6c-4737-82a3-f264d2f06565",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1950,
+        "Y": 1050,
+        "Z": -4.363931509487884e-7
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:16.453Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5774395b-a09d-47ba-98b7-f4d6fdf9430c",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1950,
+        "Y": 1200,
+        "Z": -0.000003513471824589942
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:17.091Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "bb2c1e25-48fa-4a00-8eaa-6432de0d2b20",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1650,
+        "Y": 1050,
+        "Z": 0.0000035167070961961144
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:19.399Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "2fbcd55c-ff45-4033-a9ed-c9958c8dedcd",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1650,
+        "Y": 900,
+        "Z": -0.0000042706506349077245
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:20.544Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "57761364-9a8e-41f7-8766-ca1ff684cad4",
+      "CropId": "6739186df56ddb42e0c41d93",
+      "State": "Harvestable",
+      "Location": {
+        "X": -1800,
+        "Y": 750,
+        "Z": -0.0000018229733029784256
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T17:42:22.259Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "ad550a67-4a14-43aa-9375-c2b91811d46f",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1350,
+        "Y": -300,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:12:56.720Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "6d00e21e-c548-4d3b-986d-966d603f6b55",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1350,
+        "Y": -150,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:12:57.246Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "782bacde-be3b-440f-ad13-9edd84f60e1e",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1350,
+        "Y": 0,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:12:57.780Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "b5a2113f-0b04-4de9-a79b-aedabe746acc",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1500,
+        "Y": 0,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:00.975Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d07f95c0-8ec3-4070-87dc-9725c66818e8",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1650,
+        "Y": 0,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:01.624Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "be46be72-96e7-4e80-b7ba-732f1a89c9c5",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1650,
+        "Y": -150,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:02.471Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "644d6162-8594-4333-8807-0d79cbb5b507",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1500,
+        "Y": -150,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:58.359Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "5890cf75-9de2-4a67-82a3-02cb2efdad8d",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1500,
+        "Y": -300,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:58.802Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "6b229587-eb52-4fbe-95a9-c8beead0c77b",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1650,
+        "Y": -300,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:59.329Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "266030e6-c0ce-4ce1-b4d8-2b05aff6406a",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1650,
+        "Y": -450,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:13:59.750Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "907b4af6-aa29-489e-9124-0ce5f973bd59",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1500,
+        "Y": -450,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:14:00.192Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "56ae5ee4-addf-4edb-8f91-2c529afa80a0",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1350,
+        "Y": -450,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:14:00.713Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "53db0501-3a46-445a-af41-9a5fcfe3fd3d",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1050,
+        "Y": -450,
+        "Z": -0.000010461740004075182
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:14:01.495Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    },
+    {
+      "_id": "d5fd60cb-ebe0-4d05-bce7-50cb75b68149",
+      "CropId": "",
+      "State": "Empty",
+      "Location": {
+        "X": -1200,
+        "Y": -450,
+        "Z": -0.0000013270945089516317
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": -90,
+        "Z": 0
+      },
+      "CreationTime": {
+        "$date": "2025-06-21T18:14:02.018Z"
+      },
+      "RemainingHarvestSeconds": 0,
+      "RemainingFertiliserSeconds": 0
+    }
+  ]
+}]

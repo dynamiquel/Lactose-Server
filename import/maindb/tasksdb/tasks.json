@@ -1,0 +1,168 @@
+[{
+  "_id": {
+    "$oid": "67f28c5b32645465fd463667"
+  },
+  "Name": "Logger",
+  "Description": "Login five times",
+  "RequiredProgress": 5,
+  "Triggers": [
+    {
+      "Topic": "/identity/presence/+/online",
+      "Handler": "default",
+      "Config": null
+    }
+  ],
+  "Rewards": []
+},
+{
+  "_id": {
+    "$oid": "67f2ca5b1149dc37bd4a0402"
+  },
+  "Name": "Carrot Farmer",
+  "Description": "Harvest carrots 10 times",
+  "RequiredProgress": 10,
+  "Triggers": [
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "671d0613d51e1cb523a2c58a"
+      }
+    }
+  ],
+  "Rewards": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 50
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68176e70b75c6a67416e4735"
+  },
+  "Name": "Carrot Farmer II",
+  "Description": "Harvest carrots 50 times",
+  "RequiredProgress": 50,
+  "Triggers": [
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "671d0613d51e1cb523a2c58a"
+      }
+    }
+  ],
+  "Rewards": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 200
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6818de1c52442aee51c349c2"
+  },
+  "Name": "Britain Needs More of These!",
+  "Description": "Harvest 50 Pear Trees",
+  "RequiredProgress": 50,
+  "Triggers": [
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "671d0650d51e1cb523a2c58b"
+      }
+    }
+  ],
+  "Rewards": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 150
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6818de7e52442aee51c349c3"
+  },
+  "Name": "It's Time to Make Some Cider!",
+  "Description": "Harvest 200 Pear Trees",
+  "RequiredProgress": 200,
+  "Triggers": [
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "671d0650d51e1cb523a2c58b"
+      }
+    }
+  ],
+  "Rewards": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 1000
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6818e290ca6258b1fb9946d4"
+  },
+  "Name": "Just Getting Started",
+  "Description": "Harvest 5 crops",
+  "RequiredProgress": 5,
+  "Triggers": [
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "any"
+      }
+    }
+  ],
+  "Rewards": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 10
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68286fc5614ecf8ede948860"
+  },
+  "Name": "I'm getting used to this!",
+  "Description": "Harvest 50 crops (x2 progress for pumpkins)",
+  "RequiredProgress": 50,
+  "Triggers": [
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "6739165cf56ddb42e0c41d89"
+      }
+    },
+    {
+      "Topic": "/simulation/usercrops/+/harvested",
+      "Handler": "crop",
+      "Config": {
+        "_t": "CropTaskTriggerConfig",
+        "CropId": "any"
+      }
+    }
+  ],
+  "Rewards": [
+    {
+      "ItemId": "6713c07e1b16a5ac723452fd",
+      "Quantity": 25
+    }
+  ]
+}]

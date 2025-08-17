@@ -1,0 +1,351 @@
+[{
+  "_id": {
+    "$oid": "670aab82eb16b7e464057247"
+  },
+  "Type": "Seeds",
+  "Name": "Carrot Seed",
+  "Description": "Plant these seeds in fertile soil to grow delicious, crunchy carrots. Perfect for boosting your health and stamina, these vibrant orange roots are a must-have for any aspiring gardener. Watch them flourish and reap the rewards of your hard work!",
+  "GameImage": "/Game/Economy/Images/I_CarrotSeed"
+},
+{
+  "_id": {
+    "$oid": "670aab90eb16b7e464057248"
+  },
+  "Type": "Seeds",
+  "Name": "Tomato Seed",
+  "Description": "Plant these seeds in rich, well-drained soil to grow juicy, red tomatoes. Perfect for enhancing your culinary creations and boosting your health, these vibrant fruits are a staple for any dedicated gardener. Nurture them with care and enjoy a bountiful harvest!",
+  "GameImage": "/Game/Economy/Images/I_TomatoSeed"
+},
+{
+  "_id": {
+    "$oid": "670aae635437f00b0f7fae1c"
+  },
+  "Type": "Seeds",
+  "Name": "Cabbage Seed",
+  "Description": "Plant these seeds in cool, moist soil to grow crisp, green lettuce. Perfect for fresh salads and sandwiches, these leafy greens are a staple for any healthy diet. Harvest them quickly for a continuous supply!",
+  "GameImage": "/Game/Economy/Images/I_CabbageSeed"
+},
+{
+  "_id": {
+    "$oid": "670aae795437f00b0f7fae1d"
+  },
+  "Type": "Seeds",
+  "Name": "Cucumber Seed",
+  "Description": "Plant these seeds in warm, well-drained soil to grow long, crunchy cucumbers. Ideal for pickling or adding a refreshing crunch to your salads, these versatile veggies are a must-have for any garden.",
+  "GameImage": "/Game/Economy/Images/I_CucumberSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaebb5437f00b0f7fae1e"
+  },
+  "Type": "Seeds",
+  "Name": "Pumpkin Seed",
+  "Description": "Plant these seeds in warm, fertile soil to grow large, orange squash. Perfect for pies, soups and stews, these versatile gourds are a favorite for autumn harvests.",
+  "GameImage": "/Game/Economy/Images/I_PumpkinSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaed15437f00b0f7fae1f"
+  },
+  "Type": "Seeds",
+  "Name": "Broccoli Seed",
+  "Description": "Plant these seeds in cool, fertile soil to grow nutritious, green broccoli. Packed with vitamins and minerals, these florets are perfect for steaming, roasting, or adding to your favorite dishes.",
+  "GameImage": "/Game/Economy/Images/I_BroccoliSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaee45437f00b0f7fae20"
+  },
+  "Type": "Seeds",
+  "Name": "Cauliflower Seed",
+  "Description": "Plant these seeds in cool, well-drained soil to grow tender, white cauliflower. Ideal for roasting, mashing, or using as a low-carb substitute, these versatile veggies are a healthy addition to any diet.",
+  "GameImage": "/Game/Economy/Images/I_CauliflowerSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaf025437f00b0f7fae21"
+  },
+  "Type": "Seeds",
+  "Name": "Turnip Seed",
+  "Description": "Plant these seeds in loose, well-drained soil to grow sweet, crunchy turnips. Ideal for roasting, mashing, or adding to soups, these root vegetables are a nutritious addition to your garden.",
+  "GameImage": "/Game/Economy/Images/I_TurnipSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaf175437f00b0f7fae22"
+  },
+  "Type": "Seeds",
+  "Name": "Parsnip Seed",
+  "Description": "Plant these seeds in loose, well-drained soil to grow sweet, nutty parsnips. Perfect for roasting, mashing, or adding to soups, these root vegetables are a delicious addition to your garden.",
+  "GameImage": "/Game/Economy/Images/I_ParsnipSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaf315437f00b0f7fae23"
+  },
+  "Type": "Seeds",
+  "Name": "Leek Seed",
+  "Description": "Plant these seeds in rich, well-drained soil to grow tender, mild-flavored leeks. Perfect for soups, stews, and sautés, these alliums are a versatile addition to any garden.",
+  "GameImage": "/Game/Economy/Images/I_LeekSeed"
+},
+{
+  "_id": {
+    "$oid": "670aaf565437f00b0f7fae24"
+  },
+  "Type": "Seeds",
+  "Name": "Onion Seed",
+  "Description": "Plant these seeds in fertile, well-drained soil to grow tender, mild-flavored scallions. Perfect for garnishing, adding to salads, or using in cooking, these alliums are a versatile addition to any kitchen garden.",
+  "GameImage": "/Game/Economy/Images/I_ScallionSeed"
+},
+{
+  "_id": {
+    "$oid": "670ab030063e3af5c51a61fb"
+  },
+  "Type": "Seeds",
+  "Name": "Wheat Seed",
+  "Description": "Plant these seeds in well-drained, fertile soil to grow golden, nutritious wheat. Perfect for baking bread, making pasta, or adding to your favorite recipes, these grains are a staple in kitchens around the world. Harvest your own wheat and enjoy the fruits of your labor!",
+  "GameImage": "/Game/Economy/Images/I_WheatSeed"
+},
+{
+  "_id": {
+    "$oid": "670ab03b063e3af5c51a61fc"
+  },
+  "Type": "Seeds",
+  "Name": "Corn Seed",
+  "Description": "Plant these seeds in warm, fertile soil to grow tall, golden corn. Ideal for grilling, boiling, or adding to your favorite dishes, these sweet kernels are a summertime favorite. Watch your garden transform with rows of towering corn stalks!",
+  "GameImage": "/Game/Economy/Images/I_CornSeed"
+},
+{
+  "_id": {
+    "$oid": "6713c07e1b16a5ac723452fd"
+  },
+  "Type": "Currency",
+  "Name": "Coins",
+  "Description": "It's money. What else do you need to know about it?",
+  "GameImage": "/Game/Economy/Images/I_Coins"
+},
+{
+  "_id": {
+    "$oid": "67391403f9092f5b4e2560ed"
+  },
+  "Type": "Vegetable",
+  "Name": "Carrot",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Carrot"
+},
+{
+  "_id": {
+    "$oid": "6739141bf9092f5b4e2560ee"
+  },
+  "Type": "Vegetable",
+  "Name": "Tomato",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Tomato"
+},
+{
+  "_id": {
+    "$oid": "67391420f9092f5b4e2560ef"
+  },
+  "Type": "Vegetable",
+  "Name": "Cabbage",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Cabbage"
+},
+{
+  "_id": {
+    "$oid": "67391425f9092f5b4e2560f0"
+  },
+  "Type": "Vegetable",
+  "Name": "Cucumber",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Cucumber"
+},
+{
+  "_id": {
+    "$oid": "67391430f9092f5b4e2560f1"
+  },
+  "Type": "Vegetable",
+  "Name": "Pumpkin",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Pumpkin"
+},
+{
+  "_id": {
+    "$oid": "6739143bf9092f5b4e2560f2"
+  },
+  "Type": "Vegetable",
+  "Name": "Broccoli",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Broccoli"
+},
+{
+  "_id": {
+    "$oid": "67391442f9092f5b4e2560f3"
+  },
+  "Type": "Vegetable",
+  "Name": "Cauliflower",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Cauliflower"
+},
+{
+  "_id": {
+    "$oid": "67391446f9092f5b4e2560f4"
+  },
+  "Type": "Vegetable",
+  "Name": "Turnip",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Turnip"
+},
+{
+  "_id": {
+    "$oid": "67391450f9092f5b4e2560f5"
+  },
+  "Type": "Vegetable",
+  "Name": "Parsnip",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Parsnip"
+},
+{
+  "_id": {
+    "$oid": "67391454f9092f5b4e2560f6"
+  },
+  "Type": "Vegetable",
+  "Name": "Leek",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Leek"
+},
+{
+  "_id": {
+    "$oid": "67391459f9092f5b4e2560f7"
+  },
+  "Type": "Vegetable",
+  "Name": "Onion",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Onion"
+},
+{
+  "_id": {
+    "$oid": "6739145ef9092f5b4e2560f8"
+  },
+  "Type": "Vegetable",
+  "Name": "Wheat",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Wheat"
+},
+{
+  "_id": {
+    "$oid": "67391466f9092f5b4e2560f9"
+  },
+  "Type": "Vegetable",
+  "Name": "Corn",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Corn"
+},
+{
+  "_id": {
+    "$oid": "6739146af9092f5b4e2560fa"
+  },
+  "Type": "Vegetable",
+  "Name": "Potato",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Potato"
+},
+{
+  "_id": {
+    "$oid": "6739181af9092f5b4e2560fb"
+  },
+  "Type": "Seed",
+  "Name": "Pear Seed",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_PearSeed"
+},
+{
+  "_id": {
+    "$oid": "6739182cf9092f5b4e2560fc"
+  },
+  "Type": "Vegetable",
+  "Name": "Pear",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Pear"
+},
+{
+  "_id": {
+    "$oid": "67391838f9092f5b4e2560fd"
+  },
+  "Type": "Vegetable",
+  "Name": "Orange",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_Orange"
+},
+{
+  "_id": {
+    "$oid": "67391846f9092f5b4e2560fe"
+  },
+  "Type": "Seeds",
+  "Name": "Orange Seed",
+  "Description": null,
+  "GameImage": "/Game/Economy/Images/I_OrangeSeed"
+},
+{
+  "_id": {
+    "$oid": "67548539b60b1242c1923947"
+  },
+  "Type": "Seeds",
+  "Name": "Chilli Seed",
+  "Description": "",
+  "GameImage": "/Game/Economy/Images/I_ChilliSeed"
+},
+{
+  "_id": {
+    "$oid": "6754855eb60b1242c1923948"
+  },
+  "Type": "Fertiliser",
+  "Name": "Bone Meal",
+  "Description": "Use it to make your trees grow faster!",
+  "GameImage": "/Game/Economy/Images/I_BoneMeal"
+},
+{
+  "_id": {
+    "$oid": "67548573b60b1242c1923949"
+  },
+  "Type": "Fertiliser",
+  "Name": "Probiotics",
+  "Description": "Use it to treat your animals well!",
+  "GameImage": "/Game/Economy/Images/I_Probiotics"
+},
+{
+  "_id": {
+    "$oid": "67548595b60b1242c192394a"
+  },
+  "Type": "Fertiliser",
+  "Name": "Worm Poop",
+  "Description": "Effective for easy-to-grow crops!",
+  "GameImage": "/Game/Economy/Images/I_WormPoop"
+},
+{
+  "_id": {
+    "$oid": "675485bab60b1242c192394b"
+  },
+  "Type": "Fertiliser",
+  "Name": "Fish Oil",
+  "Description": "Helpful for those more needy crops!",
+  "GameImage": "/Game/Economy/Images/I_FishOil"
+},
+{
+  "_id": {
+    "$oid": "675485d7b60b1242c192394c"
+  },
+  "Type": "Animal",
+  "Name": "Hen",
+  "Description": "",
+  "GameImage": "/Game/Economy/Images/I_Chicken"
+},
+{
+  "_id": {
+    "$oid": "675485dbb60b1242c192394d"
+  },
+  "Type": "Animal",
+  "Name": "Cow",
+  "Description": "",
+  "GameImage": "/Game/Economy/Images/I_Cow"
+}]

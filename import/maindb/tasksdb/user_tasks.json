@@ -1,0 +1,64 @@
+[{
+  "_id": {
+    "$oid": "6818cabc4419bea847dadbea"
+  },
+  "UserId": "67026efde05aacf9d6c79af6",
+  "TaskId": "67f2ca5b1149dc37bd4a0402",
+  "Progress": 10,
+  "CompleteTime": {
+    "$date": "2025-05-05T15:47:16.668Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6818cabc4419bea847dadbeb"
+  },
+  "UserId": "67026efde05aacf9d6c79af6",
+  "TaskId": "68176e70b75c6a67416e4735",
+  "Progress": 50,
+  "CompleteTime": {
+    "$date": "2025-06-20T15:01:30.348Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6818dfa3f50b95a0540a528d"
+  },
+  "UserId": "67026efde05aacf9d6c79af6",
+  "TaskId": "6818de1c52442aee51c349c2",
+  "Progress": 50,
+  "CompleteTime": {
+    "$date": "2025-05-16T16:41:29.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6818dfa3f50b95a0540a528e"
+  },
+  "UserId": "67026efde05aacf9d6c79af6",
+  "TaskId": "6818de7e52442aee51c349c3",
+  "Progress": 133,
+  "CompleteTime": null
+},
+{
+  "_id": {
+    "$oid": "6818e932bc3625e2a2c1eae2"
+  },
+  "UserId": "67026efde05aacf9d6c79af6",
+  "TaskId": "6818e290ca6258b1fb9946d4",
+  "Progress": 5,
+  "CompleteTime": {
+    "$date": "2025-05-05T16:37:27.457Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68287062071fa739080f9b2f"
+  },
+  "UserId": "67026efde05aacf9d6c79af6",
+  "TaskId": "68286fc5614ecf8ede948860",
+  "Progress": 61,
+  "CompleteTime": {
+    "$date": "2025-05-17T11:48:22.796Z"
+  }
+}]

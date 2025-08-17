@@ -1,0 +1,469 @@
+[{
+  "_id": {
+    "$oid": "671d0613d51e1cb523a2c58a"
+  },
+  "Type": "Plot",
+  "Name": "Carrot",
+  "CostItems": [
+    {
+      "ItemId": "670aab82eb16b7e464057247",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 600,
+  "HarvestItems": [
+    {
+      "ItemId": "67391403f9092f5b4e2560ed",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aab82eb16b7e464057247",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Carrot"
+},
+{
+  "_id": {
+    "$oid": "671d0650d51e1cb523a2c58b"
+  },
+  "Type": "Tree",
+  "Name": "Pear Tree",
+  "CostItems": [
+    {
+      "ItemId": "6739181af9092f5b4e2560fb",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 1200,
+  "HarvestItems": [
+    {
+      "ItemId": "6739182cf9092f5b4e2560fc",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "6739181af9092f5b4e2560fb",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "6754855eb60b1242c1923948",
+  "GameCrop": "/Game/Crops/BP_Crop_PearTree"
+},
+{
+  "_id": {
+    "$oid": "671d0748d51e1cb523a2c58d"
+  },
+  "Type": "Animal",
+  "Name": "Cow",
+  "HarvestSeconds": 200,
+  "HarvestItems": [
+    {
+      "ItemId": "milkId",
+      "Quantity": 1
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "cowId",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548573b60b1242c1923949"
+},
+{
+  "_id": {
+    "$oid": "673915c6f56ddb42e0c41d86"
+  },
+  "Type": "Plot",
+  "Name": "Tomato",
+  "CostItems": [
+    {
+      "ItemId": "670aab90eb16b7e464057248",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 1000,
+  "HarvestItems": [
+    {
+      "ItemId": "6739141bf9092f5b4e2560ee",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aab90eb16b7e464057248",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "6754855eb60b1242c1923948",
+  "GameCrop": "/Game/Crops/BP_Crop_Tomato"
+},
+{
+  "_id": {
+    "$oid": "673915f4f56ddb42e0c41d87"
+  },
+  "Type": "Plot",
+  "Name": "Cabbage",
+  "CostItems": [
+    {
+      "ItemId": "670aae635437f00b0f7fae1c",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 600,
+  "HarvestItems": [
+    {
+      "ItemId": "67391420f9092f5b4e2560ef",
+      "Quantity": 2
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aae635437f00b0f7fae1c",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Cabbage"
+},
+{
+  "_id": {
+    "$oid": "67391612f56ddb42e0c41d88"
+  },
+  "Type": "Plot",
+  "Name": "Cucumber",
+  "CostItems": [
+    {
+      "ItemId": "670aae795437f00b0f7fae1d",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 800,
+  "HarvestItems": [
+    {
+      "ItemId": "67391425f9092f5b4e2560f0",
+      "Quantity": 3
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aae795437f00b0f7fae1d",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "6754855eb60b1242c1923948",
+  "GameCrop": "/Game/Crops/BP_Crop_Cucumber"
+},
+{
+  "_id": {
+    "$oid": "6739165cf56ddb42e0c41d89"
+  },
+  "Type": "Plot",
+  "Name": "Pumpkin",
+  "CostItems": [
+    {
+      "ItemId": "670aaebb5437f00b0f7fae1e",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 1200,
+  "HarvestItems": [
+    {
+      "ItemId": "67391430f9092f5b4e2560f1",
+      "Quantity": 3
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaebb5437f00b0f7fae1e",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Pumpkin"
+},
+{
+  "_id": {
+    "$oid": "67391683f56ddb42e0c41d8a"
+  },
+  "Type": "Plot",
+  "Name": "Broccoli",
+  "CostItems": [
+    {
+      "ItemId": "670aaed15437f00b0f7fae1f",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 600,
+  "HarvestItems": [
+    {
+      "ItemId": "6739143bf9092f5b4e2560f2",
+      "Quantity": 3
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaed15437f00b0f7fae1f",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "675485bab60b1242c192394b",
+  "GameCrop": "/Game/Crops/BP_Crop_Broccoli"
+},
+{
+  "_id": {
+    "$oid": "67391695f56ddb42e0c41d8b"
+  },
+  "Type": "Plot",
+  "Name": "Cauliflower",
+  "CostItems": [
+    {
+      "ItemId": "670aaee45437f00b0f7fae20",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 600,
+  "HarvestItems": [
+    {
+      "ItemId": "67391442f9092f5b4e2560f3",
+      "Quantity": 3
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaee45437f00b0f7fae20",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "675485bab60b1242c192394b",
+  "GameCrop": "/Game/Crops/BP_Crop_Cauliflower"
+},
+{
+  "_id": {
+    "$oid": "673916acf56ddb42e0c41d8c"
+  },
+  "Type": "Plot",
+  "Name": "Turnip",
+  "CostItems": [
+    {
+      "ItemId": "670aaf025437f00b0f7fae21",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 800,
+  "HarvestItems": [
+    {
+      "ItemId": "67391446f9092f5b4e2560f4",
+      "Quantity": 3
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaf025437f00b0f7fae21",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Turnip"
+},
+{
+  "_id": {
+    "$oid": "673916c9f56ddb42e0c41d8d"
+  },
+  "Type": "Plot",
+  "Name": "Parsnip",
+  "CostItems": [
+    {
+      "ItemId": "670aaf175437f00b0f7fae22",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 800,
+  "HarvestItems": [
+    {
+      "ItemId": "67391450f9092f5b4e2560f5",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaf175437f00b0f7fae22",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Parsnip"
+},
+{
+  "_id": {
+    "$oid": "673916def56ddb42e0c41d8e"
+  },
+  "Type": "Plot",
+  "Name": "Leek",
+  "CostItems": [
+    {
+      "ItemId": "670aaf315437f00b0f7fae23",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 600,
+  "HarvestItems": [
+    {
+      "ItemId": "67391454f9092f5b4e2560f6",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaf315437f00b0f7fae23",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "675485bab60b1242c192394b",
+  "GameCrop": "/Game/Crops/BP_Crop_Leek"
+},
+{
+  "_id": {
+    "$oid": "673916f3f56ddb42e0c41d8f"
+  },
+  "Type": "Plot",
+  "Name": "Onion",
+  "CostItems": [
+    {
+      "ItemId": "670aaf565437f00b0f7fae24",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 300,
+  "HarvestItems": [
+    {
+      "ItemId": "67391459f9092f5b4e2560f7",
+      "Quantity": 3
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670aaf565437f00b0f7fae24",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Onion"
+},
+{
+  "_id": {
+    "$oid": "67391722f56ddb42e0c41d90"
+  },
+  "Type": "Plot",
+  "Name": "Wheat",
+  "CostItems": [
+    {
+      "ItemId": "670ab030063e3af5c51a61fb",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 800,
+  "HarvestItems": [
+    {
+      "ItemId": "6739145ef9092f5b4e2560f8",
+      "Quantity": 6
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670ab030063e3af5c51a61fb",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Wheat"
+},
+{
+  "_id": {
+    "$oid": "6739173bf56ddb42e0c41d91"
+  },
+  "Type": "Plot",
+  "Name": "Corn",
+  "CostItems": [
+    {
+      "ItemId": "670ab03b063e3af5c51a61fc",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 800,
+  "HarvestItems": [
+    {
+      "ItemId": "67391466f9092f5b4e2560f9",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "670ab03b063e3af5c51a61fc",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "675485bab60b1242c192394b",
+  "GameCrop": "/Game/Crops/BP_Crop_Corn"
+},
+{
+  "_id": {
+    "$oid": "67391778f56ddb42e0c41d92"
+  },
+  "Type": "Plot",
+  "Name": "Potato",
+  "CostItems": [
+    {
+      "ItemId": "6739146af9092f5b4e2560fa",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 1200,
+  "HarvestItems": [
+    {
+      "ItemId": "6739146af9092f5b4e2560fa",
+      "Quantity": 5
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "6739146af9092f5b4e2560fa",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "67548595b60b1242c192394a",
+  "GameCrop": "/Game/Crops/BP_Crop_Potato"
+},
+{
+  "_id": {
+    "$oid": "6739186df56ddb42e0c41d93"
+  },
+  "Type": "Tree",
+  "Name": "Orange Tree",
+  "CostItems": [
+    {
+      "ItemId": "67391846f9092f5b4e2560fe",
+      "Quantity": 1
+    }
+  ],
+  "HarvestSeconds": 1600,
+  "HarvestItems": [
+    {
+      "ItemId": "67391838f9092f5b4e2560fd",
+      "Quantity": 4
+    }
+  ],
+  "DestroyItems": [
+    {
+      "ItemId": "67391846f9092f5b4e2560fe",
+      "Quantity": 1
+    }
+  ],
+  "FertiliserItemId": "6754855eb60b1242c1923948",
+  "GameCrop": "/Game/Crops/BP_Crop_OrangeTree"
+}]
